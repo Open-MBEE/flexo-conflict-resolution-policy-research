@@ -45,11 +45,15 @@ The operational levels above describe *who* interacts with Flexo and at what sco
 - [[Conflict Classification]] — taxonomy of conflict types and constraint categories
 - [[Predicate Compliance Oracle]] — abstract constraint evaluator; conceptual hook for dual variables
 
+### Experiments
+
+- [[Experiment 1 — Satellite Scenario]] — cross-application conflict detection on a constraint-rich satellite model (syntactic, structural, semantic conflicts)
+
 → [[Key Insight]] · [[Flexo Conflict Resolution Mapping]] · [[Conflict Resolution Problem Statement]] · [[A Policy-based Approach to Model Lifecycle Management with Flexo|Model Lifecycle Diagrams]]
 
 ## Key Repositories
 
 - [flexo-mms-layer1-service](https://github.com/Open-MBEE/flexo-mms-layer1-service) — core service, SPARQL/GSP API
 - [flexo-mms-sysmlv2](https://github.com/Open-MBEE/flexo-mms-sysmlv2) — OMG [[SysML v2]] API implementation
-- [flexo-mms-deployment](https://github.com/Open-MBEE/flexo-mms-deployment) — Docker Compose / k8s deployment
+- [flexo-mms-deployment](https://github.com/Open-MBEE/flexo-mms-deployment) — Docker Compose / k8s deployment → [[Local Deployment Setup]]
 - [Layer 1 OpenAPI spec](https://www.openmbee.org/flexo-mms-layer1-openapi/) — CRUD API surface
