@@ -1,0 +1,10 @@
+# C3 — Bus Load (relational)
+# Constraint: total power of bus-connected subsystems ≤ bus max load
+# Satisfied when ?violation ≤ 0; violated when ?violation > 0
+
+PREFIX sat: <http://example.org/satellite/>
+
+SELECT ?totalPower ?maxLoad ((?totalPower - ?maxLoad) AS ?violation) WHERE {
+  { SELECT (SUM(?p) AS ?totalPower) WHERE { ?s sat:connectedTo sat:PowerBus . ?s sat:power ?p . } }
+  sat:PowerBus sat:maxLoad ?maxLoad .
+}

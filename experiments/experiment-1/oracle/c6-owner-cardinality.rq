@@ -1,0 +1,9 @@
+# C6 — Owner Cardinality (structural)
+# Constraint: max 1 sat:owner per subsystem
+# Returns violating subsystems; empty result means satisfied
+
+PREFIX sat: <http://example.org/satellite/>
+
+SELECT ?s (COUNT(?owner) AS ?ownerCount) WHERE {
+  ?s a sat:Subsystem . ?s sat:owner ?owner .
+} GROUP BY ?s HAVING (COUNT(?owner) > 1)

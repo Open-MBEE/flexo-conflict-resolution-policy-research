@@ -4,6 +4,8 @@ A concrete experiment exercising the [[Conflict Resolution Problem Statement|con
 
 Since Flexo v0.2.2 does not implement three-way merge or conflict detection, we implement the [[Predicate Compliance Oracle]] externally as SPARQL queries and construct cross-application states manually via the branch/update API.
 
+**Reproducibility**: All model files, SPARQL queries, and an executable script are in [`experiments/experiment-1/`](experiments/experiment-1/). See the [reproducibility guide](experiments/experiment-1/README.md).
+
 ---
 
 ## Model: Satellite Power Subsystem
@@ -189,7 +191,7 @@ Each commit is independently valid — all constraints pass when applied to the 
 
 | Constraint | Value | Status |
 |------------|-------|--------|
-| C1 mass | $85 - 100 = -15$ | Slack |
+| C1 mass | $65 - 100 = -35$ | Slack |
 | C2 power | $40 - 50 = -10$ | Slack |
 | C3 bus | $40 - 50 = -10$ | Slack |
 | C4 local | all $\geq 0$ | Satisfied |

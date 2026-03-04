@@ -1,0 +1,24 @@
+@prefix sat: <http://example.org/satellite/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sat:Satellite a sat:System ;
+    sat:massBudget "100"^^xsd:integer ;
+    sat:powerBudget "50"^^xsd:integer .
+
+sat:CommSubsystem a sat:Subsystem ;
+    sat:mass "30"^^xsd:integer ;
+    sat:power "15"^^xsd:integer ;
+    sat:dataRate "100"^^xsd:integer ;
+    sat:name "CommSubsystem" ;
+    sat:connectedTo sat:PowerBus .
+
+sat:ThermalSubsystem a sat:Subsystem ;
+    sat:mass "20"^^xsd:integer ;
+    sat:power "10"^^xsd:integer ;
+    sat:capacity "15"^^xsd:integer ;
+    sat:name "ThermalSubsystem" ;
+    sat:connectedTo sat:PowerBus .
+
+sat:PowerBus a sat:Bus ;
+    sat:maxLoad "50"^^xsd:integer ;
+    sat:name "PowerBus" .
