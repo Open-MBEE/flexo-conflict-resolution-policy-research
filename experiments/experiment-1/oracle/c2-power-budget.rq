@@ -1,0 +1,10 @@
+# C2 — Power Budget (aggregate)
+# Constraint: total subsystem power ≤ satellite power budget
+# Satisfied when ?violation ≤ 0; violated when ?violation > 0
+
+PREFIX sat: <http://example.org/satellite/>
+
+SELECT ?totalPower ?powerBudget ((?totalPower - ?powerBudget) AS ?violation) WHERE {
+  { SELECT (SUM(?p) AS ?totalPower) WHERE { ?s a sat:Subsystem . ?s sat:power ?p . } }
+  sat:Satellite sat:powerBudget ?powerBudget .
+}

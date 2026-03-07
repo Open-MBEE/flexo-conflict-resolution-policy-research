@@ -1,0 +1,9 @@
+# Name Multiplicity (syntactic conflict detection)
+# Detects elements with multiple sat:name values
+# Returns conflicting elements; empty result means no name conflicts
+
+PREFIX sat: <http://example.org/satellite/>
+
+SELECT ?s (GROUP_CONCAT(?name; separator=", ") AS ?names) (COUNT(?name) AS ?nameCount) WHERE {
+  ?s sat:name ?name .
+} GROUP BY ?s HAVING (COUNT(?name) > 1)
