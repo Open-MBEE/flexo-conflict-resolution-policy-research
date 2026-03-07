@@ -1,0 +1,123 @@
+[22:33:43] Step 0: Waiting for Flexo services to be ready...
+[22:33:49]   waiting for Layer 1... (5s)
+[22:33:54]   waiting for Layer 1... (10s)
+[22:33:55]   Layer 1 responding (HTTP 404).
+[22:33:58]   Auth service ready.
+[22:33:58]   Waiting 10s for services to settle...
+[22:34:08] 
+[22:34:08] Step 1: Authenticating as user01...
+[22:34:08]   Token acquired.
+[22:34:08] 
+[22:34:08] Step 2: Creating org 'research' and repo 'scenario-1'...
+[22:34:16]   org: HTTP 201
+[22:34:35]   repo: HTTP 201
+[22:34:35] 
+[22:34:35] Step 3: Loading ancestor model onto master...
+[22:34:41]   load: HTTP 201
+[22:34:41] 
+[22:34:41] Step 4: Verifying ancestor constraints...
+[22:34:41] 
+[22:34:41] === Oracle evaluation: master ===
+[22:34:41] --- c1-mass-budget.rq ---
+[22:34:42]    {'totalMass': '50', 'massBudget': '100', 'violation': '-50'}
+[22:34:42] --- c2-power-budget.rq ---
+[22:34:42]    {'totalPower': '25', 'powerBudget': '50', 'violation': '-25'}
+[22:34:42] --- c3-bus-load.rq ---
+[22:34:43]    {'totalPower': '25', 'maxLoad': '50', 'violation': '-25'}
+[22:34:43] --- c4-nonneg-mass.rq ---
+[22:34:43]   (no results — constraint satisfied)
+[22:34:43] --- c5-thermal-coupling.rq ---
+[22:34:43]    {'capacity': '15', 'commPower': '15', 'threshold': '4.5', 'violation': '-10.5'}
+[22:34:44] --- c6-owner-cardinality.rq ---
+[22:34:44]   (no results — constraint satisfied)
+[22:34:44] --- name-multiplicity.rq ---
+[22:34:44]   (no results — constraint satisfied)
+[22:34:44] 
+[22:34:44] Step 5: Creating branch-a and branch-b from master...
+[22:34:52]   branch-a: HTTP 201
+[22:35:00]   branch-b: HTTP 201
+[22:35:00] 
+[22:35:00] Step 6: Applying commits...
+[22:35:04]   commit u on branch-a: HTTP 201
+[22:35:07]   commit v on branch-b: HTTP 201
+[22:35:07] 
+[22:35:07] Step 7: Verifying individual validity...
+[22:35:07] 
+[22:35:07] === Oracle evaluation: branch-a ===
+[22:35:07] --- c1-mass-budget.rq ---
+[22:35:08]    {'totalMass': '65', 'massBudget': '100', 'violation': '-35'}
+[22:35:08] --- c2-power-budget.rq ---
+[22:35:08]    {'totalPower': '40', 'powerBudget': '50', 'violation': '-10'}
+[22:35:08] --- c3-bus-load.rq ---
+[22:35:08]    {'totalPower': '40', 'maxLoad': '50', 'violation': '-10'}
+[22:35:08] --- c4-nonneg-mass.rq ---
+[22:35:08]   (no results — constraint satisfied)
+[22:35:08] --- c5-thermal-coupling.rq ---
+[22:35:09]    {'capacity': '15', 'commPower': '30', 'threshold': '9.0', 'violation': '-6.0'}
+[22:35:09] --- c6-owner-cardinality.rq ---
+[22:35:09]   (no results — constraint satisfied)
+[22:35:09] --- name-multiplicity.rq ---
+[22:35:09]   (no results — constraint satisfied)
+[22:35:09] 
+[22:35:09] === Oracle evaluation: branch-b ===
+[22:35:09] --- c1-mass-budget.rq ---
+[22:35:09]    {'totalMass': '70', 'massBudget': '100', 'violation': '-30'}
+[22:35:09] --- c2-power-budget.rq ---
+[22:35:09]    {'totalPower': '40', 'powerBudget': '50', 'violation': '-10'}
+[22:35:09] --- c3-bus-load.rq ---
+[22:35:09]    {'totalPower': '40', 'maxLoad': '50', 'violation': '-10'}
+[22:35:09] --- c4-nonneg-mass.rq ---
+[22:35:10]   (no results — constraint satisfied)
+[22:35:10] --- c5-thermal-coupling.rq ---
+[22:35:10]    {'capacity': '15', 'commPower': '15', 'threshold': '4.5', 'violation': '-10.5'}
+[22:35:10] --- c6-owner-cardinality.rq ---
+[22:35:10]   (no results — constraint satisfied)
+[22:35:10] --- name-multiplicity.rq ---
+[22:35:10]   (no results — constraint satisfied)
+[22:35:10] 
+[22:35:10] Step 8: Constructing cross-application states...
+[22:35:17]   branch-uv create: HTTP 201
+[22:35:20]   apply v to branch-uv: HTTP 201
+[22:35:25]   branch-vu create: HTTP 201
+[22:35:28]   apply u to branch-vu: HTTP 201
+[22:35:28] 
+[22:35:28] Step 9: Evaluating oracle on cross-application states...
+[22:35:28] 
+[22:35:28] === Oracle evaluation: branch-uv ===
+[22:35:28] --- c1-mass-budget.rq ---
+[22:35:28]    {'totalMass': '85', 'massBudget': '100', 'violation': '-15'}
+[22:35:28] --- c2-power-budget.rq ---
+[22:35:28]    {'totalPower': '55', 'powerBudget': '50', 'violation': '5'}
+[22:35:28] --- c3-bus-load.rq ---
+[22:35:28]    {'totalPower': '55', 'maxLoad': '50', 'violation': '5'}
+[22:35:28] --- c4-nonneg-mass.rq ---
+[22:35:28]   (no results — constraint satisfied)
+[22:35:28] --- c5-thermal-coupling.rq ---
+[22:35:29]    {'capacity': '15', 'commPower': '30', 'threshold': '9.0', 'violation': '-6.0'}
+[22:35:29] --- c6-owner-cardinality.rq ---
+[22:35:29]    {'s': 'http://example.org/satellite/CommSubsystem', 'ownerCount': '2'}
+[22:35:29] --- name-multiplicity.rq ---
+[22:35:29]    {'s': 'http://example.org/satellite/CommSubsystem', 'names': 'HighBandwidthComm, CommunicationsSubsystem', 'nameCount': '2'}
+[22:35:29] 
+[22:35:29] === Oracle evaluation: branch-vu ===
+[22:35:29] --- c1-mass-budget.rq ---
+[22:35:29]    {'totalMass': '85', 'massBudget': '100', 'violation': '-15'}
+[22:35:29] --- c2-power-budget.rq ---
+[22:35:29]    {'totalPower': '55', 'powerBudget': '50', 'violation': '5'}
+[22:35:29] --- c3-bus-load.rq ---
+[22:35:29]    {'totalPower': '55', 'maxLoad': '50', 'violation': '5'}
+[22:35:29] --- c4-nonneg-mass.rq ---
+[22:35:30]   (no results — constraint satisfied)
+[22:35:30] --- c5-thermal-coupling.rq ---
+[22:35:30]    {'capacity': '15', 'commPower': '30', 'threshold': '9.0', 'violation': '-6.0'}
+[22:35:30] --- c6-owner-cardinality.rq ---
+[22:35:30]    {'s': 'http://example.org/satellite/CommSubsystem', 'ownerCount': '2'}
+[22:35:30] --- name-multiplicity.rq ---
+[22:35:30]    {'s': 'http://example.org/satellite/CommSubsystem', 'names': 'HighBandwidthComm, CommunicationsSubsystem', 'nameCount': '2'}
+[22:35:30] 
+[22:35:30] ============================================
+[22:35:30]   Experiment 1 complete.
+[22:35:30]   Compare branch-uv and branch-vu results.
+[22:35:30]   Expected violations: C2 (+5), C3 (+5),
+[22:35:30]   C6 (2 owners), name (2 values).
+[22:35:30] ============================================

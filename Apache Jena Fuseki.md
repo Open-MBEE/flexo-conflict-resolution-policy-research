@@ -23,5 +23,7 @@ Before the Layer 1 service can run, the quadstore must be bootstrapped ([Layer 1
 
 Read and write operations can be separated to distinct Fuseki nodes. Flexo env vars `FLEXO_MMS_QUERY_URL` and `FLEXO_MMS_UPDATE_URL` point to different endpoints, with `FLEXO_MMS_MASTER_QUERY_URL` available for strict-consistency reads ([Layer 1 docs](https://flexo-mms-deployment-guide.readthedocs.io/en/latest/flexo-mms-layer1-service/index.html)).
 
+For a complete walkthrough of standing up a local Fuseki-backed Flexo instance, see [[Local Deployment Setup]].
+
 ---
 ← [[Quadstore]] · [[SPARQL]] · [[Flexo Organization Level]]

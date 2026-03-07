@@ -1,0 +1,11 @@
+# C5 — Thermal Coupling (coupling)
+# Constraint: thermal capacity ≥ comm power × 0.3
+# Satisfied when ?violation ≤ 0; violated when ?violation > 0
+
+PREFIX sat: <http://example.org/satellite/>
+
+SELECT ?capacity ?commPower ?threshold ((?threshold - ?capacity) AS ?violation) WHERE {
+  sat:ThermalSubsystem sat:capacity ?capacity .
+  sat:CommSubsystem sat:power ?commPower .
+  BIND (?commPower * 0.3 AS ?threshold)
+}

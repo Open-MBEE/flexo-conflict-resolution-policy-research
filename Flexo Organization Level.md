@@ -48,7 +48,7 @@ Complementary services include an [auth service](https://github.com/Open-MBEE/fl
 
 Flexo MMS stores all of its state information in the quadstore alongside user data ([flexo-mms-layer1-service](https://github.com/Open-MBEE/flexo-mms-layer1-service)).
 
-Deployment examples (Docker Compose and k8s) are available in the [flexo-mms-deployment](https://github.com/Open-MBEE/flexo-mms-deployment) repo.
+Deployment examples (Docker Compose and k8s) are available in the [flexo-mms-deployment](https://github.com/Open-MBEE/flexo-mms-deployment) repo. For a step-by-step local setup guide, see [[Local Deployment Setup]].
 
 ## IT Operations Responsibilities
 

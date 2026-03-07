@@ -1,0 +1,10 @@
+# C4 — Non-negative Mass (local)
+# Constraint: mass ≥ 0 for each subsystem
+# Returns violating subsystems; empty result means satisfied
+
+PREFIX sat: <http://example.org/satellite/>
+
+SELECT ?s ?mass WHERE {
+  ?s a sat:Subsystem . ?s sat:mass ?mass .
+  FILTER (?mass < 0)
+}

@@ -1,0 +1,10 @@
+# C1 — Mass Budget (aggregate)
+# Constraint: total subsystem mass ≤ satellite mass budget
+# Satisfied when ?violation ≤ 0; violated when ?violation > 0
+
+PREFIX sat: <http://example.org/satellite/>
+
+SELECT ?totalMass ?massBudget ((?totalMass - ?massBudget) AS ?violation) WHERE {
+  { SELECT (SUM(?m) AS ?totalMass) WHERE { ?s a sat:Subsystem . ?s sat:mass ?m . } }
+  sat:Satellite sat:massBudget ?massBudget .
+}
