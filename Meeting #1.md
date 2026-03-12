@@ -38,7 +38,7 @@ Key topics: [[Basics]]
 
 - Set up a shared public sandbox Flexo MMS server for experimentation (target ~two weeks)
     
-- Draft and publish a short problem statement, problem demonstration outline, and success criteria in Confluence
+- Draft and publish a short problem statement, problem demonstration outline, and success criteria.
     
 - Create and use GitHub issues in the transferred repo to track action items (e.g., demo, shared server, Confluence docs, common-ancestor API)
     
