@@ -1,0 +1,20 @@
+# C5: Type consistency — detect elements typed as kc:Edge or kc:Face
+# (via their mtg: subclasses) that are NOT in the complex.
+# With schema loaded, we can use rdf:type to find typed instances
+# that have been removed from complex membership but whose type
+# triples may still exist.
+
+PREFIX kc: <https://example.org/kc#>
+PREFIX mtg: <https://example.org/mtg#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?element ?type
+WHERE {
+  ?element a ?type .
+  ?type rdfs:subClassOf ?kcType .
+  FILTER(?kcType IN (kc:Vertex, kc:Edge, kc:Face))
+  FILTER NOT EXISTS {
+    mtg:_complex kc:hasElement ?element .
+  }
+}
+ORDER BY ?element

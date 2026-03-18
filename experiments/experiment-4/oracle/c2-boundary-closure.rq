@@ -1,0 +1,17 @@
+# C2: Boundary closure — detect elements in the complex whose
+# boundary elements are NOT in the complex.
+# For a valid simplicial complex, if element X is in the complex
+# and X is boundedBy Y, then Y must also be in the complex.
+
+PREFIX kc: <https://example.org/kc#>
+PREFIX mtg: <https://example.org/mtg#>
+
+SELECT ?element ?missingBoundary
+WHERE {
+  mtg:_complex kc:hasElement ?element .
+  ?element kc:boundedBy ?missingBoundary .
+  FILTER NOT EXISTS {
+    mtg:_complex kc:hasElement ?missingBoundary .
+  }
+}
+ORDER BY ?element

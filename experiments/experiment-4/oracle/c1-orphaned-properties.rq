@@ -1,0 +1,32 @@
+# C1: Orphaned properties — detect elements in the mtg: namespace that
+# have domain-specific properties (mtg:* predicates) but are NOT members
+# of the complex (kc:hasElement).
+# Filters out OWL/RDFS schema triples by requiring the predicate to be
+# in the mtg: namespace (domain properties, not rdfs:subClassOf etc.).
+
+PREFIX kc: <https://example.org/kc#>
+PREFIX mtg: <https://example.org/mtg#>
+
+SELECT ?element ?property ?value
+WHERE {
+  ?element ?property ?value .
+  # Element must be in the mtg: namespace
+  FILTER(STRSTARTS(STR(?element), STR(mtg:)))
+  FILTER(?element != mtg:_complex)
+  # Property must be a domain property (mtg: or kc: namespace), not OWL/RDFS
+  FILTER(STRSTARTS(STR(?property), STR(mtg:)) || STRSTARTS(STR(?property), STR(kc:)))
+  # Element must NOT be in the complex
+  FILTER NOT EXISTS {
+    mtg:_complex kc:hasElement ?element .
+  }
+  # Exclude elements that are OWL classes or properties (schema definitions)
+  FILTER NOT EXISTS {
+    ?element a ?schemaType .
+    FILTER(?schemaType IN (
+      <http://www.w3.org/2002/07/owl#Class>,
+      <http://www.w3.org/2002/07/owl#ObjectProperty>,
+      <http://www.w3.org/2002/07/owl#DatatypeProperty>
+    ))
+  }
+}
+ORDER BY ?element ?property
