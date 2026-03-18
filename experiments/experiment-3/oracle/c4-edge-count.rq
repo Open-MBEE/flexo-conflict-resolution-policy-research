@@ -1,0 +1,11 @@
+# C4: Edge count — simple structural summary.
+# Ancestor has 10 edges; after commit u removes BG, should be 9.
+
+PREFIX kc: <https://example.org/kc#>
+PREFIX mtg: <https://example.org/mtg#>
+
+SELECT (COUNT(?edge) AS ?edgeCount)
+WHERE {
+  mtg:_complex kc:hasElement ?edge .
+  ?edge a mtg:ColorPair .
+}
