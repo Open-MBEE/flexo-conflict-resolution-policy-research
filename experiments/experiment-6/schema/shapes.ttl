@@ -1,0 +1,247 @@
+@prefix kc: <https://example.org/kc#> .
+@prefix kcs: <https://example.org/kc/shape#> .
+@prefix mtg: <https://example.org/mtg#> .
+@prefix mtgs: <https://example.org/mtg/shape#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+kcs:ComplexShape a sh:NodeShape ;
+    rdfs:label "ComplexShape" ;
+    rdfs:comment """Boundary-closure constraint: if a simplex is in the complex,
+        all its boundary elements must also be in the complex.""" ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            rdfs:comment """Boundary-closure: for every element in the complex,
+            each of its boundedBy targets must also be a hasElement of the complex.""" ;
+            sh:message "Complex is not closed under the boundary operator: an element's boundary element is missing from the complex." ;
+            sh:select """
+            PREFIX kc: <https://example.org/kc#>
+            SELECT $this WHERE {
+                $this kc:hasElement ?elem .
+                ?elem kc:boundedBy ?boundary .
+                FILTER NOT EXISTS {
+                    $this kc:hasElement ?boundary .
+                }
+            }
+        """ ] ;
+    sh:targetClass kc:Complex .
+
+kcs:EdgeShape a sh:NodeShape ;
+    rdfs:label "EdgeShape" ;
+    rdfs:comment "Topological constraints on KC:Edge instances." ;
+    sh:property [ sh:class kc:Vertex ;
+            sh:maxCount 2 ;
+            sh:message "Edge must have exactly two boundedBy relations of type KC:Vertex." ;
+            sh:minCount 2 ;
+            sh:path kc:boundedBy ] ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            rdfs:comment "Edge boundary vertices must be distinct individuals." ;
+            sh:message "Edge boundary vertices must not be the same vertex." ;
+            sh:select """
+            PREFIX kc: <https://example.org/kc#>
+            SELECT $this WHERE {
+                $this kc:boundedBy ?v .
+            }
+            GROUP BY $this
+            HAVING (COUNT(DISTINCT ?v) < 2)
+        """ ] ;
+    sh:targetClass kc:Edge .
+
+kcs:FaceShape a sh:NodeShape ;
+    rdfs:label "FaceShape" ;
+    rdfs:comment "Topological constraints on KC:Face instances." ;
+    sh:property [ sh:class kc:Edge ;
+            sh:maxCount 3 ;
+            sh:message "Face must have exactly three boundedBy relations, each of type KC:Edge." ;
+            sh:minCount 3 ;
+            sh:path kc:boundedBy ] ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            rdfs:comment """
+            Closed-triangle constraint: the 3 boundary edges of a Face must share
+            vertices forming a cycle (v1-v2, v2-v3, v3-v1). This cannot be expressed
+            in OWL because it requires co-referencing property values across 3 edge
+            individuals.
+        """ ;
+            sh:message "Face boundary edges do not form a closed triangle over shared vertices." ;
+            sh:select """
+            PREFIX kc: <https://example.org/kc#>
+            SELECT $this WHERE {
+                $this kc:boundedBy ?e1 ;
+                      kc:boundedBy ?e2 ;
+                      kc:boundedBy ?e3 .
+                FILTER (?e1 != ?e2 && ?e2 != ?e3 && ?e1 != ?e3)
+                ?e1 kc:boundedBy ?a1 ; kc:boundedBy ?b1 .
+                ?e2 kc:boundedBy ?a2 ; kc:boundedBy ?b2 .
+                ?e3 kc:boundedBy ?a3 ; kc:boundedBy ?b3 .
+                FILTER (?a1 != ?b1 && ?a2 != ?b2 && ?a3 != ?b3)
+                # For a valid triangle each endpoint of e1 must appear in at least
+                # one other edge's boundary.
+                BIND(
+                    EXISTS {
+                        { ?e2 kc:boundedBy ?a1 } UNION { ?e3 kc:boundedBy ?a1 }
+                    } AS ?a1_shared
+                )
+                BIND(
+                    EXISTS {
+                        { ?e2 kc:boundedBy ?b1 } UNION { ?e3 kc:boundedBy ?b1 }
+                    } AS ?b1_shared
+                )
+                FILTER NOT EXISTS {
+                    # Valid closed triangle: each endpoint of e1 is shared with another edge
+                    FILTER (?a1_shared && ?b1_shared)
+                }
+            }
+        """ ] ;
+    sh:targetClass kc:Face .
+
+mtgs:ColorPairShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:synergies ],
+        [ sh:datatype xsd:string ;
+            sh:minCount 0 ;
+            sh:path mtg:example_decks ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:at_worst ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:tensions ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:at_best ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "adjacent" "opposite" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:disposition ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path mtg:playstyle ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "azorius" "dimir" "rakdos" "gruul" "selesnya" "orzhov" "boros" "simic" "izzet" "golgari" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:guild ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "design" "growth_mindset" "independence" "authenticity" "community" "tribalism" "heroism" "truth_seeking" "creativity" "profanity" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:theme ],
+        [ sh:datatype xsd:string ;
+            sh:minCount 1 ;
+            sh:path mtg:example_behaviors ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:persona ] ;
+    sh:targetClass mtg:ColorPair .
+
+mtgs:ColorShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:in ( "order" "knowledge" "ruthlessness" "action" "acceptance" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:method ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:persona ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path mtg:playstyle ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "peace" "perfection" "satisfaction" "freedom" "harmony" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:goal ],
+        [ sh:datatype xsd:string ;
+            sh:minCount 0 ;
+            sh:path mtg:example_decks ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:at_best ],
+        [ sh:datatype xsd:string ;
+            sh:minCount 1 ;
+            sh:path mtg:example_behaviors ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:at_worst ] ;
+    sh:targetClass mtg:Color .
+
+mtgs:ColorTripleShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:in ( "shard" "wedge" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path mtg:structure ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:persona ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:closure ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:at_best ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "esper" "grixis" "jund" "naya" "bant" "mardu" "temur" "abzan" "jeskai" "sultai" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:clan ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path mtg:playstyle ],
+        [ sh:datatype xsd:string ;
+            sh:minCount 0 ;
+            sh:path mtg:example_decks ],
+        [ sh:datatype xsd:string ;
+            sh:minCount 1 ;
+            sh:path mtg:example_behaviors ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "design" "growth_mindset" "independence" "authenticity" "community" "tribalism" "heroism" "truth_seeking" "creativity" "profanity" ) ;
+            sh:minCount 1 ;
+            sh:path mtg:thematic_triad ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:at_worst ] ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            sh:message "thematic_triad is missing at least one theme from a bounding edge." ;
+            sh:select """    PREFIX kc: <https://example.org/kc#>
+    PREFIX mtg: <https://example.org/mtg#>
+    SELECT $this WHERE {
+        $this kc:boundedBy ?edge .
+        ?edge mtg:theme ?edgeTheme .
+        FILTER NOT EXISTS {
+            $this mtg:thematic_triad ?edgeTheme .
+        }
+    }
+""" ],
+        [ a sh:SPARQLConstraint ;
+            sh:message "thematic_triad contains a value that is not a theme of any bounding edge." ;
+            sh:select """    PREFIX kc: <https://example.org/kc#>
+    PREFIX mtg: <https://example.org/mtg#>
+    SELECT $this WHERE {
+        $this mtg:thematic_triad ?triadTheme .
+        FILTER NOT EXISTS {
+            $this kc:boundedBy ?edge .
+            ?edge mtg:theme ?triadTheme .
+        }
+    }
+""" ] ;
+    sh:targetClass mtg:ColorTriple .
+
