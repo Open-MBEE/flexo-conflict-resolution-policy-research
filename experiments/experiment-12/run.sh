@@ -12,27 +12,30 @@ set -euo pipefail
 # to show that independently valid commits produce invalid merged states,
 # and that all three layers are necessary to detect this.
 #
-# Requires a running Flexo MMS instance (see Local Deployment Setup.md).
+# Targets the remote Layer 1 SPARQL API at try-layer1.starforge.app.
+# Requires a pre-issued Bearer token in FLEXO_TOKEN env var.
+#
+# Usage:
+#   export FLEXO_TOKEN="eyJhbGci..."
+#   ./run.sh
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-BASE="${FLEXO_BASE_URL:-http://localhost:8080}"
-AUTH="${FLEXO_AUTH_URL:-http://localhost:8082}"
-USER="${FLEXO_USER:-user01}"
-PASS="${FLEXO_PASS:-password1}"
+BASE="${FLEXO_BASE_URL:-https://try-layer1.starforge.app}"
 ORG="research"
-REPO="three-layer-demo"
+REPO="three-layer-demo-$(date +%s)"
+TIMEOUT=120
 
-TIMEOUT=900
+# Require token from environment (remote server — no local auth service)
+if [[ -z "${FLEXO_TOKEN:-}" ]]; then
+  echo "ERROR: FLEXO_TOKEN environment variable is not set."
+  echo 'Usage: export FLEXO_TOKEN="eyJhbGci..." && ./run.sh'
+  exit 1
+fi
+TOKEN="$FLEXO_TOKEN"
 
-# --- Helpers (reused from experiment-4) ---
-
-get_token() {
-  TOKEN=$(curl -s -m 30 -u "$USER:$PASS" "$AUTH/login" \
-    | python3 -c "import sys,json; print(json.load(sys.stdin)['token'])")
-  export FLEXO_TOKEN="$TOKEN"
-}
+# --- Helpers ---
 
 flexo_put() {
   local url="$1" body="$2"
@@ -90,9 +93,8 @@ verify_gate() {
   # Run Layer 3 verification on a branch
   local branch="$1"
   python3 verify.py "$branch" \
-    --base-url "$BASE" --auth-url "$AUTH" \
+    --base-url "$BASE" \
     --org "$ORG" --repo "$REPO" \
-    --user "$USER" --password "$PASS" \
     --token "$TOKEN"
   return $?
 }
@@ -116,9 +118,11 @@ echo ""
 
 # --- Phase 0: Service Readiness ---
 
-echo "Phase 0: Waiting for Flexo services..."
+echo "Phase 0: Checking remote Flexo service..."
+echo "  Target: $BASE"
+echo "  Repo:   $REPO (unique per run)"
 
-MAX_WAIT=180
+MAX_WAIT=30
 WAITED=0
 while true; do
   HTTP=$(curl -s -m 5 -o /dev/null -w "%{http_code}" "$BASE/" 2>/dev/null) || HTTP="000"
@@ -126,33 +130,14 @@ while true; do
     break
   fi
   if (( WAITED >= MAX_WAIT )); then
-    echo "  ERROR: Layer 1 not responding after ${MAX_WAIT}s. Is Flexo running?"
+    echo "  ERROR: Layer 1 not responding after ${MAX_WAIT}s."
     exit 1
   fi
-  sleep 5
-  WAITED=$((WAITED + 5))
+  sleep 3
+  WAITED=$((WAITED + 3))
   echo "  waiting for Layer 1... (${WAITED}s)"
 done
 echo "  Layer 1 responding (HTTP $HTTP)."
-
-WAITED=0
-while true; do
-  HTTP=$(curl -s -m 5 -o /dev/null -w "%{http_code}" -u "$USER:$PASS" "$AUTH/login" 2>/dev/null) || HTTP="000"
-  if [[ "$HTTP" =~ ^2 ]]; then
-    break
-  fi
-  if (( WAITED >= MAX_WAIT )); then
-    echo "  ERROR: Auth service not responding after ${MAX_WAIT}s."
-    exit 1
-  fi
-  sleep 5
-  WAITED=$((WAITED + 5))
-  echo "  waiting for Auth... (${WAITED}s, HTTP $HTTP)"
-done
-echo "  Auth service ready."
-
-echo "  Waiting 10s for services to settle..."
-sleep 10
 
 # ┌─────────────────────────────────────────────────────────┐
 # │  LAYER 1 — SYNTACTIC (Quadstore)                        │
@@ -165,26 +150,18 @@ echo "│  LAYER 1 — SYNTACTIC (Quadstore)                        │"
 echo "│  Accepts any valid RDF. No interpretation. No semantics. │"
 echo "└─────────────────────────────────────────────────────────┘"
 
-# Step 1.1: Authenticate
+# Step 1.1: Create org and repo
 echo ""
-echo "Step 1.1: [Layer 1] Authenticating as $USER..."
-get_token
-echo "  Token acquired."
-
-# Step 1.2: Create org and repo
-echo ""
-echo "Step 1.2: [Layer 1] Creating org '$ORG' and repo '$REPO'..."
+echo "Step 1.1: [Layer 1] Creating org '$ORG' and repo '$REPO'..."
 CODE=$(flexo_put "$BASE/orgs/$ORG" "<> <http://purl.org/dc/terms/title> \"$ORG\"@en .")
 expect_ok_or_exists "$CODE" "org"
 
 CODE=$(flexo_put "$BASE/orgs/$ORG/repos/$REPO" "<> <http://purl.org/dc/terms/title> \"$REPO\"@en .")
 expect_ok_or_exists "$CODE" "repo"
 
-# Step 1.3: Load instance data (no schema)
-get_token
-
+# Step 1.2: Load instance data (no schema)
 echo ""
-echo "Step 1.3: [Layer 1] Loading instance data onto master..."
+echo "Step 1.2: [Layer 1] Loading instance data onto master..."
 echo "  (No ontology, no shapes — Layer 1 stores raw triples without interpretation)"
 load_ttl_as_insert master instance/ancestor-model.ttl "instance data"
 
@@ -244,7 +221,6 @@ echo "└───────────────────────�
 # Step 3.1: Verify ancestor state
 echo ""
 echo "Step 3.1: [Layer 3] Verification gate — ancestor state on master..."
-get_token
 if verify_gate master; then
   echo "  Verification gate: PASSED"
 else
@@ -283,7 +259,6 @@ echo "  commit u on branch-a: HTTP $CODE"
 
 echo ""
 echo "Step 4.2: [Layer 3] Verification gate — branch-a after commit u..."
-get_token
 if verify_gate branch-a; then
   echo "  Verification gate: PASSED — commit u accepted"
 else
@@ -298,7 +273,6 @@ echo "  commit v on branch-b: HTTP $CODE"
 
 echo ""
 echo "Step 4.3: [Layer 3] Verification gate — branch-b after commit v..."
-get_token
 if verify_gate branch-b; then
   echo "  Verification gate: PASSED — commit v accepted"
 else
@@ -332,8 +306,6 @@ echo ""
 echo "Step 4.5: [Layer 3] Verification gate — cross-application states..."
 echo "  These states are syntactically valid RDF (Layer 1 accepted them)."
 echo "  But do they satisfy the ontology's constraints?"
-
-get_token
 
 echo ""
 echo "  --- branch-uv (u then v): ---"

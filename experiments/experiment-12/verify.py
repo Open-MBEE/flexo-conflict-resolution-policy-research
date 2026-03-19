@@ -31,23 +31,10 @@ ONTOLOGY_DIR = SCRIPT_DIR / "ontology"
 ORACLE_DIR = SCRIPT_DIR / "oracle"
 
 # Flexo connection defaults
-DEFAULT_BASE = "http://localhost:8080"
-DEFAULT_AUTH = "http://localhost:8082"
+DEFAULT_BASE = "https://try-layer1.starforge.app"
 DEFAULT_ORG = "research"
 DEFAULT_REPO = "three-layer-demo"
-DEFAULT_USER = "user01"
-DEFAULT_PASS = "password1"
-TIMEOUT = 900
-
-
-def get_token(auth_url, user, password):
-    """Acquire JWT token from Flexo auth service."""
-    import json
-    result = subprocess.run(
-        ["curl", "-s", "-m", "30", "-u", f"{user}:{password}", f"{auth_url}/login"],
-        capture_output=True, text=True,
-    )
-    return json.loads(result.stdout)["token"]
+TIMEOUT = 120
 
 
 def fetch_triples(base_url, token, org, repo, branch):
@@ -124,18 +111,16 @@ def main():
     parser = argparse.ArgumentParser(description="Layer 3 — Verification Service")
     parser.add_argument("branch", help="Flexo branch name to verify")
     parser.add_argument("--base-url", default=os.environ.get("FLEXO_BASE_URL", DEFAULT_BASE))
-    parser.add_argument("--auth-url", default=os.environ.get("FLEXO_AUTH_URL", DEFAULT_AUTH))
     parser.add_argument("--org", default=os.environ.get("FLEXO_ORG", DEFAULT_ORG))
     parser.add_argument("--repo", default=os.environ.get("FLEXO_REPO", DEFAULT_REPO))
-    parser.add_argument("--user", default=os.environ.get("FLEXO_USER", DEFAULT_USER))
-    parser.add_argument("--password", default=os.environ.get("FLEXO_PASS", DEFAULT_PASS))
     parser.add_argument("--token", default=os.environ.get("FLEXO_TOKEN", ""))
     args = parser.parse_args()
 
-    # --- Step 1: Authenticate ---
+    # --- Step 1: Get token ---
     token = args.token
     if not token:
-        token = get_token(args.auth_url, args.user, args.password)
+        print("  [verify.py] ERROR: No token provided (set FLEXO_TOKEN or --token)", file=sys.stderr)
+        sys.exit(2)
 
     # --- Step 2: Fetch triples from Layer 1 ---
     print(f"  [verify.py] Fetching state from Layer 1: {args.branch}")
@@ -188,10 +173,17 @@ def main():
     print("  [verify.py] Running oracle queries (C1-C6)...")
     oracle_results = run_oracle_queries(data_graph)
 
+    # c3, c4, c6 are informational (they return counts, not violations)
+    INFORMATIONAL = {"c3-complex-membership", "c4-edge-count", "c6-shape-targets"}
+
     any_oracle_fail = False
     for name, rows in oracle_results:
         if not rows:
             print(f"  [verify.py]   {name}: PASS (no violations)")
+        elif name in INFORMATIONAL:
+            print(f"  [verify.py]   {name}: INFO ({len(rows)} result(s))")
+            for row in rows[:5]:
+                print(f"  [verify.py]     {row}")
         else:
             any_oracle_fail = True
             print(f"  [verify.py]   {name}: FAIL ({len(rows)} result(s))")

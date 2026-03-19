@@ -74,29 +74,33 @@ Each package is self-contained with its own ontology and shapes. The domain pack
 
 ## Prerequisites
 
-- Running local Flexo MMS instance (see `Local Deployment Setup.md`)
-  - Docker/Colima with 12+ GB RAM
-  - All 6 containers running (layer1-service, auth-service, store-service, quad-server, minio-server, openldap-server)
+- A pre-issued Bearer token for the remote Layer 1 service at `try-layer1.starforge.app`
 - Python 3.8+ with `rdflib` and `pyshacl`:
   ```bash
   pip install -r requirements.txt
   ```
 - `curl` on PATH
 
+The experiment can also run against a local Flexo instance by overriding `FLEXO_BASE_URL`:
+```bash
+export FLEXO_BASE_URL=http://localhost:8080
+```
+Note: local Flexo on Apple Silicon runs under QEMU emulation and is significantly slower (repo creation alone can take 10-15 minutes).
+
 ## Running
 
 ```bash
-# For clean state, restart the Flexo stack first:
-cd ~/Documents/GitHub/flexo-mms-deployment/docker-compose
-docker compose down && docker compose up -d
-# Wait ~60s for Fuseki to initialize
+# Set your Bearer token
+export FLEXO_TOKEN="eyJhbGci..."
 
-# Run the experiment:
+# Run the experiment
 cd experiments/experiment-12
 ./run.sh
 ```
 
-Expected runtime: 3–7 minutes on Apple Silicon (QEMU emulation).
+Each run creates a unique repo name (timestamped) so there's no stale state to worry about.
+
+Expected runtime: ~1-2 minutes against the remote server.
 
 ## Expected Results
 
