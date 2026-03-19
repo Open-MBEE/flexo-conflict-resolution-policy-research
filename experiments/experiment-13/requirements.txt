@@ -1,0 +1,4 @@
+rdflib
+pandas
+# mtg-kc must be installed separately:
+#   pip install -e /path/to/mtg-kc

@@ -1,0 +1,178 @@
+═══════════════════════════════════════════════════════════
+  Experiment 13 — KC Python API as Verification Service
+═══════════════════════════════════════════════════════════
+
+Phase 0: Checking remote Flexo service...
+  Target: https://try-layer1.starforge.app
+  Repo:   kc-api-demo-1773887221 (unique per run)
+  Flexo responding (HTTP 404).
+
+┌─────────────────────────────────────────────────────────┐
+│  STORAGE — Version-controlled RDF persistence            │
+│  Flexo Layer 0 (Quadstore) + Layer 1 (MMS core).        │
+│  Accepts any valid RDF. Indifferent to interpretation.   │
+└─────────────────────────────────────────────────────────┘
+
+Step 1.1: [Storage] Creating org 'research' and repo 'kc-api-demo-1773887221'...
+  org: HTTP 200
+  repo: HTTP 201
+
+Step 1.2: [Storage] Loading instance data onto master...
+  instance data: HTTP 201
+
+┌─────────────────────────────────────────────────────────┐
+│  SCHEMA — Modular ontology packages                      │
+│  Defines vocabulary, types, and well-formedness rules.   │
+│  Composable like package management.                     │
+└─────────────────────────────────────────────────────────┘
+
+Step 2.1: [Schema] Loading ontology package [kc-core] (1 of 2)...
+  Package: Knowledge Complex Core
+  kc-core ontology: HTTP 201
+  kc-core shapes: HTTP 201
+
+Step 2.2: [Schema] Loading ontology package [mtg-domain] (2 of 2)...
+  Package: MTG Color Philosophy Domain Extension
+  Depends on: kc-core
+  mtg-domain ontology: HTTP 201
+  mtg-domain shapes: HTTP 201
+
+Step 2.3: [Schema] Package loading summary
+  2 ontology packages loaded (kc-core + mtg-domain)
+  Note: the verification service gets its schema from build_mtg_schema(),
+  not from these stored triples. The .ttl files are loaded into Flexo for
+  completeness — a production deployment would serve schema from the API.
+
+┌─────────────────────────────────────────────────────────┐
+│  VERIFICATION — KC Python API as constraint service      │
+│  Uses mtg-kc: domain-typed validation + named queries.   │
+│  Proxy for future KerML/SysML v2 verification services.  │
+└─────────────────────────────────────────────────────────┘
+
+Step 3.1: [Verification] Gate check — ancestor state on master...
+  [verify.py] Fetching state from Flexo: master
+  [verify.py] Loaded 772 triples from storage
+  [verify.py] Complex membership: 5 Color, 10 ColorPair, 10 ColorTriple
+  [verify.py] Reconstructing complex via KC Python API...
+  [verify.py]   Schema: build_mtg_schema()
+  [verify.py]   Reconstruction: PASSED — all 25 elements valid
+  [verify.py]   Orphaned data: NONE
+  [verify.py] Running domain queries...
+  [verify.py]   vertices: 5 results
+  [verify.py]   edges_by_disposition: 5 adjacent, 5 opposite
+  [verify.py]   faces_by_edge_pattern: 10 results
+  [verify.py] VERDICT: PASS
+  Verification gate: PASSED
+
+┌─────────────────────────────────────────────────────────┐
+│  CONFLICT SCENARIO                                       │
+│  Two independently valid commits that produce invalid    │
+│  merged states. All three concerns are exercised.        │
+└─────────────────────────────────────────────────────────┘
+
+Step 4.1: [Storage] Creating branch-a and branch-b from master...
+  branch-a: HTTP 201
+  branch-b: HTTP 201
+
+Step 4.2: [Storage] Applying commit u (remove BG) on branch-a...
+  commit u on branch-a: HTTP 201
+
+Step 4.2: [Verification] Gate check — branch-a after commit u...
+  [verify.py] Fetching state from Flexo: branch-a
+  [verify.py] Loaded 709 triples from storage
+  [verify.py] Complex membership: 5 Color, 9 ColorPair, 7 ColorTriple
+  [verify.py] Reconstructing complex via KC Python API...
+  [verify.py]   Schema: build_mtg_schema()
+  [verify.py]   Reconstruction: PASSED — all 21 elements valid
+  [verify.py]   Orphaned data: NONE
+  [verify.py] Running domain queries...
+  [verify.py]   vertices: 5 results
+  [verify.py]   edges_by_disposition: 5 adjacent, 4 opposite
+  [verify.py]   faces_by_edge_pattern: 7 results
+  [verify.py] VERDICT: PASS
+  Verification gate: PASSED — commit u accepted
+
+Step 4.3: [Storage] Applying commit v (enrich BG) on branch-b...
+  commit v on branch-b: HTTP 201
+
+Step 4.3: [Verification] Gate check — branch-b after commit v...
+  [verify.py] Fetching state from Flexo: branch-b
+  [verify.py] Loaded 776 triples from storage
+  [verify.py] Complex membership: 5 Color, 10 ColorPair, 10 ColorTriple
+  [verify.py] Reconstructing complex via KC Python API...
+  [verify.py]   Schema: build_mtg_schema()
+  [verify.py]   Reconstruction: PASSED — all 25 elements valid
+  [verify.py]   Orphaned data: NONE
+  [verify.py] Running domain queries...
+  [verify.py]   vertices: 5 results
+  [verify.py]   edges_by_disposition: 5 adjacent, 5 opposite
+  [verify.py]   faces_by_edge_pattern: 10 results
+  [verify.py] VERDICT: PASS
+  Verification gate: PASSED — commit v accepted
+
+Step 4.4: [Storage] Constructing cross-application states...
+  branch-uv created: HTTP 201
+  apply v to branch-uv: HTTP 201
+  branch-vu created: HTTP 201
+  apply u to branch-vu: HTTP 201
+
+Step 4.5: [Verification] Gate check — cross-application states...
+  Storage accepted both. Does the KC API?
+
+  --- branch-uv (u then v): ---
+  [verify.py] Fetching state from Flexo: branch-uv
+  [verify.py] Loaded 713 triples from storage
+  [verify.py] Complex membership: 5 Color, 9 ColorPair, 7 ColorTriple
+  [verify.py] Reconstructing complex via KC Python API...
+  [verify.py]   Schema: build_mtg_schema()
+  [verify.py]   Reconstruction: PASSED — all 21 elements valid
+  [verify.py]   Orphaned data: FOUND (4 triple(s) outside complex)
+  [verify.py]     BG.playstyle = graveyard-recursion
+  [verify.py]     BG.example_decks = Golgari Midrange
+  [verify.py]     BRG.playstyle = aggressive-midrange
+  [verify.py]     BRG.example_decks = Jund Sacrifice
+  [verify.py] Running domain queries...
+  [verify.py]   vertices: 5 results
+  [verify.py]   edges_by_disposition: 5 adjacent, 4 opposite
+  [verify.py]   faces_by_edge_pattern: 7 results
+  [verify.py] VERDICT: FAIL
+  Verification gate: FAILED
+  -> Storage accepted this state. KC API rejects it.
+
+  --- branch-vu (v then u): ---
+  [verify.py] Fetching state from Flexo: branch-vu
+  [verify.py] Loaded 709 triples from storage
+  [verify.py] Complex membership: 5 Color, 9 ColorPair, 7 ColorTriple
+  [verify.py] Reconstructing complex via KC Python API...
+  [verify.py]   Schema: build_mtg_schema()
+  [verify.py]   Reconstruction: PASSED — all 21 elements valid
+  [verify.py]   Orphaned data: NONE
+  [verify.py] Running domain queries...
+  [verify.py]   vertices: 5 results
+  [verify.py]   edges_by_disposition: 5 adjacent, 4 opposite
+  [verify.py]   faces_by_edge_pattern: 7 results
+  [verify.py] VERDICT: PASS
+  Verification gate: PASSED
+
+═══════════════════════════════════════════════════════════
+  RESULTS — KC Python API as Verification Service
+═══════════════════════════════════════════════════════════
+
+  Storage (Flexo Layer 0 + Layer 1):
+    Accepted ALL operations. Indifferent to semantics.
+
+  Schema (Ontology Packages):
+    kc-core + mtg-domain loaded into Flexo.
+    Verification service gets schema from build_mtg_schema().
+
+  Verification (KC Python API):
+    Reconstructed each branch state via the KC API:
+      add_vertex(), add_edge(), add_face() — domain-typed validation.
+    Orphan detection via reconstruction gap.
+    Named queries for domain analysis.
+
+  This is the pattern a KerML/SysML v2 verification service
+  would follow: domain-typed API, SHACL/SPARQL abstracted away.
+
+  Compare branch-uv vs branch-vu for non-commutativity.
+═══════════════════════════════════════════════════════════
