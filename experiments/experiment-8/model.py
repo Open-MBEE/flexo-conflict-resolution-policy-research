@@ -25,8 +25,11 @@ COMMIT_V_ENRICHMENTS = {
     "mtg:BRG": {"playstyle": "aggressive-midrange", "example_decks": "Jund Sacrifice"},
 }
 
-# Elements to delete via identity-only commit
-COMMIT_U_DELETE_IDS = ["BG", "WBG", "UBG", "BRG"]
+# Elements to delete via identity-only commit.
+# IMPORTANT: must use the ORIGINAL @id with prefix, not the stripped version
+# returned by GET /elements. The API strips "mtg:" on read but matches on
+# the original for deletion. See CHANGELOG below.
+COMMIT_U_DELETE_IDS = ["mtg:BG", "mtg:WBG", "mtg:UBG", "mtg:BRG"]
 
 
 def build_commit_u_membership_update(elements):

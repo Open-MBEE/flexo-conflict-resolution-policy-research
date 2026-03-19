@@ -173,8 +173,9 @@ def main():
     print(f"  Elements before: {sorted(before_ids)}")
 
     print("Step 1.3: Deleting BG via identity-only commit...")
-    # API strips mtg: prefix, so delete "BG" not "mtg:BG"
-    client.delete_elements(pid, bid, ["BG"], "Delete BG")
+    # BUGFIX: must use ORIGINAL @id with prefix ("mtg:BG"), not the stripped
+    # version ("BG") returned by GET /elements. See CHANGELOG in README.
+    client.delete_elements(pid, bid, ["mtg:BG"], "Delete BG")
     head = branch_head(client, pid, bid)
     after = client.get_elements(pid, head)
     after_ids = {e["@id"] for e in after}
