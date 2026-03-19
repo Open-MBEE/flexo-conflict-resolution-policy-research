@@ -1,0 +1,96 @@
+============================================================
+PHASE 1: Validate identity-only deletion (non-SysML types)
+============================================================
+
+Step 1.1: Creating test project...
+Step 1.2: Committing MTG-KC elements (Color, ColorPair types)...
+  Elements before: ['BG', 'Black', 'White', '_complex']
+Step 1.3: Deleting BG via identity-only commit...
+  Elements after:  ['Black', 'White', '_complex']
+
+  ✓ PASS: BG (ColorPair) deleted, others retained
+
+============================================================
+PHASE 2: MTG-KC conflict scenario with identity-only deletion
+============================================================
+
+Step 2.1: Creating project...
+Step 2.2: Loading ancestor model...
+Step 2.3: Verifying ancestor constraints...
+  26 elements loaded.
+
+=== Oracle evaluation: master ===
+--- c1-orphaned-properties ---
+   (no results — constraint satisfied)
+--- c2-boundary-closure ---
+   (no results — constraint satisfied)
+--- c3-complex-membership ---
+   {'ColorPair': 10, 'ColorTriple': 10, 'Color': 5}
+--- c4-edge-count ---
+   {'edgeCount': 10}
+
+Step 2.4: Creating branches...
+
+Step 2.5: Applying commits...
+  commit u on branch-a: deleted ['mtg:BG', 'mtg:WBG', 'mtg:UBG', 'mtg:BRG']
+  commit v on branch-b: enriched BG + BRG
+
+Step 2.6: Verifying individual validity...
+
+=== Oracle evaluation: branch-a ===
+--- c1-orphaned-properties ---
+   (no results — constraint satisfied)
+--- c2-boundary-closure ---
+   (no results — constraint satisfied)
+--- c3-complex-membership ---
+   {'ColorPair': 9, 'Color': 5, 'ColorTriple': 7}
+--- c4-edge-count ---
+   {'edgeCount': 9}
+
+=== Oracle evaluation: branch-b ===
+--- c1-orphaned-properties ---
+   (no results — constraint satisfied)
+--- c2-boundary-closure ---
+   (no results — constraint satisfied)
+--- c3-complex-membership ---
+   {'ColorPair': 10, 'ColorTriple': 10, 'Color': 5}
+--- c4-edge-count ---
+   {'edgeCount': 10}
+
+Step 2.7: Constructing cross-application states...
+  branch-uv created
+  branch-vu created
+
+Step 2.8: Evaluating oracle on cross-application states...
+
+=== Oracle evaluation: branch-uv ===
+--- c1-orphaned-properties ---
+   {'element': 'BG', 'properties': {'guild': 'golgari', 'example_decks': 'Golgari Midrange', 'theme': 'profanity', 'name': 'Golgari', 'disposition': 'opposite', 'playstyle': 'graveyard-recursion', 'boundedBy': ['mtg:Black', 'mtg:Green']}}
+   {'element': 'BRG', 'properties': {'example_decks': 'Jund Sacrifice', 'clan': 'jund', 'name': 'Jund', 'playstyle': 'aggressive-midrange', 'thematic_triad': ['independence', 'authenticity', 'profanity'], 'boundedBy': ['mtg:BR', 'mtg:RG', 'mtg:BG']}}
+--- c2-boundary-closure ---
+   (no results — constraint satisfied)
+--- c3-complex-membership ---
+   {'ColorPair': 9, 'Color': 5, 'ColorTriple': 7}
+--- c4-edge-count ---
+   {'edgeCount': 9}
+
+=== Oracle evaluation: branch-vu ===
+--- c1-orphaned-properties ---
+   (no results — constraint satisfied)
+--- c2-boundary-closure ---
+   (no results — constraint satisfied)
+--- c3-complex-membership ---
+   {'ColorPair': 9, 'Color': 5, 'ColorTriple': 7}
+--- c4-edge-count ---
+   {'edgeCount': 9}
+
+============================================
+  Experiment 8 complete.
+  Phase 1: Non-SysML deletion validation
+  Phase 2: MTG-KC conflict with real deletion
+  Compare with Exp 5 (no deletion) and
+  Exp 3 (SPARQL deletion).
+============================================
+
+Cleaning up...
+  Deleted.
