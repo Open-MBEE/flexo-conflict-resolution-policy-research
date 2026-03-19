@@ -34,3 +34,7 @@ export FLEXO_TOKEN="eyJhbGci..."
 ## Expected Results
 
 Identical to Experiment 4. See [Experiment 4 README](../experiment-4/README.md) for the full results including SHACL shape target coverage.
+
+## Run Status
+
+**2026-03-18:** Initial run succeeded during interactive session (results matched Experiment 4 exactly — same C5/C6 schema-aware results, same shape target counts), but output was not captured to a log file at that time. Subsequent re-runs to capture logs failed — `try-layer1.starforge.app` became unresponsive (HTTP 504 on write operations, full timeout on reads). The service needs to be restarted or investigated before logs can be captured. See `run-output-20260318.log` for the failure trace.

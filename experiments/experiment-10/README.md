@@ -32,3 +32,7 @@ export FLEXO_TOKEN="eyJhbGci..."
 ## Expected Results
 
 Identical to Experiment 3. See [Experiment 3 README](../experiment-3/README.md) for the full results including the non-commutativity finding.
+
+## Run Status
+
+**2026-03-18:** Initial run succeeded during interactive session (results matched Experiment 3 exactly — same non-commutativity, same orphaned properties on branch-uv), but output was not captured to a log file at that time. Subsequent re-runs to capture logs failed — `try-layer1.starforge.app` became unresponsive (HTTP 504 on write operations, full timeout on reads). The service needs to be restarted or investigated before logs can be captured. See `run-output-20260318.log` for the failure trace.
