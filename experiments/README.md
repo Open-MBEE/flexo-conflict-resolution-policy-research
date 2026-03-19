@@ -6,19 +6,19 @@ This directory contains 13 experiments that progressively investigate how Flexo 
 
 | # | Name | API | Model | Key Question | Log |
 | --- | --- | --- | --- | --- | --- |
-| 1 | [Satellite (local SPARQL)](experiment-1/) | Local Layer 1 | Satellite (SysML) | Baseline: can Flexo detect merge conflicts? | Yes |
-| 2 | [Satellite (remote REST)](experiment-2/) | Remote SysML v2 REST | Satellite (SysML) | Same conflicts via REST API? | Yes |
-| 3 | [MTG-KC instance (local SPARQL)](experiment-3/) | Local Layer 1 | MTG-KC (OWL) | Can Flexo handle non-SysML RDF? | Yes |
-| 4 | [MTG-KC + schema (local SPARQL)](experiment-4/) | Local Layer 1 | MTG-KC + OWL/SHACL | Does Flexo preserve schema triples? | Yes |
-| 5 | [MTG-KC (remote REST)](experiment-5/) | Remote SysML v2 REST | MTG-KC (JSON) | REST API with non-SysML types? | Yes |
-| 6 | [MTG-KC (REST + RDF bridge)](experiment-6/) | Remote REST + pyshacl | MTG-KC (JSON↔RDF) | Can we bridge RDF validation onto REST? | Yes |
-| 7 | [Deletion validation (SysML)](experiment-7/) | Remote SysML v2 REST | Satellite (SysML) | Does identity-only deletion work? | Yes |
-| 8 | [Deletion validation (non-SysML)](experiment-8/) | Remote SysML v2 REST | MTG-KC (non-SysML) | Is deletion type-dependent? | Yes |
-| 9 | [Satellite (remote SPARQL)](experiment-9/) | Remote Layer 1 | Satellite (SysML) | Remote SPARQL matches local? | Yes |
-| 10 | [MTG-KC instance (remote SPARQL)](experiment-10/) | Remote Layer 1 | MTG-KC (OWL) | Remote SPARQL matches local for non-SysML? | Yes |
-| 11 | [MTG-KC + schema (remote SPARQL)](experiment-11/) | Remote Layer 1 | MTG-KC + OWL/SHACL | Remote SPARQL preserves schema? | Yes |
-| 12 | [Three-layer architecture](experiment-12/) | Local Layer 1 | MTG-KC | Where does each concern live? | Yes |
-| 13 | [KC Python API verification](experiment-13/) | Remote Layer 1 | MTG-KC via KC API | Can domain APIs abstract verification? | Yes |
+| 1 | [Satellite (local SPARQL)](experiment-1/) | Local Layer 1 | Satellite (SysML) | Baseline: can Flexo detect merge conflicts? | [log](experiment-1/run-output-20260303.log) |
+| 2 | [Satellite (remote REST)](experiment-2/) | Remote SysML v2 REST | Satellite (SysML) | Same conflicts via REST API? | [log](experiment-2/run-output-20260318.log) |
+| 3 | [MTG-KC instance (local SPARQL)](experiment-3/) | Local Layer 1 | MTG-KC (OWL) | Can Flexo handle non-SysML RDF? | [log](experiment-3/run-output-20260318.log) |
+| 4 | [MTG-KC + schema (local SPARQL)](experiment-4/) | Local Layer 1 | MTG-KC + OWL/SHACL | Does Flexo preserve schema triples? | [log](experiment-4/run-output-20260318.log) |
+| 5 | [MTG-KC (remote REST)](experiment-5/) | Remote SysML v2 REST | MTG-KC (JSON) | REST API with non-SysML types? | [log](experiment-5/run-output-20260318.log) |
+| 6 | [MTG-KC (REST + RDF bridge)](experiment-6/) | Remote REST + pyshacl | MTG-KC (JSON↔RDF) | Can we bridge RDF validation onto REST? | [log](experiment-6/run-output-20260318.log) |
+| 7 | [Deletion validation (SysML)](experiment-7/) | Remote SysML v2 REST | Satellite (SysML) | Does identity-only deletion work? | [log](experiment-7/run-output-20260318.log) |
+| 8 | [Deletion validation (non-SysML)](experiment-8/) | Remote SysML v2 REST | MTG-KC (non-SysML) | Is deletion type-dependent? | [log](experiment-8/run-output-20260318.log) |
+| 9 | [Satellite (remote SPARQL)](experiment-9/) | Remote Layer 1 | Satellite (SysML) | Remote SPARQL matches local? | [log](experiment-9/run-output-20260318.log) |
+| 10 | [MTG-KC instance (remote SPARQL)](experiment-10/) | Remote Layer 1 | MTG-KC (OWL) | Remote SPARQL matches local for non-SysML? | [log](experiment-10/run-output-20260318.log) |
+| 11 | [MTG-KC + schema (remote SPARQL)](experiment-11/) | Remote Layer 1 | MTG-KC + OWL/SHACL | Remote SPARQL preserves schema? | [log](experiment-11/run-output-20260318.log) |
+| 12 | [Three-layer architecture](experiment-12/) | Local Layer 1 | MTG-KC | Where does each concern live? | [log](experiment-12/run-output-20260318.log) |
+| 13 | [KC Python API verification](experiment-13/) | Remote Layer 1 | MTG-KC via KC API | Can domain APIs abstract verification? | [log](experiment-13/run-output-20260318.log) |
 
 ## Narrative Arc
 
