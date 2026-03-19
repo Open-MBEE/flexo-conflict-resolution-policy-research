@@ -1,0 +1,155 @@
+@prefix kc: <https://example.org/kc#> .
+@prefix mtg: <https://example.org/mtg#> .
+@prefix mtgs: <https://example.org/mtg/shape#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+mtgs:ColorShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:in ( "peace" "perfection" "satisfaction" "freedom" "harmony" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:goal ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "order" "knowledge" "ruthlessness" "action" "acceptance" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:method ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:persona ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:at_best ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:at_worst ],
+        [ sh:datatype xsd:string ;
+            sh:minCount 1 ;
+            sh:path mtg:example_behaviors ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path mtg:playstyle ],
+        [ sh:datatype xsd:string ;
+            sh:minCount 0 ;
+            sh:path mtg:example_decks ] ;
+    sh:targetClass mtg:Color .
+
+mtgs:ColorPairShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:in ( "azorius" "dimir" "rakdos" "gruul" "selesnya" "orzhov" "boros" "simic" "izzet" "golgari" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:guild ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "design" "growth_mindset" "independence" "authenticity" "community" "tribalism" "heroism" "truth_seeking" "creativity" "profanity" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:theme ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "adjacent" "opposite" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:disposition ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:synergies ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:tensions ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:persona ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:at_best ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:at_worst ],
+        [ sh:datatype xsd:string ;
+            sh:minCount 1 ;
+            sh:path mtg:example_behaviors ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path mtg:playstyle ],
+        [ sh:datatype xsd:string ;
+            sh:minCount 0 ;
+            sh:path mtg:example_decks ] ;
+    sh:targetClass mtg:ColorPair .
+
+mtgs:ColorTripleShape a sh:NodeShape ;
+    sh:property [ sh:datatype xsd:string ;
+            sh:in ( "esper" "grixis" "jund" "naya" "bant" "mardu" "temur" "abzan" "jeskai" "sultai" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:clan ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "shard" "wedge" ) ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path mtg:structure ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:closure ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:persona ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:at_best ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 1 ;
+            sh:path mtg:at_worst ],
+        [ sh:datatype xsd:string ;
+            sh:minCount 1 ;
+            sh:path mtg:example_behaviors ],
+        [ sh:datatype xsd:string ;
+            sh:minCount 0 ;
+            sh:path mtg:example_decks ],
+        [ sh:datatype xsd:string ;
+            sh:maxCount 1 ;
+            sh:minCount 0 ;
+            sh:path mtg:playstyle ],
+        [ sh:datatype xsd:string ;
+            sh:in ( "design" "growth_mindset" "independence" "authenticity" "community" "tribalism" "heroism" "truth_seeking" "creativity" "profanity" ) ;
+            sh:minCount 1 ;
+            sh:path mtg:thematic_triad ] ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            sh:message "thematic_triad is missing at least one theme from a bounding edge." ;
+            sh:select """    PREFIX kc: <https://example.org/kc#>
+    PREFIX mtg: <https://example.org/mtg#>
+    SELECT $this WHERE {
+        $this kc:boundedBy ?edge .
+        ?edge mtg:theme ?edgeTheme .
+        FILTER NOT EXISTS {
+            $this mtg:thematic_triad ?edgeTheme .
+        }
+    }
+""" ],
+        [ a sh:SPARQLConstraint ;
+            sh:message "thematic_triad contains a value that is not a theme of any bounding edge." ;
+            sh:select """    PREFIX kc: <https://example.org/kc#>
+    PREFIX mtg: <https://example.org/mtg#>
+    SELECT $this WHERE {
+        $this mtg:thematic_triad ?triadTheme .
+        FILTER NOT EXISTS {
+            $this kc:boundedBy ?edge .
+            ?edge mtg:theme ?triadTheme .
+        }
+    }
+""" ] ;
+    sh:targetClass mtg:ColorTriple .
