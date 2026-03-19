@@ -37,4 +37,8 @@ Identical to Experiment 4. See [Experiment 4 README](../experiment-4/README.md) 
 
 ## Run Status
 
-**2026-03-18:** Initial run succeeded during interactive session (results matched Experiment 4 exactly — same C5/C6 schema-aware results, same shape target counts), but output was not captured to a log file at that time. Subsequent re-runs to capture logs failed — `try-layer1.starforge.app` became unresponsive (HTTP 504 on write operations, full timeout on reads). The service needs to be restarted or investigated before logs can be captured. See `run-output-20260318.log` for the failure trace.
+**2026-03-18 (run 1):** Succeeded during interactive session, results matched Experiment 4 exactly. Output not captured to log.
+
+**2026-03-18 (run 2):** Re-run to capture logs failed — `try-layer1.starforge.app` became unresponsive (HTTP 504).
+
+**2026-03-18 (run 3):** Service recovered. Full successful run captured in `run-output-20260318.log`. Results identical to Experiment 4 (same C5/C6 schema-aware results, same shape target counts).
