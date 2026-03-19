@@ -1,0 +1,251 @@
+═══════════════════════════════════════════════════════════
+  Experiment 12 — Three Service Concerns for Flexo
+═══════════════════════════════════════════════════════════
+
+Phase 0: Checking remote Flexo service...
+  Target: https://try-layer1.starforge.app
+  Repo:   three-concerns-demo-1773887810 (unique per run)
+  Flexo responding (HTTP 404).
+
+┌─────────────────────────────────────────────────────────┐
+│  STORAGE — Version-controlled RDF persistence            │
+│  Flexo Layer 0 (Quadstore) + Layer 1 (MMS core).        │
+│  Accepts any valid RDF. Indifferent to interpretation.   │
+└─────────────────────────────────────────────────────────┘
+
+Step 1.1: [Storage] Creating org 'research' and repo 'three-concerns-demo-1773887810'...
+  org: HTTP 200
+  repo: HTTP 201
+
+Step 1.2: [Storage] Loading instance data onto master...
+  (No ontology, no shapes — storage accepts raw triples without interpretation)
+  instance data: HTTP 201
+
+┌─────────────────────────────────────────────────────────┐
+│  SCHEMA — Modular ontology packages                      │
+│  Defines vocabulary, types, and well-formedness rules.   │
+│  Composable like package management.                     │
+└─────────────────────────────────────────────────────────┘
+
+Step 2.1: [Schema] Loading ontology package [kc-core] (1 of 2)...
+  Package: Knowledge Complex Core
+  Classes: Element, Vertex, Edge, Face, Complex
+  Properties: boundedBy, hasElement
+  Shapes: ComplexShape, EdgeShape, FaceShape
+  kc-core ontology: HTTP 201
+  kc-core shapes: HTTP 201
+
+Step 2.2: [Schema] Loading ontology package [mtg-domain] (2 of 2)...
+  Package: MTG Color Philosophy Domain Extension
+  Depends on: kc-core
+  Classes: Color (-> Vertex), ColorPair (-> Edge), ColorTriple (-> Face)
+  Properties: guild, theme, persona, goal, method, ... (14 domain properties)
+  Shapes: ColorShape, ColorPairShape, ColorTripleShape
+  mtg-domain ontology: HTTP 201
+  mtg-domain shapes: HTTP 201
+
+Step 2.3: [Schema] Package loading summary
+  2 ontology packages loaded (kc-core + mtg-domain)
+  6 SHACL shapes active (3 core + 3 domain)
+  Note: storage treats ontology triples identically to data triples.
+  Schema interpretation is an external concern — the quadstore is indifferent.
+
+┌─────────────────────────────────────────────────────────┐
+│  VERIFICATION — Constraint compliance as a service       │
+│  Checks model state against schema-declared rules.       │
+│  Currently client-side (pyshacl + SPARQL via rdflib).    │
+└─────────────────────────────────────────────────────────┘
+
+Step 3.1: [Verification] Gate check — ancestor state on master...
+  [verify.py] Fetching state from Layer 1: master
+  [verify.py] Loaded 772 triples from Layer 1
+  [verify.py] Loaded ontology packages: kc-core, mtg-domain
+  [verify.py] Loaded 307 shape triples
+  [verify.py] Running SHACL validation...
+  [verify.py]   SHACL: PASSED (0 violations)
+  [verify.py] Running oracle queries (C1-C6)...
+  [verify.py]   c1-orphaned-properties: PASS (no violations)
+  [verify.py]   c2-boundary-closure: PASS (no violations)
+  [verify.py]   c3-complex-membership: INFO (3 result(s))
+  [verify.py]     {'type': 'https://example.org/mtg#Color', 'count': '5'}
+  [verify.py]     {'type': 'https://example.org/mtg#ColorPair', 'count': '10'}
+  [verify.py]     {'type': 'https://example.org/mtg#ColorTriple', 'count': '10'}
+  [verify.py]   c4-edge-count: INFO (1 result(s))
+  [verify.py]     {'edgeCount': '10'}
+  [verify.py]   c5-type-consistency: PASS (no violations)
+  [verify.py]   c6-shape-targets: INFO (6 result(s))
+  [verify.py]     {'shape': 'https://example.org/kc/shape#ComplexShape', 'targetClass': 'https://example.org/kc#Complex', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/kc/shape#EdgeShape', 'targetClass': 'https://example.org/kc#Edge', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/kc/shape#FaceShape', 'targetClass': 'https://example.org/kc#Face', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/mtg/shape#ColorPairShape', 'targetClass': 'https://example.org/mtg#ColorPair', 'instanceCount': '10'}
+  [verify.py]     {'shape': 'https://example.org/mtg/shape#ColorShape', 'targetClass': 'https://example.org/mtg#Color', 'instanceCount': '5'}
+  [verify.py] VERDICT: PASS
+  Verification gate: PASSED
+
+┌─────────────────────────────────────────────────────────┐
+│  CONFLICT SCENARIO                                       │
+│  Two independently valid commits that produce invalid    │
+│  merged states. All three concerns are exercised.        │
+└─────────────────────────────────────────────────────────┘
+
+Step 4.1: [Storage] Creating branch-a and branch-b from master...
+  branch-a: HTTP 201
+  branch-b: HTTP 201
+
+Step 4.2: [Storage] Applying commit u (remove BG) on branch-a...
+  commit u on branch-a: HTTP 201
+
+Step 4.2: [Verification] Gate check — branch-a after commit u...
+  [verify.py] Fetching state from Layer 1: branch-a
+  [verify.py] Loaded 709 triples from Layer 1
+  [verify.py] Loaded ontology packages: kc-core, mtg-domain
+  [verify.py] Loaded 307 shape triples
+  [verify.py] Running SHACL validation...
+  [verify.py]   SHACL: PASSED (0 violations)
+  [verify.py] Running oracle queries (C1-C6)...
+  [verify.py]   c1-orphaned-properties: PASS (no violations)
+  [verify.py]   c2-boundary-closure: PASS (no violations)
+  [verify.py]   c3-complex-membership: INFO (3 result(s))
+  [verify.py]     {'type': 'https://example.org/mtg#Color', 'count': '5'}
+  [verify.py]     {'type': 'https://example.org/mtg#ColorPair', 'count': '9'}
+  [verify.py]     {'type': 'https://example.org/mtg#ColorTriple', 'count': '7'}
+  [verify.py]   c4-edge-count: INFO (1 result(s))
+  [verify.py]     {'edgeCount': '9'}
+  [verify.py]   c5-type-consistency: PASS (no violations)
+  [verify.py]   c6-shape-targets: INFO (6 result(s))
+  [verify.py]     {'shape': 'https://example.org/kc/shape#ComplexShape', 'targetClass': 'https://example.org/kc#Complex', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/kc/shape#EdgeShape', 'targetClass': 'https://example.org/kc#Edge', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/kc/shape#FaceShape', 'targetClass': 'https://example.org/kc#Face', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/mtg/shape#ColorPairShape', 'targetClass': 'https://example.org/mtg#ColorPair', 'instanceCount': '9'}
+  [verify.py]     {'shape': 'https://example.org/mtg/shape#ColorShape', 'targetClass': 'https://example.org/mtg#Color', 'instanceCount': '5'}
+  [verify.py] VERDICT: PASS
+  Verification gate: PASSED — commit u accepted
+
+Step 4.3: [Storage] Applying commit v (enrich BG) on branch-b...
+  commit v on branch-b: HTTP 201
+
+Step 4.3: [Verification] Gate check — branch-b after commit v...
+  [verify.py] Fetching state from Layer 1: branch-b
+  [verify.py] Loaded 776 triples from Layer 1
+  [verify.py] Loaded ontology packages: kc-core, mtg-domain
+  [verify.py] Loaded 307 shape triples
+  [verify.py] Running SHACL validation...
+  [verify.py]   SHACL: PASSED (0 violations)
+  [verify.py] Running oracle queries (C1-C6)...
+  [verify.py]   c1-orphaned-properties: PASS (no violations)
+  [verify.py]   c2-boundary-closure: PASS (no violations)
+  [verify.py]   c3-complex-membership: INFO (3 result(s))
+  [verify.py]     {'type': 'https://example.org/mtg#Color', 'count': '5'}
+  [verify.py]     {'type': 'https://example.org/mtg#ColorPair', 'count': '10'}
+  [verify.py]     {'type': 'https://example.org/mtg#ColorTriple', 'count': '10'}
+  [verify.py]   c4-edge-count: INFO (1 result(s))
+  [verify.py]     {'edgeCount': '10'}
+  [verify.py]   c5-type-consistency: PASS (no violations)
+  [verify.py]   c6-shape-targets: INFO (6 result(s))
+  [verify.py]     {'shape': 'https://example.org/kc/shape#ComplexShape', 'targetClass': 'https://example.org/kc#Complex', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/kc/shape#EdgeShape', 'targetClass': 'https://example.org/kc#Edge', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/kc/shape#FaceShape', 'targetClass': 'https://example.org/kc#Face', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/mtg/shape#ColorPairShape', 'targetClass': 'https://example.org/mtg#ColorPair', 'instanceCount': '10'}
+  [verify.py]     {'shape': 'https://example.org/mtg/shape#ColorShape', 'targetClass': 'https://example.org/mtg#Color', 'instanceCount': '5'}
+  [verify.py] VERDICT: PASS
+  Verification gate: PASSED — commit v accepted
+
+Step 4.4: [Storage] Constructing cross-application states...
+  branch-uv created: HTTP 201
+  apply v to branch-uv: HTTP 201
+  branch-vu created: HTTP 201
+  apply u to branch-vu: HTTP 201
+
+Step 4.5: [Verification] Gate check — cross-application states...
+  These states are syntactically valid RDF (storage accepted them).
+  But do they satisfy the schema's constraints?
+
+  --- branch-uv (u then v): ---
+  [verify.py] Fetching state from Layer 1: branch-uv
+  [verify.py] Loaded 713 triples from Layer 1
+  [verify.py] Loaded ontology packages: kc-core, mtg-domain
+  [verify.py] Loaded 307 shape triples
+  [verify.py] Running SHACL validation...
+  [verify.py]   SHACL: PASSED (0 violations)
+  [verify.py] Running oracle queries (C1-C6)...
+  [verify.py]   c1-orphaned-properties: FAIL (4 result(s))
+  [verify.py]     {'element': 'https://example.org/mtg#BG', 'property': 'https://example.org/mtg#example_decks', 'value': 'Golgari Midrange'}
+  [verify.py]     {'element': 'https://example.org/mtg#BG', 'property': 'https://example.org/mtg#playstyle', 'value': 'graveyard-recursion'}
+  [verify.py]     {'element': 'https://example.org/mtg#BRG', 'property': 'https://example.org/mtg#example_decks', 'value': 'Jund Sacrifice'}
+  [verify.py]     {'element': 'https://example.org/mtg#BRG', 'property': 'https://example.org/mtg#playstyle', 'value': 'aggressive-midrange'}
+  [verify.py]   c2-boundary-closure: PASS (no violations)
+  [verify.py]   c3-complex-membership: INFO (3 result(s))
+  [verify.py]     {'type': 'https://example.org/mtg#Color', 'count': '5'}
+  [verify.py]     {'type': 'https://example.org/mtg#ColorPair', 'count': '9'}
+  [verify.py]     {'type': 'https://example.org/mtg#ColorTriple', 'count': '7'}
+  [verify.py]   c4-edge-count: INFO (1 result(s))
+  [verify.py]     {'edgeCount': '9'}
+  [verify.py]   c5-type-consistency: PASS (no violations)
+  [verify.py]   c6-shape-targets: INFO (6 result(s))
+  [verify.py]     {'shape': 'https://example.org/kc/shape#ComplexShape', 'targetClass': 'https://example.org/kc#Complex', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/kc/shape#EdgeShape', 'targetClass': 'https://example.org/kc#Edge', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/kc/shape#FaceShape', 'targetClass': 'https://example.org/kc#Face', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/mtg/shape#ColorPairShape', 'targetClass': 'https://example.org/mtg#ColorPair', 'instanceCount': '9'}
+  [verify.py]     {'shape': 'https://example.org/mtg/shape#ColorShape', 'targetClass': 'https://example.org/mtg#Color', 'instanceCount': '5'}
+  [verify.py] VERDICT: FAIL
+  Verification gate: FAILED
+  -> Storage accepted this state. Verification rejects it.
+
+  --- branch-vu (v then u): ---
+  [verify.py] Fetching state from Layer 1: branch-vu
+  [verify.py] Loaded 709 triples from Layer 1
+  [verify.py] Loaded ontology packages: kc-core, mtg-domain
+  [verify.py] Loaded 307 shape triples
+  [verify.py] Running SHACL validation...
+  [verify.py]   SHACL: PASSED (0 violations)
+  [verify.py] Running oracle queries (C1-C6)...
+  [verify.py]   c1-orphaned-properties: PASS (no violations)
+  [verify.py]   c2-boundary-closure: PASS (no violations)
+  [verify.py]   c3-complex-membership: INFO (3 result(s))
+  [verify.py]     {'type': 'https://example.org/mtg#Color', 'count': '5'}
+  [verify.py]     {'type': 'https://example.org/mtg#ColorPair', 'count': '9'}
+  [verify.py]     {'type': 'https://example.org/mtg#ColorTriple', 'count': '7'}
+  [verify.py]   c4-edge-count: INFO (1 result(s))
+  [verify.py]     {'edgeCount': '9'}
+  [verify.py]   c5-type-consistency: PASS (no violations)
+  [verify.py]   c6-shape-targets: INFO (6 result(s))
+  [verify.py]     {'shape': 'https://example.org/kc/shape#ComplexShape', 'targetClass': 'https://example.org/kc#Complex', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/kc/shape#EdgeShape', 'targetClass': 'https://example.org/kc#Edge', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/kc/shape#FaceShape', 'targetClass': 'https://example.org/kc#Face', 'instanceCount': '0'}
+  [verify.py]     {'shape': 'https://example.org/mtg/shape#ColorPairShape', 'targetClass': 'https://example.org/mtg#ColorPair', 'instanceCount': '9'}
+  [verify.py]     {'shape': 'https://example.org/mtg/shape#ColorShape', 'targetClass': 'https://example.org/mtg#Color', 'instanceCount': '5'}
+  [verify.py] VERDICT: PASS
+  Verification gate: PASSED
+
+═══════════════════════════════════════════════════════════
+  RESULTS — Three Service Concerns Demonstration
+═══════════════════════════════════════════════════════════
+
+  Storage (Flexo Layer 0 + Layer 1):
+    Accepted ALL operations without complaint.
+    Every SPARQL INSERT/DELETE was valid RDF.
+    Storage is indifferent to semantic meaning.
+
+  Schema (Ontology Packages):
+    Two packages loaded as composable modules:
+      kc-core:    abstract topological backbone
+      mtg-domain: domain-specific extension (depends on kc-core)
+    The same pattern applies to SysML v2:
+      KerML:      core modeling abstractions
+      SysML ext:  discipline-specific extensions
+
+  Verification (Constraint Service):
+    Client-side verification successfully:
+      - Validated ancestor state (PASS)
+      - Validated individual commits (both PASS)
+      - Detected invalid merged state (FAIL on branch-uv)
+    The verification gate pattern shows where enforcement belongs.
+
+  Key finding:
+    Independently valid commits can produce invalid merged states.
+    Storage cannot detect this — it accepts any valid RDF.
+    Schema defines what 'valid' means (ontology + shapes).
+    Verification checks it. All three concerns are necessary.
+
+  Compare branch-uv vs branch-vu for non-commutativity.
+═══════════════════════════════════════════════════════════
