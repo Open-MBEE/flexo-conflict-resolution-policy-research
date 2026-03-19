@@ -1,52 +1,62 @@
-# Experiment 12 — Three-Layer Flexo Service Architecture
+# Experiment 12 — Three Service Concerns for Flexo
 
 ## Motivation
 
-Experiments 1–11 demonstrated that Flexo can detect merge conflicts across API layers and ontology families. A recurring implicit pattern emerged: the quadstore, the ontology, and the constraint-checking logic each play distinct architectural roles. This experiment makes the pattern **explicit**.
+Experiments 1–11 demonstrated that Flexo can detect merge conflicts across API layers and ontology families. A recurring implicit pattern emerged: storage, interpretation, and constraint-checking each play distinct roles that should be understood as separate service concerns. This experiment makes that separation **explicit**.
 
-The goal is **architectural clarity** — not solving conflicts. We've already shown that independently valid commits can produce invalid merged states (Experiments 3–4). What this experiment adds is a clear demonstration of *where each concern lives* and how they compose.
+The goal is **architectural clarity** — not solving conflicts. We've already shown that independently valid commits can produce invalid merged states (Experiments 3–4). What this experiment adds is a clear demonstration of *where each concern lives*, what function each serves, and how they compose.
 
-## The Three-Layer Pattern
+## Three Service Concerns
+
+Flexo MMS defines four architectural layers (Layer 0–3: Quadstore, Layer 1 service, SysML v2 API, Client) that describe how data flows through the system. Orthogonal to those layers, we identify three **service concerns** — distinct functions that a complete model management platform must provide. Each concern may span one or more architectural layers:
 
 ```
-┌─────────────────────────────────────────────┐
-│  Layer 3 — VERIFICATION                     │
-│  Constraint checking as a service.           │
-│  SHACL validation + SPARQL oracle.           │
-│  Can optionally gate commits.                │
-├─────────────────────────────────────────────┤
-│  Layer 2 — SEMANTIC (Ontology Packages)      │
-│  Modular, composable interpretation layer.   │
-│  Core ontology + domain extensions.          │
-│  Like package management — import what       │
-│  you need, compose without conflict.         │
-├─────────────────────────────────────────────┤
-│  Layer 1 — SYNTACTIC (Quadstore)             │
-│  Accepts any valid RDF.                      │
-│  Indifferent to interpretation.              │
-│  Flexo Layer 1 + Apache Jena Fuseki.         │
-└─────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────┐
+│  VERIFICATION                                     │
+│  Constraint compliance as a service.              │
+│  Checks model state against declared rules.       │
+│  Can optionally gate commits.                     │
+├──────────────────────────────────────────────────┤
+│  SCHEMA                                           │
+│  Ontology packages — modular, composable.         │
+│  Core ontology + domain extensions.               │
+│  Defines what the data means and what             │
+│  well-formedness requires.                        │
+├──────────────────────────────────────────────────┤
+│  STORAGE                                          │
+│  Version-controlled RDF persistence.              │
+│  Accepts any valid RDF. Indifferent to            │
+│  interpretation. Branching, committing, diffing.  │
+└──────────────────────────────────────────────────┘
 ```
 
-**Layer 1** stores triples. It doesn't know what a `Complex` or `Edge` means — it just ensures valid RDF. Flexo's branching, committing, and diffing all operate here.
+**Storage** spans Flexo's Layer 0 (Quadstore) and Layer 1 (version-controlled graph management). It stores triples — it doesn't know what a `Complex` or `Edge` means. Flexo's branching, committing, and diffing all operate here.
 
-**Layer 2** provides the vocabulary and structure for interpreting the data. Ontology packages are modular: a core package defines abstract types, and domain packages extend them. This is analogous to package management — you import what you need, and packages compose without conflict as long as their namespaces don't collide.
+**Schema** is not a separate architectural layer in Flexo — ontology triples live in the same quadstore as instance data. But it is a distinct service concern: the vocabulary and structure that give data its meaning. Ontology packages are modular — a core package defines abstract types, domain packages extend them. This is analogous to package management: import what you need, compose without conflict as long as namespaces don't collide.
 
-**Layer 3** checks whether the data satisfies the constraints declared by the ontology packages. This is where SHACL shape validation and SPARQL constraint queries execute. In a production architecture, this service could **gate commits** — rejecting changes that would put a branch into a non-compliant state. Currently implemented client-side (pyshacl + rdflib); a hosted verification service would live here.
+**Verification** checks whether a model state satisfies the constraints declared by the schema packages. This is where SHACL shape validation and SPARQL constraint queries execute. In a production architecture, this service could **gate commits** — rejecting changes that would put a branch into a non-compliant state. Currently implemented client-side (pyshacl + rdflib); a hosted verification service is the natural next step.
+
+### How These Concerns Map to Flexo's Architectural Layers
+
+| Concern | Flexo Layer(s) | Current implementation | Future |
+| --- | --- | --- | --- |
+| Storage | Layer 0 (Quadstore) + Layer 1 (MMS core) | Flexo as-is | Flexo as-is |
+| Schema | Stored in Layer 0, interpreted by clients (Layer 3) | Ontology files loaded as RDF; no server-side reasoning | Server-side ontology registry / package manager |
+| Verification | Currently Layer 3 (client-side) | pyshacl + rdflib in verify.py | Hosted service between Layer 1 and Layer 2 |
 
 ## KC ↔ SysML v2 Correspondence
 
-The Knowledge Complex stack used in this experiment mirrors the SysML v2 layering at smaller scale. This makes the architectural pattern legible in a single experiment run:
+The Knowledge Complex stack used in this experiment mirrors the SysML v2 concern structure at smaller scale, making the pattern legible in a single experiment run:
 
 | KC Stack (this experiment) | SysML v2 Stack (future experiment) |
 | --- | --- |
-| Quadstore (Fuseki) — valid RDF | Quadstore (Fuseki) — valid RDF |
+| Flexo Layer 0+1 — version-controlled RDF | Flexo Layer 0+1 — version-controlled RDF |
 | KC Core ontology (Element, Vertex, Edge, Face, Complex, boundedBy) | KerML (core modeling abstractions: features, types, relationships) |
 | MTG Domain ontology (Color, ColorPair, ColorTriple, guild, theme...) | SysML v2 domain/discipline extensions (mechanical, electrical, thermal...) |
 | SHACL shapes (boundary-closure, cardinality, triangle) | KerML/SysML v2 compiler checks + constraint verification services |
 | Client-side pyshacl + SPARQL oracle | Hosted verification service (when available) |
 
-The KC stack comprises 6 classes, 2 object properties, ~15 datatype properties, and 6 SHACL shapes. When KerML and SysML v2 compiler/verification services become available, a parallel experiment should demonstrate the same three-layer pattern at full SysML scale.
+The KC stack comprises 6 classes, 2 object properties, ~15 datatype properties, and 6 SHACL shapes. When KerML and SysML v2 compiler/verification services become available, a parallel experiment should demonstrate the same three-concern pattern at full SysML scale.
 
 ## Ontology Package Structure
 
@@ -64,13 +74,13 @@ Each package is self-contained with its own ontology and shapes. The domain pack
 
 ## What This Experiment Demonstrates
 
-1. **Layer 1 accepts everything**: The quadstore stores instance data, ontology triples, and SHACL shapes identically — they're all just RDF. It also stores cross-application states that violate constraints, without complaint.
+1. **Storage accepts everything**: The quadstore stores instance data, ontology triples, and SHACL shapes identically — they're all just RDF. It also stores cross-application states that violate constraints, without complaint.
 
-2. **Layer 2 is modular**: The ontology is split into composable packages loaded sequentially. The core package provides the topological backbone; the domain package extends it with MTG-specific types and properties.
+2. **Schema is modular**: The ontology is split into composable packages loaded sequentially. The core package provides the topological backbone; the domain package extends it with MTG-specific types and properties. Each package brings its own SHACL shapes.
 
-3. **Layer 3 detects what Layer 1 cannot**: The client-side verification service fetches triples from Flexo via SPARQL CONSTRUCT, loads the ontology packages, runs SHACL validation and oracle queries, and reports pass/fail. It successfully validates the ancestor and individual commits (PASS), then catches the invalid merged states (FAIL).
+3. **Verification detects what storage cannot**: The client-side verification service fetches triples from Flexo via SPARQL CONSTRUCT, loads the schema packages, runs SHACL validation and oracle queries, and reports pass/fail. It validates the ancestor and individual commits (PASS), then catches the invalid merged states (FAIL).
 
-4. **The conflict scenario is the proof**: No synthetic bad data is needed. The cross-application states are syntactically valid RDF that Layer 1 happily stores — but they fail at Layer 3. The merge conflicts naturally demonstrate why all three layers are necessary.
+4. **The conflict scenario is the proof**: No synthetic bad data is needed. The cross-application states are syntactically valid RDF that storage happily accepts — but they fail verification. The merge conflicts naturally demonstrate why all three concerns are necessary.
 
 ## Prerequisites
 
@@ -82,9 +92,11 @@ Each package is self-contained with its own ontology and shapes. The domain pack
 - `curl` on PATH
 
 The experiment can also run against a local Flexo instance by overriding `FLEXO_BASE_URL`:
+
 ```bash
 export FLEXO_BASE_URL=http://localhost:8080
 ```
+
 Note: local Flexo on Apple Silicon runs under QEMU emulation and is significantly slower (repo creation alone can take 10-15 minutes).
 
 ## Running
@@ -104,28 +116,28 @@ Expected runtime: ~1-2 minutes against the remote server.
 
 ## Expected Results
 
-| Branch | Layer 1 | Layer 3 (SHACL) | Layer 3 (Oracle) | Notes |
+| Branch | Storage | Verification (SHACL) | Verification (Oracle) | Notes |
 | --- | --- | --- | --- | --- |
 | master (ancestor) | Accepted | PASS | PASS | All 25 elements valid |
 | branch-a (commit u) | Accepted | PASS | PASS | BG + dependent faces removed |
 | branch-b (commit v) | Accepted | PASS | PASS | BG/BRG enriched with properties |
-| branch-uv (u then v) | Accepted | **FAIL** | **FAIL** | Orphaned properties on deleted elements |
-| branch-vu (v then u) | Accepted | **FAIL** | **FAIL** | Different violations (non-commutativity) |
+| branch-uv (u then v) | Accepted | PASS | **FAIL** (4 orphans) | Orphaned properties on deleted elements |
+| branch-vu (v then u) | Accepted | PASS | PASS | Wildcard DELETE cleaned everything |
 
-The key finding: Layer 1 accepted all five states. Only Layer 3 can distinguish valid from invalid. And the two cross-application orderings produce *different* violations — the conflict is non-commutative, meaning application order matters for the residual data state.
+The key finding: storage accepted all five states. Only verification can distinguish valid from invalid. And the two cross-application orderings produce *different* results — branch-uv fails (orphaned properties) while branch-vu passes (wildcard DELETE caught everything). The conflict is non-commutative: application order matters for the residual data state.
 
 ## File Manifest
 
-| File | Layer | Description |
+| File | Concern | Description |
 | --- | --- | --- |
-| `run.sh` | Orchestrator | Main script — drives all three layers |
-| `verify.py` | Layer 3 | Client-side verification service (pyshacl + rdflib SPARQL) |
-| `ontology/kc-core/ontology.ttl` | Layer 2 | KC core OWL ontology |
-| `ontology/kc-core/shapes.ttl` | Layer 2 | KC core SHACL shapes |
-| `ontology/mtg-domain/ontology.ttl` | Layer 2 | MTG domain OWL extension |
-| `ontology/mtg-domain/shapes.ttl` | Layer 2 | MTG domain SHACL shapes |
-| `instance/ancestor-model.ttl` | Layer 1 | Pure instance data (25 MTG elements) |
-| `commits/commit-u-remove-bg.ru` | Layer 1 | SPARQL UPDATE: remove BG + dependent faces |
-| `commits/commit-v-enrich-bg.ru` | Layer 1 | SPARQL UPDATE: enrich BG/BRG properties |
-| `oracle/*.rq` | Layer 3 | SPARQL constraint queries (C1–C6) |
+| `run.sh` | Orchestrator | Main script — exercises all three concerns |
+| `verify.py` | Verification | Client-side verification service (pyshacl + rdflib SPARQL) |
+| `ontology/kc-core/ontology.ttl` | Schema | KC core OWL ontology |
+| `ontology/kc-core/shapes.ttl` | Schema | KC core SHACL shapes |
+| `ontology/mtg-domain/ontology.ttl` | Schema | MTG domain OWL extension |
+| `ontology/mtg-domain/shapes.ttl` | Schema | MTG domain SHACL shapes |
+| `instance/ancestor-model.ttl` | Storage | Pure instance data (25 MTG elements) |
+| `commits/commit-u-remove-bg.ru` | Storage | SPARQL UPDATE: remove BG + dependent faces |
+| `commits/commit-v-enrich-bg.ru` | Storage | SPARQL UPDATE: enrich BG/BRG properties |
+| `oracle/*.rq` | Verification | SPARQL constraint queries (C1–C6) |
 | `requirements.txt` | — | Python dependencies |

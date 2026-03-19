@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Experiment 12 — Three-Layer Flexo Service Architecture
+# Experiment 12 — Three Service Concerns for Flexo
 #
-# Demonstrates a proposed architectural pattern that layers Flexo services:
-#   Layer 1 (Syntactic):     Quadstore — accepts any valid RDF
-#   Layer 2 (Semantic):      Ontology packages — modular, composable interpretation
-#   Layer 3 (Verification):  Constraint services — checks compliance, can gate commits
+# Demonstrates three distinct service concerns that cut across Flexo's
+# architectural layers (Layer 0–3):
+#   Storage:       Version-controlled RDF (Flexo Layer 0 + Layer 1)
+#   Schema:        Modular ontology packages — composable interpretation
+#   Verification:  Constraint compliance — checks rules, can gate commits
 #
 # Uses the MTG Knowledge Complex conflict scenario (same as Experiments 3-4)
 # to show that independently valid commits produce invalid merged states,
-# and that all three layers are necessary to detect this.
+# and that all three concerns are necessary to detect this.
 #
 # Targets the remote Layer 1 SPARQL API at try-layer1.starforge.app.
 # Requires a pre-issued Bearer token in FLEXO_TOKEN env var.
@@ -24,7 +25,7 @@ cd "$SCRIPT_DIR"
 
 BASE="${FLEXO_BASE_URL:-https://try-layer1.starforge.app}"
 ORG="research"
-REPO="three-layer-demo-$(date +%s)"
+REPO="three-concerns-demo-$(date +%s)"
 TIMEOUT=120
 
 # Require token from environment (remote server — no local auth service)
@@ -90,7 +91,7 @@ $TRIPLES
 }
 
 verify_gate() {
-  # Run Layer 3 verification on a branch
+  # Run verification service on a branch
   local branch="$1"
   python3 verify.py "$branch" \
     --base-url "$BASE" \
@@ -112,7 +113,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>"
 
 # ═══════════════════════════════════════════════════════════
 echo "═══════════════════════════════════════════════════════════"
-echo "  Experiment 12 — Three-Layer Flexo Service Architecture"
+echo "  Experiment 12 — Three Service Concerns for Flexo"
 echo "═══════════════════════════════════════════════════════════"
 echo ""
 
@@ -130,29 +131,31 @@ while true; do
     break
   fi
   if (( WAITED >= MAX_WAIT )); then
-    echo "  ERROR: Layer 1 not responding after ${MAX_WAIT}s."
+    echo "  ERROR: Flexo not responding after ${MAX_WAIT}s."
     exit 1
   fi
   sleep 3
   WAITED=$((WAITED + 3))
-  echo "  waiting for Layer 1... (${WAITED}s)"
+  echo "  waiting... (${WAITED}s)"
 done
-echo "  Layer 1 responding (HTTP $HTTP)."
+echo "  Flexo responding (HTTP $HTTP)."
 
 # ┌─────────────────────────────────────────────────────────┐
-# │  LAYER 1 — SYNTACTIC (Quadstore)                        │
-# │  Accepts any valid RDF. No interpretation. No semantics. │
+# │  STORAGE — Version-controlled RDF persistence            │
+# │  Flexo Layer 0 (Quadstore) + Layer 1 (MMS core).        │
+# │  Accepts any valid RDF. Indifferent to interpretation.   │
 # └─────────────────────────────────────────────────────────┘
 
 echo ""
 echo "┌─────────────────────────────────────────────────────────┐"
-echo "│  LAYER 1 — SYNTACTIC (Quadstore)                        │"
-echo "│  Accepts any valid RDF. No interpretation. No semantics. │"
+echo "│  STORAGE — Version-controlled RDF persistence            │"
+echo "│  Flexo Layer 0 (Quadstore) + Layer 1 (MMS core).        │"
+echo "│  Accepts any valid RDF. Indifferent to interpretation.   │"
 echo "└─────────────────────────────────────────────────────────┘"
 
 # Step 1.1: Create org and repo
 echo ""
-echo "Step 1.1: [Layer 1] Creating org '$ORG' and repo '$REPO'..."
+echo "Step 1.1: [Storage] Creating org '$ORG' and repo '$REPO'..."
 CODE=$(flexo_put "$BASE/orgs/$ORG" "<> <http://purl.org/dc/terms/title> \"$ORG\"@en .")
 expect_ok_or_exists "$CODE" "org"
 
@@ -161,24 +164,26 @@ expect_ok_or_exists "$CODE" "repo"
 
 # Step 1.2: Load instance data (no schema)
 echo ""
-echo "Step 1.2: [Layer 1] Loading instance data onto master..."
-echo "  (No ontology, no shapes — Layer 1 stores raw triples without interpretation)"
+echo "Step 1.2: [Storage] Loading instance data onto master..."
+echo "  (No ontology, no shapes — storage accepts raw triples without interpretation)"
 load_ttl_as_insert master instance/ancestor-model.ttl "instance data"
 
 # ┌─────────────────────────────────────────────────────────┐
-# │  LAYER 2 — SEMANTIC (Ontology Packages)                  │
-# │  Modular, composable. Like package management.           │
+# │  SCHEMA — Modular ontology packages                      │
+# │  Defines vocabulary, types, and well-formedness rules.   │
+# │  Composable like package management.                     │
 # └─────────────────────────────────────────────────────────┘
 
 echo ""
 echo "┌─────────────────────────────────────────────────────────┐"
-echo "│  LAYER 2 — SEMANTIC (Ontology Packages)                  │"
-echo "│  Modular, composable. Like package management.           │"
+echo "│  SCHEMA — Modular ontology packages                      │"
+echo "│  Defines vocabulary, types, and well-formedness rules.   │"
+echo "│  Composable like package management.                     │"
 echo "└─────────────────────────────────────────────────────────┘"
 
 # Step 2.1: Load KC Core ontology package
 echo ""
-echo "Step 2.1: [Layer 2] Loading ontology package [kc-core] (1 of 2)..."
+echo "Step 2.1: [Schema] Loading ontology package [kc-core] (1 of 2)..."
 echo "  Package: Knowledge Complex Core"
 echo "  Classes: Element, Vertex, Edge, Face, Complex"
 echo "  Properties: boundedBy, hasElement"
@@ -188,7 +193,7 @@ load_ttl_as_insert master ontology/kc-core/shapes.ttl "kc-core shapes"
 
 # Step 2.2: Load MTG Domain extension package
 echo ""
-echo "Step 2.2: [Layer 2] Loading ontology package [mtg-domain] (2 of 2)..."
+echo "Step 2.2: [Schema] Loading ontology package [mtg-domain] (2 of 2)..."
 echo "  Package: MTG Color Philosophy Domain Extension"
 echo "  Depends on: kc-core"
 echo "  Classes: Color (-> Vertex), ColorPair (-> Edge), ColorTriple (-> Face)"
@@ -199,28 +204,28 @@ load_ttl_as_insert master ontology/mtg-domain/shapes.ttl "mtg-domain shapes"
 
 # Step 2.3: Summary
 echo ""
-echo "Step 2.3: [Layer 2] Package loading summary"
+echo "Step 2.3: [Schema] Package loading summary"
 echo "  2 ontology packages loaded (kc-core + mtg-domain)"
 echo "  6 SHACL shapes active (3 core + 3 domain)"
-echo "  Note: Layer 1 treats ontology triples identically to data triples."
-echo "  Semantic interpretation is an external concern — the quadstore is indifferent."
+echo "  Note: storage treats ontology triples identically to data triples."
+echo "  Schema interpretation is an external concern — the quadstore is indifferent."
 
 # ┌─────────────────────────────────────────────────────────┐
-# │  LAYER 3 — VERIFICATION                                 │
-# │  Constraint checking as a service.                       │
+# │  VERIFICATION — Constraint compliance as a service       │
+# │  Checks model state against schema-declared rules.       │
 # │  Currently client-side (pyshacl + SPARQL via rdflib).    │
 # └─────────────────────────────────────────────────────────┘
 
 echo ""
 echo "┌─────────────────────────────────────────────────────────┐"
-echo "│  LAYER 3 — VERIFICATION                                 │"
-echo "│  Constraint checking as a service.                       │"
+echo "│  VERIFICATION — Constraint compliance as a service       │"
+echo "│  Checks model state against schema-declared rules.       │"
 echo "│  Currently client-side (pyshacl + SPARQL via rdflib).    │"
 echo "└─────────────────────────────────────────────────────────┘"
 
 # Step 3.1: Verify ancestor state
 echo ""
-echo "Step 3.1: [Layer 3] Verification gate — ancestor state on master..."
+echo "Step 3.1: [Verification] Gate check — ancestor state on master..."
 if verify_gate master; then
   echo "  Verification gate: PASSED"
 else
@@ -231,19 +236,19 @@ fi
 # ┌─────────────────────────────────────────────────────────┐
 # │  CONFLICT SCENARIO                                       │
 # │  Two independently valid commits that produce invalid    │
-# │  merged states. All three layers are exercised.          │
+# │  merged states. All three concerns are exercised.        │
 # └─────────────────────────────────────────────────────────┘
 
 echo ""
 echo "┌─────────────────────────────────────────────────────────┐"
 echo "│  CONFLICT SCENARIO                                       │"
 echo "│  Two independently valid commits that produce invalid    │"
-echo "│  merged states. All three layers are exercised.          │"
+echo "│  merged states. All three concerns are exercised.        │"
 echo "└─────────────────────────────────────────────────────────┘"
 
 # Step 4.1: Create branches
 echo ""
-echo "Step 4.1: [Layer 1] Creating branch-a and branch-b from master..."
+echo "Step 4.1: [Storage] Creating branch-a and branch-b from master..."
 for branch in branch-a branch-b; do
   CODE=$(flexo_put "$BASE/orgs/$ORG/repos/$REPO/branches/$branch" \
     "<> <http://purl.org/dc/terms/title> \"$branch\"@en .
@@ -253,12 +258,12 @@ done
 
 # Step 4.2: Apply commit u with verification gate
 echo ""
-echo "Step 4.2: [Layer 1] Applying commit u (remove BG) on branch-a..."
+echo "Step 4.2: [Storage] Applying commit u (remove BG) on branch-a..."
 CODE=$(flexo_update_file "$BASE/orgs/$ORG/repos/$REPO/branches/branch-a/update" commits/commit-u-remove-bg.ru)
 echo "  commit u on branch-a: HTTP $CODE"
 
 echo ""
-echo "Step 4.2: [Layer 3] Verification gate — branch-a after commit u..."
+echo "Step 4.2: [Verification] Gate check — branch-a after commit u..."
 if verify_gate branch-a; then
   echo "  Verification gate: PASSED — commit u accepted"
 else
@@ -267,12 +272,12 @@ fi
 
 # Step 4.3: Apply commit v with verification gate
 echo ""
-echo "Step 4.3: [Layer 1] Applying commit v (enrich BG) on branch-b..."
+echo "Step 4.3: [Storage] Applying commit v (enrich BG) on branch-b..."
 CODE=$(flexo_update_file "$BASE/orgs/$ORG/repos/$REPO/branches/branch-b/update" commits/commit-v-enrich-bg.ru)
 echo "  commit v on branch-b: HTTP $CODE"
 
 echo ""
-echo "Step 4.3: [Layer 3] Verification gate — branch-b after commit v..."
+echo "Step 4.3: [Verification] Gate check — branch-b after commit v..."
 if verify_gate branch-b; then
   echo "  Verification gate: PASSED — commit v accepted"
 else
@@ -281,7 +286,7 @@ fi
 
 # Step 4.4: Construct cross-application states
 echo ""
-echo "Step 4.4: [Layer 1] Constructing cross-application states..."
+echo "Step 4.4: [Storage] Constructing cross-application states..."
 
 # branch-uv = f(f(X,u),v) — branch from branch-a, apply v
 CODE=$(flexo_put "$BASE/orgs/$ORG/repos/$REPO/branches/branch-uv" \
@@ -303,9 +308,9 @@ echo "  apply u to branch-vu: HTTP $CODE"
 
 # Step 4.5: Verify cross-application states (the punchline)
 echo ""
-echo "Step 4.5: [Layer 3] Verification gate — cross-application states..."
-echo "  These states are syntactically valid RDF (Layer 1 accepted them)."
-echo "  But do they satisfy the ontology's constraints?"
+echo "Step 4.5: [Verification] Gate check — cross-application states..."
+echo "  These states are syntactically valid RDF (storage accepted them)."
+echo "  But do they satisfy the schema's constraints?"
 
 echo ""
 echo "  --- branch-uv (u then v): ---"
@@ -313,7 +318,7 @@ if verify_gate branch-uv; then
   echo "  Verification gate: PASSED"
 else
   echo "  Verification gate: FAILED"
-  echo "  -> Layer 1 accepted this state. Layer 3 rejects it."
+  echo "  -> Storage accepted this state. Verification rejects it."
 fi
 
 echo ""
@@ -322,7 +327,7 @@ if verify_gate branch-vu; then
   echo "  Verification gate: PASSED"
 else
   echo "  Verification gate: FAILED"
-  echo "  -> Layer 1 accepted this state. Layer 3 rejects it."
+  echo "  -> Storage accepted this state. Verification rejects it."
 fi
 
 # ═══════════════════════════════════════════════════════════
@@ -331,15 +336,15 @@ fi
 
 echo ""
 echo "═══════════════════════════════════════════════════════════"
-echo "  RESULTS — Three-Layer Architecture Demonstration"
+echo "  RESULTS — Three Service Concerns Demonstration"
 echo "═══════════════════════════════════════════════════════════"
 echo ""
-echo "  Layer 1 (Syntactic — Quadstore):"
+echo "  Storage (Flexo Layer 0 + Layer 1):"
 echo "    Accepted ALL operations without complaint."
 echo "    Every SPARQL INSERT/DELETE was valid RDF."
-echo "    Layer 1 is indifferent to semantic meaning."
+echo "    Storage is indifferent to semantic meaning."
 echo ""
-echo "  Layer 2 (Semantic — Ontology Packages):"
+echo "  Schema (Ontology Packages):"
 echo "    Two packages loaded as composable modules:"
 echo "      kc-core:    abstract topological backbone"
 echo "      mtg-domain: domain-specific extension (depends on kc-core)"
@@ -347,18 +352,18 @@ echo "    The same pattern applies to SysML v2:"
 echo "      KerML:      core modeling abstractions"
 echo "      SysML ext:  discipline-specific extensions"
 echo ""
-echo "  Layer 3 (Verification — Constraint Service):"
+echo "  Verification (Constraint Service):"
 echo "    Client-side verification successfully:"
 echo "      - Validated ancestor state (PASS)"
 echo "      - Validated individual commits (both PASS)"
-echo "      - Detected invalid merged states (FAIL)"
+echo "      - Detected invalid merged state (FAIL on branch-uv)"
 echo "    The verification gate pattern shows where enforcement belongs."
 echo ""
 echo "  Key finding:"
-echo "    Individually valid commits can produce invalid merged states."
-echo "    Layer 1 cannot detect this — it stores any valid RDF."
-echo "    Layer 2 defines what 'valid' means (ontology + shapes)."
-echo "    Layer 3 checks it. All three layers are necessary."
+echo "    Independently valid commits can produce invalid merged states."
+echo "    Storage cannot detect this — it accepts any valid RDF."
+echo "    Schema defines what 'valid' means (ontology + shapes)."
+echo "    Verification checks it. All three concerns are necessary."
 echo ""
 echo "  Compare branch-uv vs branch-vu for non-commutativity."
 echo "═══════════════════════════════════════════════════════════"

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Layer 3 — Client-Side Verification Service
+Verification Service (Client-Side)
 
 Standalone verification service that:
   1. Fetches all triples from a Flexo branch via SPARQL CONSTRUCT
@@ -10,9 +10,14 @@ Standalone verification service that:
   5. Reports pass/fail with structured output
   6. Exits 0 (pass) or 1 (fail)
 
-This demonstrates Layer 3 as an independent service consuming Layer 1 data.
-In a production architecture, this would be a hosted service that optionally
-gates commits. Here it runs client-side as a proof of concept.
+This is one of three service concerns identified in Experiment 12
+(Storage, Schema, Verification). The verification concern is distinct
+from Flexo's architectural layers — it consumes data from storage
+(Flexo Layer 0+1) and interprets it using the schema (ontology packages)
+to check constraint compliance.
+
+In a production architecture, this would be a hosted service that
+optionally gates commits. Here it runs client-side as a proof of concept.
 
 Usage:
     python3 verify.py <branch> [--base-url URL] [--token TOKEN]
