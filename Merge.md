@@ -91,7 +91,8 @@ The merge operation can be specified as a state transition with pre- and post-co
 - **Merge commit parents**: How should multiple parents be represented in the metadata graph? Extend `mms:parent` to allow multiple values, or introduce a separate predicate?
 - **Merge base algorithm**: How is the common ancestor found in a DAG? Standard algorithms (e.g., lowest common ancestor) apply, but the current linked-list commit model must first support branching history.
 - **Delta composition**: Can two deltas from a common ancestor be composed? The current delta format (SPARQL UPDATE strings) is procedural — composing two arbitrary SPARQL UPDATEs is non-trivial.
-- **Atomicity**: Must the entire merge succeed or fail atomically? What happens if the merge commit is partially applied?
+- **Atomicity**: Must the entire merge succeed or fail atomically? What happens if the merge commit is partially applied? 
+	- Or could the unit be a custom defined entity. E.g. a part definition consists of hundreds of triples. 
 - **Resolution as input**: The SysML v2 API allows the client to supply `Data[]` as conflict resolutions. How does this interact with automated [[Policy]]-based resolution?
 
 ## References
