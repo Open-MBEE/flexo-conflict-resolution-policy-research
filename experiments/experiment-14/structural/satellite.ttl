@@ -1,0 +1,103 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix sysml:   <https://www.omg.org/spec/SysML/2.0/> .
+@prefix sat:     <http://example.org/adcs-demo/satellite/> .
+@prefix adcs:    <http://example.org/adcs-demo/> .
+@prefix pwr:     <http://example.org/adcs-demo/power/> .
+
+# =============================================================================
+# Satellite — system of interest (owned by systems engineering)
+# =============================================================================
+# This file defines the top-level system and interface subsystem stubs.
+# Each subsystem team owns their own structural file.
+
+sat:GeoSat a sysml:PartDefinition ;
+    sysml:declaredName "GeoSat" ;
+    rdfs:comment """Geostationary communications satellite — system of interest.
+        Owned by the systems engineering team. Subsystem teams reference
+        satellite-level properties as interface parameters but do not
+        own or modify this file.""" ;
+    sysml:ownedPart adcs:ADCSSubsystem ,
+                    pwr:PowerSubsystem ,
+                    sat:CommsSubsystem ,
+                    sat:ThermalSubsystem ,
+                    sat:StructureSubsystem ;
+    sysml:ownedAttribute sat:attr_mass ,
+                         sat:attr_bodyLength ,
+                         sat:attr_bodyWidth ,
+                         sat:attr_bodyHeight ,
+                         sat:attr_orbitalRate ,
+                         sat:attr_powerBudget .
+
+# Interface subsystems (stubs — not modeled in detail)
+sat:CommsSubsystem a sysml:PartDefinition ;
+    sysml:declaredName "Communications" ;
+    rdfs:comment "Comms subsystem — ADCS team points the antenna, comms defines link budget." ;
+    sysml:ownedAttribute sat:attr_comms_powerDraw .
+
+sat:ThermalSubsystem a sysml:PartDefinition ;
+    sysml:declaredName "Thermal" ;
+    rdfs:comment "Thermal subsystem — manages heat from reaction wheels and electronics." ;
+    sysml:ownedAttribute sat:attr_thermal_powerDraw .
+
+sat:StructureSubsystem a sysml:PartDefinition ;
+    sysml:declaredName "Structure" ;
+    rdfs:comment "Structural subsystem — defines mass properties, provides inertia tensor." ;
+    sysml:ownedAttribute sat:attr_structure_powerDraw .
+
+# =============================================================================
+# Satellite-level parameters (owned by systems engineering)
+# =============================================================================
+
+sat:attr_mass a sysml:AttributeUsage ;
+    sysml:declaredName "mass" ;
+    rdfs:comment "Total satellite bus mass (excluding panels and antenna)." ;
+    sysml:value "550.0"^^xsd:double ;
+    sysml:unit "kg" .
+
+sat:attr_bodyLength a sysml:AttributeUsage ;
+    sysml:declaredName "bodyLength" ;
+    sysml:value "0.90"^^xsd:double ;
+    sysml:unit "m" .
+
+sat:attr_bodyWidth a sysml:AttributeUsage ;
+    sysml:declaredName "bodyWidth" ;
+    sysml:value "1.00"^^xsd:double ;
+    sysml:unit "m" .
+
+sat:attr_bodyHeight a sysml:AttributeUsage ;
+    sysml:declaredName "bodyHeight" ;
+    sysml:value "1.10"^^xsd:double ;
+    sysml:unit "m" .
+
+sat:attr_orbitalRate a sysml:AttributeUsage ;
+    sysml:declaredName "orbitalRate" ;
+    rdfs:comment "GEO orbital angular rate (2*pi / 86400 s)." ;
+    sysml:value "7.2722e-05"^^xsd:double ;
+    sysml:unit "rad/s" .
+
+sat:attr_powerBudget a sysml:AttributeUsage ;
+    sysml:declaredName "powerBudget" ;
+    rdfs:comment "Total power available to subsystems after distribution losses." ;
+    sysml:value "300.0"^^xsd:double ;
+    sysml:unit "W" .
+
+# Interface subsystem power draws (stubs — fixed allocations)
+sat:attr_comms_powerDraw a sysml:AttributeUsage ;
+    sysml:declaredName "commsPowerDraw" ;
+    rdfs:comment "Communications subsystem nominal power draw." ;
+    sysml:value "120.0"^^xsd:double ;
+    sysml:unit "W" .
+
+sat:attr_thermal_powerDraw a sysml:AttributeUsage ;
+    sysml:declaredName "thermalPowerDraw" ;
+    rdfs:comment "Thermal subsystem nominal power draw (heaters, TEC)." ;
+    sysml:value "40.0"^^xsd:double ;
+    sysml:unit "W" .
+
+sat:attr_structure_powerDraw a sysml:AttributeUsage ;
+    sysml:declaredName "structurePowerDraw" ;
+    rdfs:comment "Structure subsystem power draw (deployment mechanisms, heaters)." ;
+    sysml:value "10.0"^^xsd:double ;
+    sysml:unit "W" .

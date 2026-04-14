@@ -1,0 +1,5 @@
+* 362bce9 (HEAD -> merge-b-into-a, adcs-update-power) adcs-update-power: structural/adcs.ttl
+| * e0bd8d7 (syseng-correct-power, merge-a-into-b) syseng-correct-power: structural/adcs.ttl
+|/  
+* 63e72e5 (main) ancestor: satellite model (ADCS + Power)
+* a972cac initial commit (empty)

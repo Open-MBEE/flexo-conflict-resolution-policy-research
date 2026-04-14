@@ -1,0 +1,17 @@
+# C2 — Power generation vs declared available
+# Checks that declared availablePower is consistent with
+# panel output × PDU efficiency × number of panels.
+# Returns a row if availablePower exceeds what panels can provide.
+
+PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+PREFIX pwr:   <http://example.org/adcs-demo/power/>
+
+SELECT ?declaredAvailable ?actualCapacity ?violation WHERE {
+    pwr:attr_availablePower sysml:value ?declaredAvailable .
+    pwr:attr_sa_power sysml:value ?panelPower .
+    pwr:attr_pdu_efficiency sysml:value ?efficiency .
+    # 2 panels
+    BIND(2 * ?panelPower * ?efficiency AS ?actualCapacity)
+    BIND(?declaredAvailable - ?actualCapacity AS ?violation)
+    FILTER(?violation > 0)
+}

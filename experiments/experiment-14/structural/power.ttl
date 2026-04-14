@@ -1,0 +1,142 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix sysml:   <https://www.omg.org/spec/SysML/2.0/> .
+@prefix pwr:     <http://example.org/adcs-demo/power/> .
+
+# =============================================================================
+# Power Subsystem (owned by power team)
+# =============================================================================
+# This file is owned by the power team. Changes here do not require
+# coordination with other teams UNLESS they affect the power budget
+# or interface parameters (available power, battery capacity).
+
+pwr:PowerSubsystem a sysml:PartDefinition ;
+    sysml:declaredName "Power" ;
+    rdfs:comment """Electrical Power System. Owned by the power team.
+        Generates, stores, and distributes electrical power to all
+        subsystems. Sets the power budget that other teams draw from.""" ;
+    sysml:ownedPart pwr:SolarArray_Port ,
+                    pwr:SolarArray_Starboard ,
+                    pwr:Battery ,
+                    pwr:PDU ;
+    sysml:ownedAttribute pwr:attr_pwr_powerDraw ,
+                         pwr:attr_availablePower .
+
+# --- Power interface attributes ---
+
+pwr:attr_pwr_powerDraw a sysml:AttributeUsage ;
+    sysml:declaredName "pwrSubsystemPowerDraw" ;
+    rdfs:comment "Power subsystem's own power draw (charge regulation, telemetry)." ;
+    sysml:value "15.0"^^xsd:double ;
+    sysml:unit "W" .
+
+pwr:attr_availablePower a sysml:AttributeUsage ;
+    sysml:declaredName "availablePower" ;
+    rdfs:comment "Total power available to subsystems (generation * PDU efficiency)." ;
+    sysml:value "306.0"^^xsd:double ;
+    sysml:unit "W" .
+
+# --- Solar Arrays ---
+
+pwr:SolarArrayDef a sysml:PartDefinition ;
+    sysml:declaredName "SolarArray" ;
+    rdfs:comment "Deployable solar array panel — GaAs triple-junction cells." ;
+    sysml:ownedAttribute pwr:attr_sa_power ,
+                         pwr:attr_sa_area ,
+                         pwr:attr_sa_mass ,
+                         pwr:attr_sa_degradation .
+
+pwr:SolarArray_Port a sysml:PartUsage ;
+    sysml:declaredName "SolarArray_Port" ;
+    sysml:type pwr:SolarArrayDef ;
+    rdfs:comment "Port-side solar array." .
+
+pwr:SolarArray_Starboard a sysml:PartUsage ;
+    sysml:declaredName "SolarArray_Starboard" ;
+    sysml:type pwr:SolarArrayDef ;
+    rdfs:comment "Starboard-side solar array." .
+
+pwr:attr_sa_power a sysml:AttributeUsage ;
+    sysml:declaredName "panelPower" ;
+    rdfs:comment "BOL power output per panel at GEO (normal incidence)." ;
+    sysml:value "180.0"^^xsd:double ;
+    sysml:unit "W" .
+
+pwr:attr_sa_area a sysml:AttributeUsage ;
+    sysml:declaredName "panelArea" ;
+    rdfs:comment "Active cell area per panel." ;
+    sysml:value "2.25"^^xsd:double ;
+    sysml:unit "m^2" .
+
+pwr:attr_sa_mass a sysml:AttributeUsage ;
+    sysml:declaredName "panelMass" ;
+    rdfs:comment "Mass of a single solar panel (including deployment mechanism)." ;
+    sysml:value "30.0"^^xsd:double ;
+    sysml:unit "kg" .
+
+pwr:attr_sa_degradation a sysml:AttributeUsage ;
+    sysml:declaredName "degradationFactor" ;
+    rdfs:comment "End-of-life power degradation factor (15 year GEO)." ;
+    sysml:value "0.77"^^xsd:double ;
+    sysml:unit "dimensionless" .
+
+# --- Battery ---
+
+pwr:BatteryDef a sysml:PartDefinition ;
+    sysml:declaredName "Battery" ;
+    rdfs:comment "Li-ion battery pack for eclipse power and peak loads." ;
+    sysml:ownedAttribute pwr:attr_bat_capacity ,
+                         pwr:attr_bat_voltage ,
+                         pwr:attr_bat_mass ,
+                         pwr:attr_bat_dod .
+
+pwr:Battery a sysml:PartUsage ;
+    sysml:declaredName "Battery" ;
+    sysml:type pwr:BatteryDef .
+
+pwr:attr_bat_capacity a sysml:AttributeUsage ;
+    sysml:declaredName "batteryCapacity" ;
+    rdfs:comment "Battery energy storage capacity." ;
+    sysml:value "40.0"^^xsd:double ;
+    sysml:unit "Ah" .
+
+pwr:attr_bat_voltage a sysml:AttributeUsage ;
+    sysml:declaredName "batteryVoltage" ;
+    rdfs:comment "Nominal battery bus voltage." ;
+    sysml:value "28.0"^^xsd:double ;
+    sysml:unit "V" .
+
+pwr:attr_bat_mass a sysml:AttributeUsage ;
+    sysml:declaredName "batteryMass" ;
+    sysml:value "12.0"^^xsd:double ;
+    sysml:unit "kg" .
+
+pwr:attr_bat_dod a sysml:AttributeUsage ;
+    sysml:declaredName "maxDepthOfDischarge" ;
+    rdfs:comment "Maximum allowable depth of discharge." ;
+    sysml:value "0.60"^^xsd:double ;
+    sysml:unit "dimensionless" .
+
+# --- Power Distribution Unit ---
+
+pwr:PDUDef a sysml:PartDefinition ;
+    sysml:declaredName "PDU" ;
+    rdfs:comment "Power distribution unit — regulates and routes power to subsystems." ;
+    sysml:ownedAttribute pwr:attr_pdu_efficiency ,
+                         pwr:attr_pdu_mass .
+
+pwr:PDU a sysml:PartUsage ;
+    sysml:declaredName "PDU" ;
+    sysml:type pwr:PDUDef .
+
+pwr:attr_pdu_efficiency a sysml:AttributeUsage ;
+    sysml:declaredName "pduEfficiency" ;
+    rdfs:comment "Power distribution efficiency (losses from regulation, switching)." ;
+    sysml:value "0.85"^^xsd:double ;
+    sysml:unit "dimensionless" .
+
+pwr:attr_pdu_mass a sysml:AttributeUsage ;
+    sysml:declaredName "pduMass" ;
+    sysml:value "5.0"^^xsd:double ;
+    sysml:unit "kg" .

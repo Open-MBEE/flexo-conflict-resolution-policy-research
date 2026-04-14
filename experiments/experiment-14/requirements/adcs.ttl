@@ -1,0 +1,58 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix sysml:   <https://www.omg.org/spec/SysML/2.0/> .
+@prefix rtm:     <http://example.org/ontology/rtm#> .
+@prefix adcs:    <http://example.org/adcs-demo/> .
+@prefix sat:     <http://example.org/adcs-demo/satellite/> .
+
+# =============================================================================
+# ADCS-level requirements (owned by controls team)
+# =============================================================================
+
+adcs:REQ-001 a sysml:RequirementDefinition ;
+    sysml:declaredName "REQ-001" ;
+    sysml:text """The ADCS shall maintain pointing accuracy within 0.1 degrees
+        (3-sigma) under nominal disturbance conditions within 120 seconds
+        of a slew maneuver.""" ;
+    sysml:ownedRelationship [
+        a sysml:SatisfyRequirementUsage ;
+        sysml:satisfyingElement adcs:PDController , adcs:StarTracker
+    ] ;
+    rtm:derivedFrom sat:SAT-REQ-POINTING .
+
+adcs:REQ-002 a sysml:RequirementDefinition ;
+    sysml:declaredName "REQ-002" ;
+    sysml:text """Reaction wheel angular momentum shall not exceed the rated
+        maximum momentum capacity (4.0 N.m.s) during nominal operations.""" ;
+    sysml:ownedRelationship [
+        a sysml:SatisfyRequirementUsage ;
+        sysml:satisfyingElement adcs:ReactionWheel_X ,
+                                adcs:ReactionWheel_Y ,
+                                adcs:ReactionWheel_Z
+    ] ;
+    rtm:derivedFrom sat:SAT-REQ-MOMENTUM .
+
+adcs:REQ-003 a sysml:RequirementDefinition ;
+    sysml:declaredName "REQ-003" ;
+    sysml:text """The closed-loop ADCS shall be asymptotically stable with
+        all eigenvalues having real parts less than or equal to -0.010 rad/s.""" ;
+    sysml:ownedRelationship [
+        a sysml:SatisfyRequirementUsage ;
+        sysml:satisfyingElement adcs:PDController
+    ] ;
+    rtm:derivedFrom sat:SAT-REQ-STABILITY .
+
+adcs:REQ-004 a sysml:RequirementDefinition ;
+    sysml:declaredName "REQ-004" ;
+    sysml:text """The ADCS shall reject gravity gradient disturbance torques
+        encountered in geostationary orbit without exceeding actuator
+        torque capacity.""" ;
+    sysml:ownedRelationship [
+        a sysml:SatisfyRequirementUsage ;
+        sysml:satisfyingElement adcs:PDController ,
+                                adcs:ReactionWheel_X ,
+                                adcs:ReactionWheel_Y ,
+                                adcs:ReactionWheel_Z
+    ] ;
+    rtm:derivedFrom sat:SAT-REQ-DISTURBANCE .

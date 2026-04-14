@@ -1,0 +1,35 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix sysml:   <https://www.omg.org/spec/SysML/2.0/> .
+@prefix rtm:     <http://example.org/ontology/rtm#> .
+@prefix pwr:     <http://example.org/adcs-demo/power/> .
+@prefix sat:     <http://example.org/adcs-demo/satellite/> .
+
+# =============================================================================
+# Power-level requirements (owned by power team)
+# =============================================================================
+
+pwr:REQ-P01 a sysml:RequirementDefinition ;
+    sysml:declaredName "REQ-P01" ;
+    sysml:text """The electrical power system shall provide at least 300 W
+        of regulated power to subsystem loads under nominal sunlit
+        conditions at end of life.""" ;
+    sysml:ownedRelationship [
+        a sysml:SatisfyRequirementUsage ;
+        sysml:satisfyingElement pwr:SolarArray_Port ,
+                                pwr:SolarArray_Starboard ,
+                                pwr:PDU
+    ] ;
+    rtm:derivedFrom sat:SAT-REQ-POWER .
+
+pwr:REQ-P02 a sysml:RequirementDefinition ;
+    sysml:declaredName "REQ-P02" ;
+    sysml:text """The battery system shall sustain full subsystem loads for
+        a minimum of 72 minutes during maximum GEO eclipse without
+        exceeding 60% depth of discharge.""" ;
+    sysml:ownedRelationship [
+        a sysml:SatisfyRequirementUsage ;
+        sysml:satisfyingElement pwr:Battery
+    ] ;
+    rtm:derivedFrom sat:SAT-REQ-ECLIPSE .
