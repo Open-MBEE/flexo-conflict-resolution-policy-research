@@ -1,0 +1,248 @@
+{
+  "experiment": 15,
+  "title": "Ontology Package Versioning \u2014 Composition Conflicts",
+  "timestamp": "2026-04-14T22:37:55.891995+00:00",
+  "duration_seconds": 6.657,
+  "environment": {
+    "python_version": "3.9.7",
+    "rdflib_version": "7.6.0",
+    "pyshacl_version": "0.31.0",
+    "gitpython_version": "3.1.46",
+    "platform": "darwin",
+    "git_commit": "b49fa35"
+  },
+  "parameters": {
+    "ontology_packages": [
+      "ontology/rtm.ttl",
+      "ontology/shapes.ttl"
+    ],
+    "scenarios": [
+      "benign: orthogonal additions (new class + new shape)",
+      "property-rename: rtm:derivedFrom \u2192 rtm:tracesTo in vocab+data; new shape uses old name",
+      "new-constraint-new-data: unit-check shape + component missing unit declaration"
+    ]
+  },
+  "steps": [
+    {
+      "step": 1,
+      "name": "load_data",
+      "description": "Load model files",
+      "timestamp": "2026-04-14T22:37:49.237416+00:00",
+      "duration_seconds": 0.002,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 2,
+      "name": "validate_ancestor",
+      "description": "Validate ancestor composition",
+      "timestamp": "2026-04-14T22:37:49.895204+00:00",
+      "duration_seconds": 0.657,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 3,
+      "name": "scenario_benign",
+      "description": "Scenario 1: Benign \u2014 orthogonal changes",
+      "timestamp": "2026-04-14T22:37:51.838036+00:00",
+      "duration_seconds": 1.943,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 4,
+      "name": "scenario_rename",
+      "description": "Scenario 2: Property rename \u2014 derivedFrom \u2192 tracesTo",
+      "timestamp": "2026-04-14T22:37:54.045999+00:00",
+      "duration_seconds": 2.208,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 5,
+      "name": "scenario_constraint_data",
+      "description": "Scenario 3: New constraint meets new data",
+      "timestamp": "2026-04-14T22:37:55.891806+00:00",
+      "duration_seconds": 1.846,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 6,
+      "name": "classification",
+      "description": "Detection classification",
+      "timestamp": "2026-04-14T22:37:55.891953+00:00",
+      "duration_seconds": 0.0,
+      "outcome": "success",
+      "details": {
+        "composition_only_count": 2
+      }
+    }
+  ],
+  "findings": {
+    "scenarios": [
+      {
+        "scenario": "benign",
+        "branch_a": "rtm-add-class",
+        "branch_b": "shapes-add-name-check",
+        "branch_a_validation": {
+          "label": "benign-branch-a",
+          "conforms": true,
+          "violation_count": 0,
+          "violations": []
+        },
+        "branch_b_validation": {
+          "label": "benign-branch-b",
+          "conforms": true,
+          "violation_count": 0,
+          "violations": []
+        },
+        "git_conflict": false,
+        "conflict_files": [],
+        "composed_validation": {
+          "label": "benign-composed",
+          "conforms": true,
+          "violation_count": 0,
+          "violations": []
+        },
+        "composition_gate": [],
+        "detection": {
+          "git": false,
+          "per_package_shacl": false,
+          "composed_shacl": false,
+          "composition_gate": false
+        }
+      },
+      {
+        "scenario": "property-rename",
+        "branch_a": "rtm-rename-property",
+        "branch_b": "shapes-derivation-check",
+        "branch_a_validation": {
+          "label": "property-rename-branch-a",
+          "conforms": true,
+          "violation_count": 0,
+          "violations": []
+        },
+        "branch_b_validation": {
+          "label": "property-rename-branch-b",
+          "conforms": true,
+          "violation_count": 0,
+          "violations": []
+        },
+        "git_conflict": false,
+        "conflict_files": [],
+        "composed_validation": {
+          "label": "property-rename-composed",
+          "conforms": false,
+          "violation_count": 6,
+          "violations": [
+            {
+              "shape": "shapes:DerivationChainShape",
+              "focus_node": "adcs:REQ-001",
+              "message": "Subsystem requirement is missing rtm:derivedFrom traceability link.",
+              "value": "adcs:REQ-001"
+            },
+            {
+              "shape": "shapes:DerivationChainShape",
+              "focus_node": "adcs:REQ-002",
+              "message": "Subsystem requirement is missing rtm:derivedFrom traceability link.",
+              "value": "adcs:REQ-002"
+            },
+            {
+              "shape": "shapes:DerivationChainShape",
+              "focus_node": "adcs:REQ-003",
+              "message": "Subsystem requirement is missing rtm:derivedFrom traceability link.",
+              "value": "adcs:REQ-003"
+            },
+            {
+              "shape": "shapes:DerivationChainShape",
+              "focus_node": "adcs:REQ-004",
+              "message": "Subsystem requirement is missing rtm:derivedFrom traceability link.",
+              "value": "adcs:REQ-004"
+            },
+            {
+              "shape": "shapes:DerivationChainShape",
+              "focus_node": "pwr:REQ-P01",
+              "message": "Subsystem requirement is missing rtm:derivedFrom traceability link.",
+              "value": "pwr:REQ-P01"
+            },
+            {
+              "shape": "shapes:DerivationChainShape",
+              "focus_node": "pwr:REQ-P02",
+              "message": "Subsystem requirement is missing rtm:derivedFrom traceability link.",
+              "value": "pwr:REQ-P02"
+            }
+          ]
+        },
+        "composition_gate": [],
+        "detection": {
+          "git": false,
+          "per_package_shacl": false,
+          "composed_shacl": true,
+          "composition_gate": false
+        }
+      },
+      {
+        "scenario": "constraint-data",
+        "branch_a": "shapes-unit-check",
+        "branch_b": "adcs-add-component",
+        "branch_a_validation": {
+          "label": "constraint-data-branch-a",
+          "conforms": true,
+          "violation_count": 0,
+          "violations": []
+        },
+        "branch_b_validation": {
+          "label": "constraint-data-branch-b",
+          "conforms": true,
+          "violation_count": 0,
+          "violations": []
+        },
+        "git_conflict": false,
+        "conflict_files": [],
+        "composed_validation": {
+          "label": "constraint-data-composed",
+          "conforms": false,
+          "violation_count": 1,
+          "violations": [
+            {
+              "shape": "[ sh:message Literal(\"AttributeUsage is missing sysml:unit declaration.\") ; sh:minCount Literal(\"1\", datatype=xsd:integer) ; sh:path sysml:unit ]",
+              "focus_node": "adcs:attr_st2_fov",
+              "message": "AttributeUsage is missing sysml:unit declaration.",
+              "path": "sysml:unit"
+            }
+          ]
+        },
+        "composition_gate": [],
+        "detection": {
+          "git": false,
+          "per_package_shacl": false,
+          "composed_shacl": true,
+          "composition_gate": false
+        }
+      }
+    ],
+    "detection_summary": {
+      "benign": {
+        "git": false,
+        "per_package_shacl": false,
+        "composed_shacl": false,
+        "composition_gate": false
+      },
+      "property-rename": {
+        "git": false,
+        "per_package_shacl": false,
+        "composed_shacl": true,
+        "composition_gate": false
+      },
+      "constraint-data": {
+        "git": false,
+        "per_package_shacl": false,
+        "composed_shacl": true,
+        "composition_gate": false
+      }
+    }
+  },
+  "verdict": "CONFIRMED \u2014 2 composition conflict(s) invisible to Git and per-package SHACL"
+}

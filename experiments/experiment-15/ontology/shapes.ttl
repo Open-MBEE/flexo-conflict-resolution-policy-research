@@ -1,0 +1,77 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix sysml:   <https://www.omg.org/spec/SysML/2.0/> .
+@prefix rtm:     <http://example.org/ontology/rtm#> .
+@prefix shapes:  <http://example.org/shapes/> .
+
+# =============================================================================
+# SHACL shapes for satellite structural model validation
+# =============================================================================
+# These shapes encode structural constraints checkable at merge time.
+# Budget constraints (power, mass) are checked by SPARQL oracle queries
+# because they require arithmetic aggregation across multiple nodes.
+
+# --- Every requirement must have at least one satisfy relationship ---
+
+shapes:RequirementSatisfactionShape a sh:NodeShape ;
+    rdfs:label "RequirementSatisfactionShape" ;
+    rdfs:comment """Every subsystem-level RequirementDefinition must have at least
+        one SatisfyRequirementUsage. System-level requirements (SAT-REQ-*)
+        are allocated via rtm:derivedFrom and are excluded.""" ;
+    sh:targetClass sysml:RequirementDefinition ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "Subsystem requirement has no satisfy relationship (not allocated to any design element)." ;
+        sh:select """
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this a sysml:RequirementDefinition .
+                # Only check requirements that derive from a parent
+                # (i.e., subsystem-level requirements, not system-level)
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    $this sysml:ownedRelationship ?rel .
+                    ?rel a sysml:SatisfyRequirementUsage .
+                }
+            }
+        """
+    ] .
+
+# --- Every subsystem must declare a power draw attribute ---
+
+shapes:SubsystemPowerDeclaredShape a sh:NodeShape ;
+    rdfs:label "SubsystemPowerDeclaredShape" ;
+    rdfs:comment """Every PartDefinition that is an ownedPart of the satellite
+        must declare a power draw attribute.""" ;
+    sh:targetClass sysml:PartDefinition ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "Subsystem is owned by satellite but does not declare a power draw attribute." ;
+        sh:select """
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX sat:   <http://example.org/adcs-demo/satellite/>
+            SELECT $this WHERE {
+                sat:GeoSat sysml:ownedPart $this .
+                FILTER NOT EXISTS {
+                    $this sysml:ownedAttribute ?attr .
+                    ?attr sysml:declaredName ?name .
+                    FILTER(CONTAINS(LCASE(?name), "power"))
+                }
+            }
+        """
+    ] .
+
+# --- Every PartUsage must reference a valid type ---
+
+shapes:PartUsageTypeShape a sh:NodeShape ;
+    rdfs:label "PartUsageTypeShape" ;
+    rdfs:comment "Every PartUsage must have a sysml:type pointing to a PartDefinition." ;
+    sh:targetClass sysml:PartUsage ;
+    sh:property [
+        sh:path sysml:type ;
+        sh:minCount 1 ;
+        sh:message "PartUsage has no type reference."
+    ] .

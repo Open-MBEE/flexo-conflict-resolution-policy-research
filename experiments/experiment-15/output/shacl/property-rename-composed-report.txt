@@ -1,0 +1,117 @@
+Validation Report
+Conforms: False
+Results (6):
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: shapes:DerivationChainShape
+	Focus Node: adcs:REQ-001
+	Value Node: adcs:REQ-001
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("Subsystem requirement is missing rtm:derivedFrom traceability link.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            PREFIX sat:   <http://example.org/adcs-demo/satellite/>
+            SELECT $this WHERE {
+                $this a sysml:RequirementDefinition ;
+                      sysml:declaredName ?name .
+                FILTER(!STRSTARTS(?name, "SAT-"))
+                FILTER NOT EXISTS {
+                    $this rtm:derivedFrom ?parent .
+                }
+            }
+        ") ]
+	Message: Subsystem requirement is missing rtm:derivedFrom traceability link.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: shapes:DerivationChainShape
+	Focus Node: adcs:REQ-002
+	Value Node: adcs:REQ-002
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("Subsystem requirement is missing rtm:derivedFrom traceability link.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            PREFIX sat:   <http://example.org/adcs-demo/satellite/>
+            SELECT $this WHERE {
+                $this a sysml:RequirementDefinition ;
+                      sysml:declaredName ?name .
+                FILTER(!STRSTARTS(?name, "SAT-"))
+                FILTER NOT EXISTS {
+                    $this rtm:derivedFrom ?parent .
+                }
+            }
+        ") ]
+	Message: Subsystem requirement is missing rtm:derivedFrom traceability link.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: shapes:DerivationChainShape
+	Focus Node: adcs:REQ-003
+	Value Node: adcs:REQ-003
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("Subsystem requirement is missing rtm:derivedFrom traceability link.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            PREFIX sat:   <http://example.org/adcs-demo/satellite/>
+            SELECT $this WHERE {
+                $this a sysml:RequirementDefinition ;
+                      sysml:declaredName ?name .
+                FILTER(!STRSTARTS(?name, "SAT-"))
+                FILTER NOT EXISTS {
+                    $this rtm:derivedFrom ?parent .
+                }
+            }
+        ") ]
+	Message: Subsystem requirement is missing rtm:derivedFrom traceability link.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: shapes:DerivationChainShape
+	Focus Node: adcs:REQ-004
+	Value Node: adcs:REQ-004
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("Subsystem requirement is missing rtm:derivedFrom traceability link.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            PREFIX sat:   <http://example.org/adcs-demo/satellite/>
+            SELECT $this WHERE {
+                $this a sysml:RequirementDefinition ;
+                      sysml:declaredName ?name .
+                FILTER(!STRSTARTS(?name, "SAT-"))
+                FILTER NOT EXISTS {
+                    $this rtm:derivedFrom ?parent .
+                }
+            }
+        ") ]
+	Message: Subsystem requirement is missing rtm:derivedFrom traceability link.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: shapes:DerivationChainShape
+	Focus Node: pwr:REQ-P01
+	Value Node: pwr:REQ-P01
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("Subsystem requirement is missing rtm:derivedFrom traceability link.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            PREFIX sat:   <http://example.org/adcs-demo/satellite/>
+            SELECT $this WHERE {
+                $this a sysml:RequirementDefinition ;
+                      sysml:declaredName ?name .
+                FILTER(!STRSTARTS(?name, "SAT-"))
+                FILTER NOT EXISTS {
+                    $this rtm:derivedFrom ?parent .
+                }
+            }
+        ") ]
+	Message: Subsystem requirement is missing rtm:derivedFrom traceability link.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: shapes:DerivationChainShape
+	Focus Node: pwr:REQ-P02
+	Value Node: pwr:REQ-P02
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("Subsystem requirement is missing rtm:derivedFrom traceability link.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            PREFIX sat:   <http://example.org/adcs-demo/satellite/>
+            SELECT $this WHERE {
+                $this a sysml:RequirementDefinition ;
+                      sysml:declaredName ?name .
+                FILTER(!STRSTARTS(?name, "SAT-"))
+                FILTER NOT EXISTS {
+                    $this rtm:derivedFrom ?parent .
+                }
+            }
+        ") ]
+	Message: Subsystem requirement is missing rtm:derivedFrom traceability link.

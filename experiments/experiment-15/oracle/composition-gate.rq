@@ -1,0 +1,37 @@
+# Composition gate — cross-package consistency check
+#
+# Finds SHACL property constraints that reference predicates (via sh:path)
+# which do not exist in the ontology as declared properties.
+# This catches the case where a shapes package references a property
+# that was renamed or removed in the ontology package.
+
+PREFIX sh:    <http://www.w3.org/ns/shacl#>
+PREFIX owl:   <http://www.w3.org/2002/07/owl#>
+PREFIX rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:  <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?shape ?path ?message WHERE {
+    ?shape sh:property ?prop .
+    ?prop sh:path ?path .
+    # Only check paths that are IRIs in our namespaces (not blank nodes / property paths)
+    FILTER(isIRI(?path))
+    FILTER(
+        STRSTARTS(STR(?path), "http://example.org/") ||
+        STRSTARTS(STR(?path), "https://www.omg.org/spec/SysML/")
+    )
+    # Check that the path exists as a declared property
+    FILTER NOT EXISTS {
+        { ?path a owl:ObjectProperty }
+        UNION
+        { ?path a owl:DatatypeProperty }
+        UNION
+        { ?path a rdf:Property }
+        UNION
+        { ?path rdfs:domain ?anyDomain }
+        UNION
+        { ?path rdfs:range ?anyRange }
+        UNION
+        { [] ?path [] }
+    }
+    OPTIONAL { ?prop sh:message ?message }
+}
