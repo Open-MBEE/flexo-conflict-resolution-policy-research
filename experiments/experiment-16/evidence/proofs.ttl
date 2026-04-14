@@ -1,0 +1,107 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix rtm:     <http://example.org/ontology/rtm#> .
+@prefix adcs:    <http://example.org/adcs-demo/> .
+@prefix pwr:     <http://example.org/adcs-demo/power/> .
+
+# =============================================================================
+# Evidence artifacts — added at the EVIDENCE lifecycle stage
+# =============================================================================
+
+# Computation agents
+adcs:SymPyEngine a rtm:ComputationEngine ;
+    prov:label "SymPy symbolic engine" .
+
+adcs:ScipyEngine a rtm:ComputationEngine ;
+    prov:label "SciPy numerical engine" .
+
+# --- ADCS evidence ---
+
+adcs:EV-PROOF-REQ-001 a rtm:ProofArtifact ;
+    rtm:addresses adcs:REQ-001 ;
+    rtm:contentHash "a7f1bfb5ca74cfae7e8891b5caecb67eab6104b1" ;
+    rtm:modelHash "2f91b8c4fcb0e4ae2fed68ddd5df1c6d3e5b3dc8" ;
+    rtm:evidenceMethod rtm:FormalProof ;
+    rtm:resultSummary "Steady-state pointing error under disturbance is bounded by 2*tau_gg/Kp" ;
+    rtm:sourceFile "analysis/build_proofs.py" ;
+    prov:wasGeneratedBy adcs:SA-REQ-001 ;
+    prov:generatedAtTime "2026-04-01T10:00:00Z"^^xsd:dateTime .
+
+adcs:SA-REQ-001 a rtm:SymbolicAnalysis ;
+    prov:wasAssociatedWith adcs:SymPyEngine .
+
+adcs:EV-PROOF-REQ-002 a rtm:ProofArtifact ;
+    rtm:addresses adcs:REQ-002 ;
+    rtm:contentHash "b3c2d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1" ;
+    rtm:modelHash "2f91b8c4fcb0e4ae2fed68ddd5df1c6d3e5b3dc8" ;
+    rtm:evidenceMethod rtm:FormalProof ;
+    rtm:resultSummary "Peak momentum = Kd*theta_0*sqrt(Kp/(2*J)), bounded below 4.0 N.m.s" ;
+    rtm:sourceFile "analysis/build_proofs.py" ;
+    prov:wasGeneratedBy adcs:SA-REQ-002 ;
+    prov:generatedAtTime "2026-04-01T10:01:00Z"^^xsd:dateTime .
+
+adcs:SA-REQ-002 a rtm:SymbolicAnalysis ;
+    prov:wasAssociatedWith adcs:SymPyEngine .
+
+adcs:EV-PROOF-REQ-003 a rtm:ProofArtifact ;
+    rtm:addresses adcs:REQ-003 ;
+    rtm:contentHash "c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3" ;
+    rtm:modelHash "2f91b8c4fcb0e4ae2fed68ddd5df1c6d3e5b3dc8" ;
+    rtm:evidenceMethod rtm:FormalProof ;
+    rtm:resultSummary "Routh-Hurwitz: all eigenvalues Re < -0.010 for positive J, Kp, Kd" ;
+    rtm:sourceFile "analysis/build_proofs.py" ;
+    prov:wasGeneratedBy adcs:SA-REQ-003 ;
+    prov:generatedAtTime "2026-04-01T10:02:00Z"^^xsd:dateTime .
+
+adcs:SA-REQ-003 a rtm:SymbolicAnalysis ;
+    prov:wasAssociatedWith adcs:SymPyEngine .
+
+adcs:EV-PROOF-REQ-004 a rtm:ProofArtifact ;
+    rtm:addresses adcs:REQ-004 ;
+    rtm:contentHash "d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4" ;
+    rtm:modelHash "2f91b8c4fcb0e4ae2fed68ddd5df1c6d3e5b3dc8" ;
+    rtm:evidenceMethod rtm:FormalProof ;
+    rtm:resultSummary "GEO gravity gradient torques are micro-Nm, well below 0.1 N.m actuator capacity" ;
+    rtm:sourceFile "analysis/build_proofs.py" ;
+    prov:wasGeneratedBy adcs:SA-REQ-004 ;
+    prov:generatedAtTime "2026-04-01T10:03:00Z"^^xsd:dateTime .
+
+adcs:SA-REQ-004 a rtm:SymbolicAnalysis ;
+    prov:wasAssociatedWith adcs:SymPyEngine .
+
+# --- Power evidence ---
+
+pwr:EV-ANALYSIS-REQ-P01 a rtm:ProofArtifact ;
+    rtm:addresses pwr:REQ-P01 ;
+    rtm:contentHash "e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5" ;
+    rtm:modelHash "2f91b8c4fcb0e4ae2fed68ddd5df1c6d3e5b3dc8" ;
+    rtm:evidenceMethod rtm:Analysis ;
+    rtm:resultSummary "2 panels × 180W × 0.85 PDU eff = 306W available > 300W budget" ;
+    rtm:sourceFile "analysis/power_budget.py" ;
+    prov:wasGeneratedBy pwr:PA-REQ-P01 ;
+    prov:generatedAtTime "2026-04-02T14:00:00Z"^^xsd:dateTime .
+
+pwr:PA-REQ-P01 a rtm:SymbolicAnalysis ;
+    prov:wasAssociatedWith adcs:SymPyEngine .
+
+pwr:EV-ANALYSIS-REQ-P02 a rtm:ProofArtifact ;
+    rtm:addresses pwr:REQ-P02 ;
+    rtm:contentHash "f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6" ;
+    rtm:modelHash "2f91b8c4fcb0e4ae2fed68ddd5df1c6d3e5b3dc8" ;
+    rtm:evidenceMethod rtm:Analysis ;
+    rtm:resultSummary "40Ah × 28V × 0.60 DOD = 672Wh; 235W × 1.2h eclipse = 282Wh needed; margin 138%" ;
+    rtm:sourceFile "analysis/power_budget.py" ;
+    prov:wasGeneratedBy pwr:PA-REQ-P02 ;
+    prov:generatedAtTime "2026-04-02T14:01:00Z"^^xsd:dateTime .
+
+pwr:PA-REQ-P02 a rtm:SymbolicAnalysis ;
+    prov:wasAssociatedWith adcs:SymPyEngine .
+
+# Evidence method individuals
+rtm:Analysis a rtm:EvidenceMethod ;
+    rdfs:label "Analysis" .
+
+rtm:FormalProof a rtm:EvidenceMethod ;
+    rdfs:label "Formal Proof" .
