@@ -1,0 +1,115 @@
+Step 1: Verifying connectivity to https://try-layer1.starforge.app...
+  Remote Layer 1 responding (HTTP 404). Token pre-set.
+
+Step 2: Creating org 'research' and repo 'satellite-remote-1773885238'...
+  org: HTTP 200
+  repo: HTTP 201
+
+Step 3: Loading ancestor model onto master...
+  load: HTTP 201
+
+Step 4: Verifying ancestor constraints...
+
+=== Oracle evaluation: master ===
+--- c1-mass-budget.rq ---
+   {'totalMass': '50', 'massBudget': '100', 'violation': '-50'}
+--- c2-power-budget.rq ---
+   {'totalPower': '25', 'powerBudget': '50', 'violation': '-25'}
+--- c3-bus-load.rq ---
+   {'totalPower': '25', 'maxLoad': '50', 'violation': '-25'}
+--- c4-nonneg-mass.rq ---
+  (no results — constraint satisfied)
+--- c5-thermal-coupling.rq ---
+   {'capacity': '15', 'commPower': '15', 'threshold': '4.5', 'violation': '-10.5'}
+--- c6-owner-cardinality.rq ---
+  (no results — constraint satisfied)
+--- name-multiplicity.rq ---
+  (no results — constraint satisfied)
+
+Step 5: Creating branch-a and branch-b from master...
+  branch-a: HTTP 201
+  branch-b: HTTP 201
+
+Step 6: Applying commits...
+  commit u on branch-a: HTTP 201
+  commit v on branch-b: HTTP 201
+
+Step 7: Verifying individual validity...
+
+=== Oracle evaluation: branch-a ===
+--- c1-mass-budget.rq ---
+   {'totalMass': '65', 'massBudget': '100', 'violation': '-35'}
+--- c2-power-budget.rq ---
+   {'totalPower': '40', 'powerBudget': '50', 'violation': '-10'}
+--- c3-bus-load.rq ---
+   {'totalPower': '40', 'maxLoad': '50', 'violation': '-10'}
+--- c4-nonneg-mass.rq ---
+  (no results — constraint satisfied)
+--- c5-thermal-coupling.rq ---
+   {'capacity': '15', 'commPower': '30', 'threshold': '9.0', 'violation': '-6.0'}
+--- c6-owner-cardinality.rq ---
+  (no results — constraint satisfied)
+--- name-multiplicity.rq ---
+  (no results — constraint satisfied)
+
+=== Oracle evaluation: branch-b ===
+--- c1-mass-budget.rq ---
+   {'totalMass': '70', 'massBudget': '100', 'violation': '-30'}
+--- c2-power-budget.rq ---
+   {'totalPower': '40', 'powerBudget': '50', 'violation': '-10'}
+--- c3-bus-load.rq ---
+   {'totalPower': '40', 'maxLoad': '50', 'violation': '-10'}
+--- c4-nonneg-mass.rq ---
+  (no results — constraint satisfied)
+--- c5-thermal-coupling.rq ---
+   {'capacity': '15', 'commPower': '15', 'threshold': '4.5', 'violation': '-10.5'}
+--- c6-owner-cardinality.rq ---
+  (no results — constraint satisfied)
+--- name-multiplicity.rq ---
+  (no results — constraint satisfied)
+
+Step 8: Constructing cross-application states...
+  branch-uv create: HTTP 201
+  apply v to branch-uv: HTTP 201
+  branch-vu create: HTTP 201
+  apply u to branch-vu: HTTP 201
+
+Step 9: Evaluating oracle on cross-application states...
+
+=== Oracle evaluation: branch-uv ===
+--- c1-mass-budget.rq ---
+   {'totalMass': '85', 'massBudget': '100', 'violation': '-15'}
+--- c2-power-budget.rq ---
+   {'totalPower': '55', 'powerBudget': '50', 'violation': '5'}
+--- c3-bus-load.rq ---
+   {'totalPower': '55', 'maxLoad': '50', 'violation': '5'}
+--- c4-nonneg-mass.rq ---
+  (no results — constraint satisfied)
+--- c5-thermal-coupling.rq ---
+   {'capacity': '15', 'commPower': '30', 'threshold': '9.0', 'violation': '-6.0'}
+--- c6-owner-cardinality.rq ---
+   {'s': 'http://example.org/satellite/CommSubsystem', 'ownerCount': '2'}
+--- name-multiplicity.rq ---
+   {'s': 'http://example.org/satellite/CommSubsystem', 'names': 'HighBandwidthComm, CommunicationsSubsystem', 'nameCount': '2'}
+
+=== Oracle evaluation: branch-vu ===
+--- c1-mass-budget.rq ---
+   {'totalMass': '85', 'massBudget': '100', 'violation': '-15'}
+--- c2-power-budget.rq ---
+   {'totalPower': '55', 'powerBudget': '50', 'violation': '5'}
+--- c3-bus-load.rq ---
+   {'totalPower': '55', 'maxLoad': '50', 'violation': '5'}
+--- c4-nonneg-mass.rq ---
+  (no results — constraint satisfied)
+--- c5-thermal-coupling.rq ---
+   {'capacity': '15', 'commPower': '30', 'threshold': '9.0', 'violation': '-6.0'}
+--- c6-owner-cardinality.rq ---
+   {'s': 'http://example.org/satellite/CommSubsystem', 'ownerCount': '2'}
+--- name-multiplicity.rq ---
+   {'s': 'http://example.org/satellite/CommSubsystem', 'names': 'HighBandwidthComm, CommunicationsSubsystem', 'nameCount': '2'}
+
+============================================
+  Experiment 9 complete.
+  Compare with Experiment 1 (local).
+  Expected: identical results.
+============================================

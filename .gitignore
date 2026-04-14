@@ -2,3 +2,5 @@
 .claude/
 .DS_Store
 **/output/repos/
+__pycache__/
+*.pyc

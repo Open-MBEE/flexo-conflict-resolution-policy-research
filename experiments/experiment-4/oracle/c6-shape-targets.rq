@@ -1,0 +1,20 @@
+# C6: SHACL shape target coverage — list SHACL shapes and count how
+# many instances match their sh:targetClass that are still in the complex.
+# With schema loaded, we can verify that SHACL shapes still have
+# valid targets after structural changes.
+
+PREFIX kc: <https://example.org/kc#>
+PREFIX mtg: <https://example.org/mtg#>
+PREFIX sh: <http://www.w3.org/ns/shacl#>
+
+SELECT ?shape ?targetClass (COUNT(?element) AS ?instanceCount)
+WHERE {
+  ?shape a sh:NodeShape .
+  ?shape sh:targetClass ?targetClass .
+  OPTIONAL {
+    ?element a ?targetClass .
+    mtg:_complex kc:hasElement ?element .
+  }
+}
+GROUP BY ?shape ?targetClass
+ORDER BY ?shape

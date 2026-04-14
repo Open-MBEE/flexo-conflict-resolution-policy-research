@@ -1,0 +1,118 @@
+Step 1: Verifying connectivity to https://experimental.starforge.app...
+  Connected. 3 existing project(s) on server.
+
+Step 2: Creating project 'satellite-scenario-2'...
+  Project created: cfaa20b6-7328-4b94-98f8-06faf6af8050
+  Default branch: 'Initial' (3d2d204c-c230-43f9-add7-377cc7a4b45f)
+
+Step 3: Loading ancestor model onto Master...
+  Ancestor commit: 188bdccd-b2fe-4cd3-a713-605226e5e238
+
+Step 4: Verifying ancestor constraints...
+  4 elements loaded.
+
+=== Oracle evaluation: master ===
+--- c1-mass-budget ---
+   {'totalMass': 50, 'massBudget': 100, 'violation': -50}
+--- c2-power-budget ---
+   {'totalPower': 25, 'powerBudget': 50, 'violation': -25}
+--- c3-bus-load ---
+   {'busPower': 25, 'maxLoad': 50, 'violation': -25}
+--- c4-nonneg-mass ---
+   (no results — constraint satisfied)
+--- c5-thermal-coupling ---
+   {'threshold': 4.5, 'capacity': 15, 'violation': -10.5}
+--- c6-owner-cardinality ---
+   (no results — constraint satisfied)
+--- name-multiplicity ---
+   (no results — constraint satisfied)
+
+Step 5: Creating branch-a and branch-b from Master...
+  branch-a: 73e9cf13-fe1d-4e78-b28d-ec9aa5e6d8ad
+  branch-b: 00c640f5-538a-4415-8108-0916044947df
+
+Step 6: Applying commits...
+  commit u on branch-a: 245b727f-e579-46d4-9b44-0f4a592681dd
+  commit v on branch-b: 833dcbd5-8a79-4f13-b72b-f1b0dea7b2b6
+
+Step 7: Verifying individual validity...
+
+=== Oracle evaluation: branch-a ===
+--- c1-mass-budget ---
+   {'totalMass': 65, 'massBudget': 100, 'violation': -35}
+--- c2-power-budget ---
+   {'totalPower': 40, 'powerBudget': 50, 'violation': -10}
+--- c3-bus-load ---
+   {'busPower': 40, 'maxLoad': 50, 'violation': -10}
+--- c4-nonneg-mass ---
+   (no results — constraint satisfied)
+--- c5-thermal-coupling ---
+   {'threshold': 9.0, 'capacity': 15, 'violation': -6.0}
+--- c6-owner-cardinality ---
+   (no results — constraint satisfied)
+--- name-multiplicity ---
+   (no results — constraint satisfied)
+
+=== Oracle evaluation: branch-b ===
+--- c1-mass-budget ---
+   {'totalMass': 70, 'massBudget': 100, 'violation': -30}
+--- c2-power-budget ---
+   {'totalPower': 40, 'powerBudget': 50, 'violation': -10}
+--- c3-bus-load ---
+   {'busPower': 40, 'maxLoad': 50, 'violation': -10}
+--- c4-nonneg-mass ---
+   (no results — constraint satisfied)
+--- c5-thermal-coupling ---
+   {'threshold': 4.5, 'capacity': 15, 'violation': -10.5}
+--- c6-owner-cardinality ---
+   (no results — constraint satisfied)
+--- name-multiplicity ---
+   (no results — constraint satisfied)
+
+Step 8: Constructing cross-application states...
+  branch-uv: a9e05122-20eb-420c-8105-a2d47f1f5391 (commit 512b6845-7d1a-4248-ad29-6b30d2993614)
+  branch-vu: 97582d7d-0bb5-45a9-876e-58e27f9cdd84 (commit 24cc3a3a-17fe-4bd4-a238-8e8972676969)
+
+Step 9: Evaluating oracle on cross-application states...
+
+=== Oracle evaluation: branch-uv ===
+--- c1-mass-budget ---
+   {'totalMass': 85, 'massBudget': 100, 'violation': -15}
+--- c2-power-budget ---
+   {'totalPower': 55, 'powerBudget': 50, 'violation': 5}
+--- c3-bus-load ---
+   {'busPower': 55, 'maxLoad': 50, 'violation': 5}
+--- c4-nonneg-mass ---
+   (no results — constraint satisfied)
+--- c5-thermal-coupling ---
+   {'threshold': 9.0, 'capacity': 15, 'violation': -6.0}
+--- c6-owner-cardinality ---
+   {'element': 'CommSubsystem', 'ownerCount': 2, 'owners': ['TeamAlpha', 'TeamBeta']}
+--- name-multiplicity ---
+   {'element': 'CommSubsystem', 'nameCount': 2, 'names': ['HighBandwidthComm', 'CommunicationsSubsystem']}
+
+=== Oracle evaluation: branch-vu ===
+--- c1-mass-budget ---
+   {'totalMass': 85, 'massBudget': 100, 'violation': -15}
+--- c2-power-budget ---
+   {'totalPower': 55, 'powerBudget': 50, 'violation': 5}
+--- c3-bus-load ---
+   {'busPower': 55, 'maxLoad': 50, 'violation': 5}
+--- c4-nonneg-mass ---
+   (no results — constraint satisfied)
+--- c5-thermal-coupling ---
+   {'threshold': 9.0, 'capacity': 15, 'violation': -6.0}
+--- c6-owner-cardinality ---
+   {'element': 'CommSubsystem', 'ownerCount': 2, 'owners': ['TeamBeta', 'TeamAlpha']}
+--- name-multiplicity ---
+   {'element': 'CommSubsystem', 'nameCount': 2, 'names': ['CommunicationsSubsystem', 'HighBandwidthComm']}
+
+============================================
+  Experiment 2 complete.
+  Compare branch-uv and branch-vu results.
+  Expected violations: C2 (+5), C3 (+5),
+  C6 (2 owners), name (2 values).
+============================================
+
+Cleaning up: deleting project cfaa20b6-7328-4b94-98f8-06faf6af8050...
+  Deleted.

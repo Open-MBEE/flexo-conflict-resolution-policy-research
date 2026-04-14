@@ -1,0 +1,99 @@
+Step 1: Verifying connectivity to https://experimental.starforge.app...
+  Connected. 3 existing project(s) on server.
+
+Step 2: Creating project 'mtg-kc-scenario-1'...
+  Project created: 77a654df-9b5a-400f-a169-15f7b7fd12c7
+  Default branch: 'Master' (e3d6da06-771a-4fe8-9bde-f8bf00880da3)
+
+Step 3: Loading MTG-KC ancestor model onto Master...
+  Ancestor commit: dc7b024b-5d62-46ba-a96a-4c122c719eb1
+
+Step 4: Verifying ancestor constraints...
+  26 elements loaded.
+
+=== Oracle evaluation: master ===
+--- c1-orphaned-properties ---
+   (no results — constraint satisfied)
+--- c2-boundary-closure ---
+   (no results — constraint satisfied)
+--- c3-complex-membership ---
+   {'ColorPair': 10, 'ColorTriple': 10, 'Color': 5}
+--- c4-edge-count ---
+   {'edgeCount': 10}
+
+Step 5: Creating branch-a and branch-b from Master...
+  branch-a: 07870c4f-1bbb-45ad-ad74-953ab8070b4f
+  branch-b: bb9cb1c0-8df4-46b5-89b3-73db73096970
+
+Step 6: Applying commits...
+  commit u on branch-a: 4402b648-31af-4e59-91d9-9ba12bf34c53
+  commit v on branch-b: c60469c1-aaa3-49b8-a31d-5ebed3fd14e2
+
+Step 7: Verifying individual validity...
+
+=== Oracle evaluation: branch-a ===
+--- c1-orphaned-properties ---
+   {'element': 'BG', 'properties': {'guild': 'golgari', 'theme': 'profanity', 'name': 'Golgari', 'disposition': 'opposite', 'boundedBy': ['mtg:Black', 'mtg:Green']}}
+   {'element': 'WBG', 'properties': {'clan': 'abzan', 'name': 'Abzan', 'thematic_triad': ['tribalism', 'community', 'profanity'], 'boundedBy': ['mtg:WB', 'mtg:GW', 'mtg:BG']}}
+   {'element': 'UBG', 'properties': {'clan': 'sultai', 'name': 'Sultai', 'thematic_triad': ['growth_mindset', 'truth_seeking', 'profanity'], 'boundedBy': ['mtg:UB', 'mtg:UG', 'mtg:BG']}}
+   {'element': 'BRG', 'properties': {'clan': 'jund', 'name': 'Jund', 'thematic_triad': ['independence', 'authenticity', 'profanity'], 'boundedBy': ['mtg:BR', 'mtg:RG', 'mtg:BG']}}
+--- c2-boundary-closure ---
+   (no results — constraint satisfied)
+--- c3-complex-membership ---
+   {'ColorPair': 9, 'Color': 5, 'ColorTriple': 7}
+--- c4-edge-count ---
+   {'edgeCount': 9}
+
+=== Oracle evaluation: branch-b ===
+--- c1-orphaned-properties ---
+   (no results — constraint satisfied)
+--- c2-boundary-closure ---
+   (no results — constraint satisfied)
+--- c3-complex-membership ---
+   {'ColorPair': 10, 'ColorTriple': 10, 'Color': 5}
+--- c4-edge-count ---
+   {'edgeCount': 10}
+
+Step 8: Constructing cross-application states...
+  branch-uv: 93b193c8-80b8-4b68-9549-8691fe5e7241 (commit 2ac051ea-e1b6-446e-91f2-c2be1f69bb08)
+  branch-vu: 42a63d8e-da30-470f-a77d-c1d41e86a7fa (commit 8a02118c-cba4-4a21-9abf-dcdad861763b)
+
+Step 9: Evaluating oracle on cross-application states...
+
+=== Oracle evaluation: branch-uv ===
+--- c1-orphaned-properties ---
+   {'element': 'BG', 'properties': {'guild': 'golgari', 'theme': 'profanity', 'name': 'Golgari', 'disposition': 'opposite', 'boundedBy': ['mtg:Black', 'mtg:Green']}}
+   {'element': 'WBG', 'properties': {'clan': 'abzan', 'name': 'Abzan', 'thematic_triad': ['tribalism', 'community', 'profanity'], 'boundedBy': ['mtg:WB', 'mtg:GW', 'mtg:BG']}}
+   {'element': 'BRG', 'properties': {'example_decks': 'Jund Sacrifice', 'playstyle': 'aggressive-midrange'}}
+   {'element': 'BG', 'properties': {'example_decks': 'Golgari Midrange', 'playstyle': 'graveyard-recursion'}}
+   {'element': 'UBG', 'properties': {'clan': 'sultai', 'name': 'Sultai', 'thematic_triad': ['growth_mindset', 'truth_seeking', 'profanity'], 'boundedBy': ['mtg:UB', 'mtg:UG', 'mtg:BG']}}
+   {'element': 'BRG', 'properties': {'clan': 'jund', 'name': 'Jund', 'thematic_triad': ['independence', 'authenticity', 'profanity'], 'boundedBy': ['mtg:BR', 'mtg:RG', 'mtg:BG']}}
+--- c2-boundary-closure ---
+   (no results — constraint satisfied)
+--- c3-complex-membership ---
+   {'ColorPair': 9, 'Color': 5, 'ColorTriple': 7}
+--- c4-edge-count ---
+   {'edgeCount': 9}
+
+=== Oracle evaluation: branch-vu ===
+--- c1-orphaned-properties ---
+   {'element': 'BG', 'properties': {'guild': 'golgari', 'example_decks': 'Golgari Midrange', 'theme': 'profanity', 'name': 'Golgari', 'disposition': 'opposite', 'playstyle': 'graveyard-recursion', 'boundedBy': ['mtg:Black', 'mtg:Green']}}
+   {'element': 'WBG', 'properties': {'clan': 'abzan', 'name': 'Abzan', 'thematic_triad': ['tribalism', 'community', 'profanity'], 'boundedBy': ['mtg:WB', 'mtg:GW', 'mtg:BG']}}
+   {'element': 'UBG', 'properties': {'clan': 'sultai', 'name': 'Sultai', 'thematic_triad': ['growth_mindset', 'truth_seeking', 'profanity'], 'boundedBy': ['mtg:UB', 'mtg:UG', 'mtg:BG']}}
+   {'element': 'BRG', 'properties': {'example_decks': 'Jund Sacrifice', 'clan': 'jund', 'name': 'Jund', 'playstyle': 'aggressive-midrange', 'thematic_triad': ['independence', 'authenticity', 'profanity'], 'boundedBy': ['mtg:BR', 'mtg:RG', 'mtg:BG']}}
+--- c2-boundary-closure ---
+   (no results — constraint satisfied)
+--- c3-complex-membership ---
+   {'ColorPair': 9, 'Color': 5, 'ColorTriple': 7}
+--- c4-edge-count ---
+   {'edgeCount': 9}
+
+============================================
+  Experiment 5 complete.
+  Compare branch-uv and branch-vu results.
+  Expected: orphaned elements on branch-uv,
+  clean state on branch-vu (non-commutative).
+============================================
+
+Cleaning up: deleting project 77a654df-9b5a-400f-a169-15f7b7fd12c7...
+  Deleted.

@@ -1,0 +1,159 @@
+Step 1: Verifying connectivity to https://experimental.starforge.app...
+  Connected. 3 existing project(s) on server.
+
+Step 2: Creating project 'mtg-kc-scenario-bridge'...
+  Project created: bf839970-5d1c-49ad-bfbc-94615546a987
+  Default branch: 'Master' (0270c488-19bc-4bfa-8ad1-e4dc4102dc6c)
+
+Step 3: Loading MTG-KC ancestor model onto Master...
+  Ancestor commit: d12305b3-f392-4153-9100-97a007d6aee5
+
+Step 4: Verifying ancestor constraints (Python + SHACL + SPARQL)...
+  26 elements loaded.
+
+=== Oracle evaluation: master ===
+--- c1-orphaned-properties (Python) ---
+   (no results — constraint satisfied)
+--- c2-boundary-closure (Python) ---
+   (no results — constraint satisfied)
+--- c3-complex-membership (Python) ---
+   {'ColorPair': 10, 'ColorTriple': 10, 'Color': 5}
+--- c4-edge-count (Python) ---
+   {'edgeCount': 10}
+--- c5-shacl-validation (pyshacl via bridge) ---
+   130 SHACL violation(s)
+   Validation Report
+   Conforms: False
+   Results (130):
+   Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+   	Severity: sh:Violation
+   	Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal("1", datatype=xsd:integer) ; sh:minCount Literal("1", datatype=xsd:integer) ; sh:path mtg:at_best ]
+   	Focus Node: mtg:BG
+   	Result Path: mtg:at_best
+--- c6-sparql-boundary-closure (rdflib via bridge) ---
+   (no results — constraint satisfied)
+
+Step 5: Creating branch-a and branch-b from Master...
+  branch-a: fa0a2940-d5d4-4ac7-af45-2be958734d06
+  branch-b: aba1f7f1-8bbd-45f2-bab9-f78056142f14
+
+Step 6: Applying commits...
+  commit u on branch-a: a4760dcb-fdc3-438e-8d1c-54d665dc4c3a
+  commit v on branch-b: c4a3e7d8-1345-4cfe-a7b6-92bf4e959222
+
+Step 7: Verifying individual validity...
+
+=== Oracle evaluation: branch-a ===
+--- c1-orphaned-properties (Python) ---
+   {'element': 'BG', 'properties': {'guild': 'golgari', 'theme': 'profanity', 'name': 'Golgari', 'disposition': 'opposite', 'boundedBy': ['mtg:Black', 'mtg:Green']}}
+   {'element': 'WBG', 'properties': {'clan': 'abzan', 'name': 'Abzan', 'thematic_triad': ['tribalism', 'community', 'profanity'], 'boundedBy': ['mtg:WB', 'mtg:GW', 'mtg:BG']}}
+   {'element': 'UBG', 'properties': {'clan': 'sultai', 'name': 'Sultai', 'thematic_triad': ['growth_mindset', 'truth_seeking', 'profanity'], 'boundedBy': ['mtg:UB', 'mtg:UG', 'mtg:BG']}}
+   {'element': 'BRG', 'properties': {'clan': 'jund', 'name': 'Jund', 'thematic_triad': ['independence', 'authenticity', 'profanity'], 'boundedBy': ['mtg:BR', 'mtg:RG', 'mtg:BG']}}
+--- c2-boundary-closure (Python) ---
+   (no results — constraint satisfied)
+--- c3-complex-membership (Python) ---
+   {'ColorPair': 9, 'Color': 5, 'ColorTriple': 7}
+--- c4-edge-count (Python) ---
+   {'edgeCount': 9}
+--- c5-shacl-validation (pyshacl via bridge) ---
+   130 SHACL violation(s)
+   Validation Report
+   Conforms: False
+   Results (130):
+   Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+   	Severity: sh:Violation
+   	Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal("1", datatype=xsd:integer) ; sh:minCount Literal("1", datatype=xsd:integer) ; sh:path mtg:at_best ]
+   	Focus Node: mtg:BG
+   	Result Path: mtg:at_best
+--- c6-sparql-boundary-closure (rdflib via bridge) ---
+   (no results — constraint satisfied)
+
+=== Oracle evaluation: branch-b ===
+--- c1-orphaned-properties (Python) ---
+   (no results — constraint satisfied)
+--- c2-boundary-closure (Python) ---
+   (no results — constraint satisfied)
+--- c3-complex-membership (Python) ---
+   {'ColorPair': 10, 'ColorTriple': 10, 'Color': 5}
+--- c4-edge-count (Python) ---
+   {'edgeCount': 10}
+--- c5-shacl-validation (pyshacl via bridge) ---
+   130 SHACL violation(s)
+   Validation Report
+   Conforms: False
+   Results (130):
+   Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+   	Severity: sh:Violation
+   	Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal("1", datatype=xsd:integer) ; sh:minCount Literal("1", datatype=xsd:integer) ; sh:path mtg:at_best ]
+   	Focus Node: mtg:BG
+   	Result Path: mtg:at_best
+--- c6-sparql-boundary-closure (rdflib via bridge) ---
+   (no results — constraint satisfied)
+
+Step 8: Constructing cross-application states...
+  branch-uv: 15301127-9d97-4a88-b63d-6184aefad444 (commit c29412e1-2c1f-4986-be8f-501bbae3d082)
+  branch-vu: 464ad0eb-986a-47a9-a89b-1583c3d8f2d2 (commit e8312846-b5d8-41b1-87f4-8606e5695699)
+
+Step 9: Evaluating oracle on cross-application states...
+
+=== Oracle evaluation: branch-uv ===
+--- c1-orphaned-properties (Python) ---
+   {'element': 'BG', 'properties': {'guild': 'golgari', 'theme': 'profanity', 'name': 'Golgari', 'disposition': 'opposite', 'boundedBy': ['mtg:Black', 'mtg:Green']}}
+   {'element': 'WBG', 'properties': {'clan': 'abzan', 'name': 'Abzan', 'thematic_triad': ['tribalism', 'community', 'profanity'], 'boundedBy': ['mtg:WB', 'mtg:GW', 'mtg:BG']}}
+   {'element': 'BRG', 'properties': {'example_decks': 'Jund Sacrifice', 'playstyle': 'aggressive-midrange'}}
+   {'element': 'BG', 'properties': {'example_decks': 'Golgari Midrange', 'playstyle': 'graveyard-recursion'}}
+   {'element': 'UBG', 'properties': {'clan': 'sultai', 'name': 'Sultai', 'thematic_triad': ['growth_mindset', 'truth_seeking', 'profanity'], 'boundedBy': ['mtg:UB', 'mtg:UG', 'mtg:BG']}}
+   {'element': 'BRG', 'properties': {'clan': 'jund', 'name': 'Jund', 'thematic_triad': ['independence', 'authenticity', 'profanity'], 'boundedBy': ['mtg:BR', 'mtg:RG', 'mtg:BG']}}
+--- c2-boundary-closure (Python) ---
+   (no results — constraint satisfied)
+--- c3-complex-membership (Python) ---
+   {'ColorPair': 9, 'Color': 5, 'ColorTriple': 7}
+--- c4-edge-count (Python) ---
+   {'edgeCount': 9}
+--- c5-shacl-validation (pyshacl via bridge) ---
+   130 SHACL violation(s)
+   Validation Report
+   Conforms: False
+   Results (130):
+   Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+   	Severity: sh:Violation
+   	Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal("1", datatype=xsd:integer) ; sh:minCount Literal("1", datatype=xsd:integer) ; sh:path mtg:at_best ]
+   	Focus Node: mtg:BG
+   	Result Path: mtg:at_best
+--- c6-sparql-boundary-closure (rdflib via bridge) ---
+   (no results — constraint satisfied)
+
+=== Oracle evaluation: branch-vu ===
+--- c1-orphaned-properties (Python) ---
+   {'element': 'BG', 'properties': {'guild': 'golgari', 'example_decks': 'Golgari Midrange', 'theme': 'profanity', 'name': 'Golgari', 'disposition': 'opposite', 'playstyle': 'graveyard-recursion', 'boundedBy': ['mtg:Black', 'mtg:Green']}}
+   {'element': 'WBG', 'properties': {'clan': 'abzan', 'name': 'Abzan', 'thematic_triad': ['tribalism', 'community', 'profanity'], 'boundedBy': ['mtg:WB', 'mtg:GW', 'mtg:BG']}}
+   {'element': 'UBG', 'properties': {'clan': 'sultai', 'name': 'Sultai', 'thematic_triad': ['growth_mindset', 'truth_seeking', 'profanity'], 'boundedBy': ['mtg:UB', 'mtg:UG', 'mtg:BG']}}
+   {'element': 'BRG', 'properties': {'example_decks': 'Jund Sacrifice', 'clan': 'jund', 'name': 'Jund', 'playstyle': 'aggressive-midrange', 'thematic_triad': ['independence', 'authenticity', 'profanity'], 'boundedBy': ['mtg:BR', 'mtg:RG', 'mtg:BG']}}
+--- c2-boundary-closure (Python) ---
+   (no results — constraint satisfied)
+--- c3-complex-membership (Python) ---
+   {'ColorPair': 9, 'Color': 5, 'ColorTriple': 7}
+--- c4-edge-count (Python) ---
+   {'edgeCount': 9}
+--- c5-shacl-validation (pyshacl via bridge) ---
+   130 SHACL violation(s)
+   Validation Report
+   Conforms: False
+   Results (130):
+   Constraint Violation in MinCountConstraintComponent (http://www.w3.org/ns/shacl#MinCountConstraintComponent):
+   	Severity: sh:Violation
+   	Source Shape: [ sh:datatype xsd:string ; sh:maxCount Literal("1", datatype=xsd:integer) ; sh:minCount Literal("1", datatype=xsd:integer) ; sh:path mtg:at_best ]
+   	Focus Node: mtg:BG
+   	Result Path: mtg:at_best
+--- c6-sparql-boundary-closure (rdflib via bridge) ---
+   (no results — constraint satisfied)
+
+============================================
+  Experiment 6 complete.
+  C1-C4: Python checks (same as Exp 5)
+  C5: SHACL validation via pyshacl bridge
+  C6: SPARQL query via rdflib bridge
+============================================
+
+Cleaning up: deleting project bf839970-5d1c-49ad-bfbc-94615546a987...
+  Deleted.

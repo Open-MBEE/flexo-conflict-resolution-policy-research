@@ -1,0 +1,145 @@
+Step 1: Verifying connectivity to https://try-layer1.starforge.app...
+  Remote Layer 1 responding (HTTP 404). Token pre-set.
+
+Step 2: Creating org 'research' and repo 'mtg-kc-remote-schema-1773885303'...
+  org: HTTP 200
+  repo: HTTP 201
+
+Step 3: Loading OWL ontology + SHACL shapes + instance onto master...
+  ontology: HTTP 201
+  shapes: HTTP 201
+  instance: HTTP 201
+
+Step 4: Verifying ancestor constraints...
+
+=== Oracle evaluation: master ===
+--- c1-orphaned-properties.rq ---
+  (no results — constraint satisfied)
+--- c2-boundary-closure.rq ---
+  (no results — constraint satisfied)
+--- c3-complex-membership.rq ---
+   {'type': 'https://example.org/mtg#Color', 'count': '5'}
+   {'type': 'https://example.org/mtg#ColorPair', 'count': '10'}
+   {'type': 'https://example.org/mtg#ColorTriple', 'count': '10'}
+--- c4-edge-count.rq ---
+   {'edgeCount': '10'}
+--- c5-type-consistency.rq ---
+  (no results — constraint satisfied)
+--- c6-shape-targets.rq ---
+   {'shape': 'https://example.org/kc/shape#ComplexShape', 'targetClass': 'https://example.org/kc#Complex', 'instanceCount': '0'}
+   {'shape': 'https://example.org/kc/shape#EdgeShape', 'targetClass': 'https://example.org/kc#Edge', 'instanceCount': '0'}
+   {'shape': 'https://example.org/kc/shape#FaceShape', 'targetClass': 'https://example.org/kc#Face', 'instanceCount': '0'}
+   {'shape': 'https://example.org/mtg/shape#ColorPairShape', 'targetClass': 'https://example.org/mtg#ColorPair', 'instanceCount': '10'}
+   {'shape': 'https://example.org/mtg/shape#ColorShape', 'targetClass': 'https://example.org/mtg#Color', 'instanceCount': '5'}
+   {'shape': 'https://example.org/mtg/shape#ColorTripleShape', 'targetClass': 'https://example.org/mtg#ColorTriple', 'instanceCount': '10'}
+
+Step 5: Creating branch-a and branch-b from master...
+  branch-a: HTTP 201
+  branch-b: HTTP 201
+
+Step 6: Applying commits...
+  commit u (remove BG) on branch-a: HTTP 201
+  commit v (enrich BG) on branch-b: HTTP 201
+
+Step 7: Verifying individual validity...
+
+=== Oracle evaluation: branch-a ===
+--- c1-orphaned-properties.rq ---
+  (no results — constraint satisfied)
+--- c2-boundary-closure.rq ---
+  (no results — constraint satisfied)
+--- c3-complex-membership.rq ---
+   {'type': 'https://example.org/mtg#Color', 'count': '5'}
+   {'type': 'https://example.org/mtg#ColorPair', 'count': '9'}
+   {'type': 'https://example.org/mtg#ColorTriple', 'count': '7'}
+--- c4-edge-count.rq ---
+   {'edgeCount': '9'}
+--- c5-type-consistency.rq ---
+  (no results — constraint satisfied)
+--- c6-shape-targets.rq ---
+   {'shape': 'https://example.org/kc/shape#ComplexShape', 'targetClass': 'https://example.org/kc#Complex', 'instanceCount': '0'}
+   {'shape': 'https://example.org/kc/shape#EdgeShape', 'targetClass': 'https://example.org/kc#Edge', 'instanceCount': '0'}
+   {'shape': 'https://example.org/kc/shape#FaceShape', 'targetClass': 'https://example.org/kc#Face', 'instanceCount': '0'}
+   {'shape': 'https://example.org/mtg/shape#ColorPairShape', 'targetClass': 'https://example.org/mtg#ColorPair', 'instanceCount': '9'}
+   {'shape': 'https://example.org/mtg/shape#ColorShape', 'targetClass': 'https://example.org/mtg#Color', 'instanceCount': '5'}
+   {'shape': 'https://example.org/mtg/shape#ColorTripleShape', 'targetClass': 'https://example.org/mtg#ColorTriple', 'instanceCount': '7'}
+
+=== Oracle evaluation: branch-b ===
+--- c1-orphaned-properties.rq ---
+  (no results — constraint satisfied)
+--- c2-boundary-closure.rq ---
+  (no results — constraint satisfied)
+--- c3-complex-membership.rq ---
+   {'type': 'https://example.org/mtg#Color', 'count': '5'}
+   {'type': 'https://example.org/mtg#ColorPair', 'count': '10'}
+   {'type': 'https://example.org/mtg#ColorTriple', 'count': '10'}
+--- c4-edge-count.rq ---
+   {'edgeCount': '10'}
+--- c5-type-consistency.rq ---
+  (no results — constraint satisfied)
+--- c6-shape-targets.rq ---
+   {'shape': 'https://example.org/kc/shape#ComplexShape', 'targetClass': 'https://example.org/kc#Complex', 'instanceCount': '0'}
+   {'shape': 'https://example.org/kc/shape#EdgeShape', 'targetClass': 'https://example.org/kc#Edge', 'instanceCount': '0'}
+   {'shape': 'https://example.org/kc/shape#FaceShape', 'targetClass': 'https://example.org/kc#Face', 'instanceCount': '0'}
+   {'shape': 'https://example.org/mtg/shape#ColorPairShape', 'targetClass': 'https://example.org/mtg#ColorPair', 'instanceCount': '10'}
+   {'shape': 'https://example.org/mtg/shape#ColorShape', 'targetClass': 'https://example.org/mtg#Color', 'instanceCount': '5'}
+   {'shape': 'https://example.org/mtg/shape#ColorTripleShape', 'targetClass': 'https://example.org/mtg#ColorTriple', 'instanceCount': '10'}
+
+Step 8: Constructing cross-application states...
+  branch-uv create: HTTP 201
+  apply v to branch-uv: HTTP 201
+  branch-vu create: HTTP 201
+  apply u to branch-vu: HTTP 201
+
+Step 9: Evaluating oracle on cross-application states...
+
+=== Oracle evaluation: branch-uv ===
+--- c1-orphaned-properties.rq ---
+   {'element': 'https://example.org/mtg#BG', 'property': 'https://example.org/mtg#example_decks', 'value': 'Golgari Midrange'}
+   {'element': 'https://example.org/mtg#BG', 'property': 'https://example.org/mtg#playstyle', 'value': 'graveyard-recursion'}
+   {'element': 'https://example.org/mtg#BRG', 'property': 'https://example.org/mtg#example_decks', 'value': 'Jund Sacrifice'}
+   {'element': 'https://example.org/mtg#BRG', 'property': 'https://example.org/mtg#playstyle', 'value': 'aggressive-midrange'}
+--- c2-boundary-closure.rq ---
+  (no results — constraint satisfied)
+--- c3-complex-membership.rq ---
+   {'type': 'https://example.org/mtg#Color', 'count': '5'}
+   {'type': 'https://example.org/mtg#ColorPair', 'count': '9'}
+   {'type': 'https://example.org/mtg#ColorTriple', 'count': '7'}
+--- c4-edge-count.rq ---
+   {'edgeCount': '9'}
+--- c5-type-consistency.rq ---
+  (no results — constraint satisfied)
+--- c6-shape-targets.rq ---
+   {'shape': 'https://example.org/kc/shape#ComplexShape', 'targetClass': 'https://example.org/kc#Complex', 'instanceCount': '0'}
+   {'shape': 'https://example.org/kc/shape#EdgeShape', 'targetClass': 'https://example.org/kc#Edge', 'instanceCount': '0'}
+   {'shape': 'https://example.org/kc/shape#FaceShape', 'targetClass': 'https://example.org/kc#Face', 'instanceCount': '0'}
+   {'shape': 'https://example.org/mtg/shape#ColorPairShape', 'targetClass': 'https://example.org/mtg#ColorPair', 'instanceCount': '9'}
+   {'shape': 'https://example.org/mtg/shape#ColorShape', 'targetClass': 'https://example.org/mtg#Color', 'instanceCount': '5'}
+   {'shape': 'https://example.org/mtg/shape#ColorTripleShape', 'targetClass': 'https://example.org/mtg#ColorTriple', 'instanceCount': '7'}
+
+=== Oracle evaluation: branch-vu ===
+--- c1-orphaned-properties.rq ---
+  (no results — constraint satisfied)
+--- c2-boundary-closure.rq ---
+  (no results — constraint satisfied)
+--- c3-complex-membership.rq ---
+   {'type': 'https://example.org/mtg#Color', 'count': '5'}
+   {'type': 'https://example.org/mtg#ColorPair', 'count': '9'}
+   {'type': 'https://example.org/mtg#ColorTriple', 'count': '7'}
+--- c4-edge-count.rq ---
+   {'edgeCount': '9'}
+--- c5-type-consistency.rq ---
+  (no results — constraint satisfied)
+--- c6-shape-targets.rq ---
+   {'shape': 'https://example.org/kc/shape#ComplexShape', 'targetClass': 'https://example.org/kc#Complex', 'instanceCount': '0'}
+   {'shape': 'https://example.org/kc/shape#EdgeShape', 'targetClass': 'https://example.org/kc#Edge', 'instanceCount': '0'}
+   {'shape': 'https://example.org/kc/shape#FaceShape', 'targetClass': 'https://example.org/kc#Face', 'instanceCount': '0'}
+   {'shape': 'https://example.org/mtg/shape#ColorPairShape', 'targetClass': 'https://example.org/mtg#ColorPair', 'instanceCount': '9'}
+   {'shape': 'https://example.org/mtg/shape#ColorShape', 'targetClass': 'https://example.org/mtg#Color', 'instanceCount': '5'}
+   {'shape': 'https://example.org/mtg/shape#ColorTripleShape', 'targetClass': 'https://example.org/mtg#ColorTriple', 'instanceCount': '7'}
+
+============================================
+  Experiment 11 complete.
+  Compare with Experiment 4 (local).
+  Expected: identical results.
+============================================

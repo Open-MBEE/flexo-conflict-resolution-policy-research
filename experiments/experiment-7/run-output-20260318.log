@@ -1,0 +1,161 @@
+============================================================
+PHASE 1: Validate identity-only deletion (SysML v2 types)
+============================================================
+
+Step 1.1: Creating test project...
+Step 1.2: Committing satellite ancestor elements...
+  Elements before: ['CommSubsystem', 'PowerBus', 'SatelliteSystem', 'ThermalSubsystem']
+Step 1.3: Deleting CommSubsystem via identity-only commit...
+  Elements after:  ['PowerBus', 'SatelliteSystem', 'ThermalSubsystem']
+
+  ✓ PASS: CommSubsystem deleted, others retained
+
+============================================================
+PHASE 2: Satellite conflict scenario (same as Exp 2)
+============================================================
+
+Step 2.1: Creating project...
+Step 2.2: Loading ancestor model...
+Step 2.3: Verifying ancestor constraints...
+  4 elements loaded.
+
+=== Oracle evaluation: master ===
+--- c1-mass-budget ---
+   {'totalMass': 50, 'massBudget': 100, 'violation': -50}
+--- c2-power-budget ---
+   {'totalPower': 25, 'powerBudget': 50, 'violation': -25}
+--- c3-bus-load ---
+   {'busPower': 25, 'maxLoad': 50, 'violation': -25}
+--- c4-nonneg-mass ---
+   (no results — constraint satisfied)
+--- c5-thermal-coupling ---
+   {'threshold': 4.5, 'capacity': 15, 'violation': -10.5}
+--- c6-owner-cardinality ---
+   (no results — constraint satisfied)
+--- name-multiplicity ---
+   (no results — constraint satisfied)
+
+Step 2.4: Creating branches...
+
+Step 2.5: Applying commits...
+
+Step 2.6: Verifying individual validity...
+
+=== Oracle evaluation: branch-a ===
+--- c1-mass-budget ---
+   {'totalMass': 65, 'massBudget': 100, 'violation': -35}
+--- c2-power-budget ---
+   {'totalPower': 40, 'powerBudget': 50, 'violation': -10}
+--- c3-bus-load ---
+   {'busPower': 40, 'maxLoad': 50, 'violation': -10}
+--- c4-nonneg-mass ---
+   (no results — constraint satisfied)
+--- c5-thermal-coupling ---
+   {'threshold': 9.0, 'capacity': 15, 'violation': -6.0}
+--- c6-owner-cardinality ---
+   (no results — constraint satisfied)
+--- name-multiplicity ---
+   (no results — constraint satisfied)
+
+=== Oracle evaluation: branch-b ===
+--- c1-mass-budget ---
+   {'totalMass': 70, 'massBudget': 100, 'violation': -30}
+--- c2-power-budget ---
+   {'totalPower': 40, 'powerBudget': 50, 'violation': -10}
+--- c3-bus-load ---
+   {'busPower': 40, 'maxLoad': 50, 'violation': -10}
+--- c4-nonneg-mass ---
+   (no results — constraint satisfied)
+--- c5-thermal-coupling ---
+   {'threshold': 4.5, 'capacity': 15, 'violation': -10.5}
+--- c6-owner-cardinality ---
+   (no results — constraint satisfied)
+--- name-multiplicity ---
+   (no results — constraint satisfied)
+
+Step 2.7: Constructing cross-application states...
+
+Step 2.8: Evaluating oracle on cross-application states...
+
+=== Oracle evaluation: branch-uv ===
+--- c1-mass-budget ---
+   {'totalMass': 85, 'massBudget': 100, 'violation': -15}
+--- c2-power-budget ---
+   {'totalPower': 55, 'powerBudget': 50, 'violation': 5}
+--- c3-bus-load ---
+   {'busPower': 55, 'maxLoad': 50, 'violation': 5}
+--- c4-nonneg-mass ---
+   (no results — constraint satisfied)
+--- c5-thermal-coupling ---
+   {'threshold': 9.0, 'capacity': 15, 'violation': -6.0}
+--- c6-owner-cardinality ---
+   {'element': 'CommSubsystem', 'ownerCount': 2, 'owners': ['TeamAlpha', 'TeamBeta']}
+--- name-multiplicity ---
+   {'element': 'CommSubsystem', 'nameCount': 2, 'names': ['HighBandwidthComm', 'CommunicationsSubsystem']}
+
+=== Oracle evaluation: branch-vu ===
+--- c1-mass-budget ---
+   {'totalMass': 85, 'massBudget': 100, 'violation': -15}
+--- c2-power-budget ---
+   {'totalPower': 55, 'powerBudget': 50, 'violation': 5}
+--- c3-bus-load ---
+   {'busPower': 55, 'maxLoad': 50, 'violation': 5}
+--- c4-nonneg-mass ---
+   (no results — constraint satisfied)
+--- c5-thermal-coupling ---
+   {'threshold': 9.0, 'capacity': 15, 'violation': -6.0}
+--- c6-owner-cardinality ---
+   {'element': 'CommSubsystem', 'ownerCount': 2, 'owners': ['TeamBeta', 'TeamAlpha']}
+--- name-multiplicity ---
+   {'element': 'CommSubsystem', 'nameCount': 2, 'names': ['CommunicationsSubsystem', 'HighBandwidthComm']}
+
+------------------------------------------------------------
+PHASE 2b: Test what happens when deletion meets modification
+------------------------------------------------------------
+
+Creating branch-del from master, deleting CommSubsystem...
+Evaluating after deletion:
+
+=== Oracle evaluation: branch-del ===
+--- c1-mass-budget ---
+   {'totalMass': 20, 'massBudget': 100, 'violation': -80}
+--- c2-power-budget ---
+   {'totalPower': 10, 'powerBudget': 50, 'violation': -40}
+--- c3-bus-load ---
+   {'busPower': 10, 'maxLoad': 50, 'violation': -40}
+--- c4-nonneg-mass ---
+   (no results — constraint satisfied)
+--- c5-thermal-coupling ---
+   (no results — constraint satisfied)
+--- c6-owner-cardinality ---
+   (no results — constraint satisfied)
+--- name-multiplicity ---
+   (no results — constraint satisfied)
+
+Creating branch-del-then-u from branch-del, applying commit u (modifies CommSubsystem)...
+
+=== Oracle evaluation: branch-del-then-u (CommSubsystem was deleted, then u re-adds it) ===
+--- c1-mass-budget ---
+   {'totalMass': 65, 'massBudget': 100, 'violation': -35}
+--- c2-power-budget ---
+   {'totalPower': 40, 'powerBudget': 50, 'violation': -10}
+--- c3-bus-load ---
+   {'busPower': 40, 'maxLoad': 50, 'violation': -10}
+--- c4-nonneg-mass ---
+   (no results — constraint satisfied)
+--- c5-thermal-coupling ---
+   {'threshold': 9.0, 'capacity': 15, 'violation': -6.0}
+--- c6-owner-cardinality ---
+   (no results — constraint satisfied)
+--- name-multiplicity ---
+   (no results — constraint satisfied)
+
+============================================
+  Experiment 7 complete.
+  Phase 1: Deletion validation
+  Phase 2: Satellite conflict (same as Exp 2)
+  Phase 2b: Deletion + modification interaction
+============================================
+
+Cleaning up...
+  Deleted.

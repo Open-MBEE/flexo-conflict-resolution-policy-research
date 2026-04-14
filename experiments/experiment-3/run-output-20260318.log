@@ -1,0 +1,105 @@
+Step 0: Waiting for Flexo services to be ready...
+  Layer 1 responding (HTTP 404).
+  Auth service ready.
+  Waiting 10s for services to settle...
+
+Step 1: Authenticating as user01...
+  Token acquired.
+
+Step 2: Creating org 'research' and repo 'mtg-kc-scenario-1'...
+  org: HTTP 201
+  repo: HTTP 201
+
+Step 3: Loading MTG-KC ancestor model onto master...
+  load: HTTP 201
+
+Step 4: Verifying ancestor constraints...
+
+=== Oracle evaluation: master ===
+--- c1-orphaned-properties.rq ---
+  (no results — constraint satisfied)
+--- c2-boundary-closure.rq ---
+  (no results — constraint satisfied)
+--- c3-complex-membership.rq ---
+   {'type': 'https://example.org/mtg#Color', 'count': '5'}
+   {'type': 'https://example.org/mtg#ColorPair', 'count': '10'}
+   {'type': 'https://example.org/mtg#ColorTriple', 'count': '10'}
+--- c4-edge-count.rq ---
+   {'edgeCount': '10'}
+
+Step 5: Creating branch-a and branch-b from master...
+  branch-a: HTTP 201
+  branch-b: HTTP 201
+
+Step 6: Applying commits...
+  commit u (remove BG) on branch-a: HTTP 201
+  commit v (enrich BG) on branch-b: HTTP 201
+
+Step 7: Verifying individual validity...
+
+=== Oracle evaluation: branch-a ===
+--- c1-orphaned-properties.rq ---
+  (no results — constraint satisfied)
+--- c2-boundary-closure.rq ---
+  (no results — constraint satisfied)
+--- c3-complex-membership.rq ---
+   {'type': 'https://example.org/mtg#Color', 'count': '5'}
+   {'type': 'https://example.org/mtg#ColorPair', 'count': '9'}
+   {'type': 'https://example.org/mtg#ColorTriple', 'count': '7'}
+--- c4-edge-count.rq ---
+   {'edgeCount': '9'}
+
+=== Oracle evaluation: branch-b ===
+--- c1-orphaned-properties.rq ---
+  (no results — constraint satisfied)
+--- c2-boundary-closure.rq ---
+  (no results — constraint satisfied)
+--- c3-complex-membership.rq ---
+   {'type': 'https://example.org/mtg#Color', 'count': '5'}
+   {'type': 'https://example.org/mtg#ColorPair', 'count': '10'}
+   {'type': 'https://example.org/mtg#ColorTriple', 'count': '10'}
+--- c4-edge-count.rq ---
+   {'edgeCount': '10'}
+
+Step 8: Constructing cross-application states...
+  branch-uv create: HTTP 201
+  apply v to branch-uv: HTTP 201
+  branch-vu create: HTTP 201
+  apply u to branch-vu: HTTP 201
+
+Step 9: Evaluating oracle on cross-application states...
+
+=== Oracle evaluation: branch-uv ===
+--- c1-orphaned-properties.rq ---
+   {'element': 'https://example.org/mtg#BG', 'property': 'https://example.org/mtg#example_decks', 'value': 'Golgari Midrange'}
+   {'element': 'https://example.org/mtg#BG', 'property': 'https://example.org/mtg#playstyle', 'value': 'graveyard-recursion'}
+   {'element': 'https://example.org/mtg#BRG', 'property': 'https://example.org/mtg#example_decks', 'value': 'Jund Sacrifice'}
+   {'element': 'https://example.org/mtg#BRG', 'property': 'https://example.org/mtg#playstyle', 'value': 'aggressive-midrange'}
+--- c2-boundary-closure.rq ---
+  (no results — constraint satisfied)
+--- c3-complex-membership.rq ---
+   {'type': 'https://example.org/mtg#Color', 'count': '5'}
+   {'type': 'https://example.org/mtg#ColorPair', 'count': '9'}
+   {'type': 'https://example.org/mtg#ColorTriple', 'count': '7'}
+--- c4-edge-count.rq ---
+   {'edgeCount': '9'}
+
+=== Oracle evaluation: branch-vu ===
+--- c1-orphaned-properties.rq ---
+  (no results — constraint satisfied)
+--- c2-boundary-closure.rq ---
+  (no results — constraint satisfied)
+--- c3-complex-membership.rq ---
+   {'type': 'https://example.org/mtg#Color', 'count': '5'}
+   {'type': 'https://example.org/mtg#ColorPair', 'count': '9'}
+   {'type': 'https://example.org/mtg#ColorTriple', 'count': '7'}
+--- c4-edge-count.rq ---
+   {'edgeCount': '9'}
+
+============================================
+  Experiment 3 complete.
+  Compare branch-uv and branch-vu results.
+  Expected: orphaned properties on BG/BRG
+  (properties on elements no longer in the
+   complex after commit u deletes them).
+============================================

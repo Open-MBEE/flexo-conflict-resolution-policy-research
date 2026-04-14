@@ -1,0 +1,14 @@
+# C3: Complex membership summary — count elements by type.
+# Useful for verifying structural changes across branches.
+
+PREFIX kc: <https://example.org/kc#>
+PREFIX mtg: <https://example.org/mtg#>
+
+SELECT ?type (COUNT(?element) AS ?count)
+WHERE {
+  mtg:_complex kc:hasElement ?element .
+  ?element a ?type .
+  FILTER(?type IN (mtg:Color, mtg:ColorPair, mtg:ColorTriple))
+}
+GROUP BY ?type
+ORDER BY ?type

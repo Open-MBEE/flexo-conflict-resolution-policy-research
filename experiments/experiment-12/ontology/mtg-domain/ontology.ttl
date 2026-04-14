@@ -1,0 +1,97 @@
+@prefix kc: <https://example.org/kc#> .
+@prefix mtg: <https://example.org/mtg#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/mtg> a owl:Ontology ;
+    rdfs:label "MTG Color Philosophy Domain Ontology" ;
+    rdfs:comment """Domain extension for the Knowledge Complex Core Ontology.
+        Maps the Magic: The Gathering color wheel onto the KC simplicial complex
+        framework. Depends on kc-core: Color→Vertex, ColorPair→Edge, ColorTriple→Face.""" ;
+    owl:imports <https://example.org/kc> .
+
+# --- Domain classes (subclass KC core types) ---
+
+mtg:Color a owl:Class ;
+    rdfs:subClassOf kc:Vertex .
+
+mtg:ColorPair a owl:Class ;
+    rdfs:subClassOf kc:Edge .
+
+mtg:ColorTriple a owl:Class ;
+    rdfs:subClassOf kc:Face .
+
+# --- Domain datatype properties ---
+
+mtg:goal a owl:DatatypeProperty ;
+    rdfs:comment "Allowed values: peace, perfection, satisfaction, freedom, harmony" ;
+    rdfs:domain mtg:Color ;
+    rdfs:range xsd:string .
+
+mtg:method a owl:DatatypeProperty ;
+    rdfs:comment "Allowed values: order, knowledge, ruthlessness, action, acceptance" ;
+    rdfs:domain mtg:Color ;
+    rdfs:range xsd:string .
+
+mtg:guild a owl:DatatypeProperty ;
+    rdfs:comment "Allowed values: azorius, dimir, rakdos, gruul, selesnya, orzhov, boros, simic, izzet, golgari" ;
+    rdfs:domain mtg:ColorPair ;
+    rdfs:range xsd:string .
+
+mtg:theme a owl:DatatypeProperty ;
+    rdfs:comment "Allowed values: design, growth_mindset, independence, authenticity, community, tribalism, heroism, truth_seeking, creativity, profanity" ;
+    rdfs:domain mtg:ColorPair ;
+    rdfs:range xsd:string .
+
+mtg:disposition a owl:DatatypeProperty ;
+    rdfs:comment "Allowed values: adjacent, opposite" ;
+    rdfs:domain mtg:ColorPair ;
+    rdfs:range xsd:string .
+
+mtg:synergies a owl:DatatypeProperty ;
+    rdfs:domain mtg:ColorPair ;
+    rdfs:range xsd:string .
+
+mtg:tensions a owl:DatatypeProperty ;
+    rdfs:domain mtg:ColorPair ;
+    rdfs:range xsd:string .
+
+mtg:clan a owl:DatatypeProperty ;
+    rdfs:comment "Allowed values: esper, grixis, jund, naya, bant, mardu, temur, abzan, jeskai, sultai" ;
+    rdfs:domain mtg:ColorTriple ;
+    rdfs:range xsd:string .
+
+mtg:structure a owl:DatatypeProperty ;
+    rdfs:comment "Allowed values: shard, wedge" ;
+    rdfs:domain mtg:ColorTriple ;
+    rdfs:range xsd:string .
+
+mtg:closure a owl:DatatypeProperty ;
+    rdfs:domain mtg:ColorTriple ;
+    rdfs:range xsd:string .
+
+mtg:thematic_triad a owl:DatatypeProperty ;
+    rdfs:comment "Allowed values: design, growth_mindset, independence, authenticity, community, tribalism, heroism, truth_seeking, creativity, profanity" ;
+    rdfs:domain mtg:ColorTriple ;
+    rdfs:range xsd:string .
+
+# --- Shared domain properties (no specific domain restriction) ---
+
+mtg:persona a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+mtg:at_best a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+mtg:at_worst a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+mtg:playstyle a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+mtg:example_behaviors a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
+
+mtg:example_decks a owl:DatatypeProperty ;
+    rdfs:range xsd:string .
