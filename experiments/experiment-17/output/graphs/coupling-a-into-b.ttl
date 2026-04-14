@@ -1,0 +1,707 @@
+@prefix adcs: <http://example.org/adcs-demo/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix pwr: <http://example.org/adcs-demo/power/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rtm: <http://example.org/ontology/rtm#> .
+@prefix sat: <http://example.org/adcs-demo/satellite/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix shapes: <http://example.org/shapes/> .
+@prefix sysml: <https://www.omg.org/spec/SysML/2.0/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+adcs:REQ-001 a sysml:RequirementDefinition ;
+    rtm:derivedFrom sat:SAT-REQ-POINTING ;
+    sysml:declaredName "REQ-001" ;
+    sysml:ownedRelationship [ a sysml:SatisfyRequirementUsage ;
+            sysml:satisfyingElement adcs:PDController,
+                adcs:StarTracker ] ;
+    sysml:text """The ADCS shall maintain pointing accuracy within 0.1 degrees
+        (3-sigma) under nominal disturbance conditions within 120 seconds
+        of a slew maneuver.""" .
+
+adcs:REQ-002 a sysml:RequirementDefinition ;
+    rtm:derivedFrom sat:SAT-REQ-MOMENTUM ;
+    sysml:declaredName "REQ-002" ;
+    sysml:ownedRelationship [ a sysml:SatisfyRequirementUsage ;
+            sysml:satisfyingElement adcs:ReactionWheel_X,
+                adcs:ReactionWheel_Y,
+                adcs:ReactionWheel_Z ] ;
+    sysml:text """Reaction wheel angular momentum shall not exceed the rated
+        maximum momentum capacity (4.0 N.m.s) during nominal operations.""" .
+
+adcs:REQ-003 a sysml:RequirementDefinition ;
+    rtm:derivedFrom sat:SAT-REQ-STABILITY ;
+    sysml:declaredName "REQ-003" ;
+    sysml:ownedRelationship [ a sysml:SatisfyRequirementUsage ;
+            sysml:satisfyingElement adcs:PDController ] ;
+    sysml:text """The closed-loop ADCS shall be asymptotically stable with
+        all eigenvalues having real parts less than or equal to -0.010 rad/s.""" .
+
+adcs:REQ-004 a sysml:RequirementDefinition ;
+    rtm:derivedFrom sat:SAT-REQ-DISTURBANCE ;
+    sysml:declaredName "REQ-004" ;
+    sysml:ownedRelationship [ a sysml:SatisfyRequirementUsage ;
+            sysml:satisfyingElement adcs:PDController,
+                adcs:ReactionWheel_X,
+                adcs:ReactionWheel_Y,
+                adcs:ReactionWheel_Z ] ;
+    sysml:text """The ADCS shall reject gravity gradient disturbance torques
+        encountered in geostationary orbit without exceeding actuator
+        torque capacity.""" .
+
+pwr:REQ-P01 a sysml:RequirementDefinition ;
+    rtm:derivedFrom sat:SAT-REQ-POWER ;
+    sysml:declaredName "REQ-P01" ;
+    sysml:ownedRelationship [ a sysml:SatisfyRequirementUsage ;
+            sysml:satisfyingElement pwr:PDU,
+                pwr:SolarArray_Port,
+                pwr:SolarArray_Starboard ] ;
+    sysml:text """The electrical power system shall provide at least 300 W
+        of regulated power to subsystem loads under nominal sunlit
+        conditions at end of life.""" .
+
+pwr:REQ-P02 a sysml:RequirementDefinition ;
+    rtm:derivedFrom sat:SAT-REQ-ECLIPSE ;
+    sysml:declaredName "REQ-P02" ;
+    sysml:ownedRelationship [ a sysml:SatisfyRequirementUsage ;
+            sysml:satisfyingElement pwr:Battery ] ;
+    sysml:text """The battery system shall sustain full subsystem loads for
+        a minimum of 72 minutes during maximum GEO eclipse without
+        exceeding 60% depth of discharge.""" .
+
+sat:GeoSat a sysml:PartDefinition ;
+    rdfs:comment """Geostationary communications satellite — system of interest.
+        Owned by the systems engineering team. Subsystem teams reference
+        satellite-level properties as interface parameters but do not
+        own or modify this file.""" ;
+    sysml:declaredName "GeoSat" ;
+    sysml:ownedAttribute sat:attr_bodyHeight,
+        sat:attr_bodyLength,
+        sat:attr_bodyWidth,
+        sat:attr_mass,
+        sat:attr_orbitalRate,
+        sat:attr_powerBudget ;
+    sysml:ownedPart adcs:ADCSSubsystem,
+        pwr:PowerSubsystem,
+        sat:CommsSubsystem,
+        sat:StructureSubsystem,
+        sat:ThermalSubsystem .
+
+rtm: a owl:Ontology ;
+    dcterms:description """Lightweight ontology for bidirectional requirements
+        traceability with reproducible computational evidence and human
+        attestation. Layers on top of SysMLv2 (structural model + requirements)
+        and W3C PROV-O (provenance). The RTM ontology adds only the evidence
+        and attestation concepts needed to close the traceability loop.
+
+        Core epistemological principle: computational evidence does not verify
+        requirements. Evidence *addresses* a requirement (structural intent)
+        but only human attestation connects evidence to requirement
+        *satisfaction* (judgment). Models are imperfect representations;
+        the engineer judges model adequacy and evidence sufficiency.""" ;
+    dcterms:title "Requirements Traceability Matrix Ontology" ;
+    owl:imports prov: .
+
+rtm:ComputationEngine a owl:Class ;
+    rdfs:label "Computation Engine" ;
+    rdfs:comment "Software that produced computational evidence (SymPy, scipy)." ;
+    rdfs:subClassOf prov:SoftwareAgent .
+
+rtm:Engineer a owl:Class ;
+    rdfs:label "Engineer" ;
+    rdfs:comment "A human expert who reviews evidence and attests to requirements." ;
+    rdfs:subClassOf prov:Agent .
+
+rtm:NumericalSimulation a owl:Class ;
+    rdfs:label "Numerical Simulation" ;
+    rdfs:comment """A computational activity that uses scipy to integrate
+        dynamical equations and produce time-domain simulation results.
+        Produces SimulationResult evidence.""" ;
+    rdfs:subClassOf prov:Activity .
+
+rtm:SimulationResult a owl:Class ;
+    rdfs:label "Simulation Result" ;
+    rdfs:comment """Numerical simulation output produced by scipy. Contains
+        simulation configuration and summary results, bound to a specific
+        model version via content hash.""" ;
+    rdfs:subClassOf rtm:Evidence .
+
+rtm:SymbolicAnalysis a owl:Class ;
+    rdfs:label "Symbolic Analysis" ;
+    rdfs:comment """A computational activity that uses SymPy to derive
+        symbolic results (eigenvalues, stability margins, bounds) from
+        structural model parameters. Produces ProofArtifact evidence.""" ;
+    rdfs:subClassOf prov:Activity .
+
+rtm:contentHash a owl:DatatypeProperty ;
+    rdfs:label "content hash" ;
+    rdfs:comment "SHA-256 hash of the evidence artifact content." ;
+    rdfs:domain rtm:Evidence ;
+    rdfs:range xsd:string .
+
+rtm:derivedFrom a owl:ObjectProperty ;
+    rdfs:label "derived from" ;
+    rdfs:comment """Traces a subsystem-level requirement back to the
+        system-level requirement it was derived from. E.g., an ADCS
+        pointing requirement derived from a satellite-level pointing
+        requirement.""" ;
+    rdfs:domain sysml:RequirementDefinition ;
+    rdfs:range sysml:RequirementDefinition .
+
+rtm:evidenceMethod a owl:ObjectProperty ;
+    rdfs:label "evidence method" ;
+    rdfs:comment "The computational method used to produce this evidence." ;
+    rdfs:domain rtm:Evidence ;
+    rdfs:range rtm:EvidenceMethod .
+
+rtm:evidenceSufficiency a owl:DatatypeProperty ;
+    rdfs:label "evidence sufficiency" ;
+    rdfs:comment """The engineer's statement on whether the computational
+        evidence is sufficient to conclude the requirement is satisfied.""" ;
+    rdfs:domain rtm:Attestation ;
+    rdfs:range xsd:string .
+
+rtm:gitCommit a owl:DatatypeProperty ;
+    rdfs:label "git commit" ;
+    rdfs:comment "Git commit SHA that produced or contains this artifact." ;
+    rdfs:domain prov:Entity ;
+    rdfs:range xsd:string .
+
+rtm:hasEvidence a owl:ObjectProperty ;
+    rdfs:label "has evidence" ;
+    rdfs:comment """Links an attestation to the evidence artifacts the
+        engineer reviewed when making their judgment.""" ;
+    rdfs:domain rtm:Attestation ;
+    rdfs:range rtm:Evidence .
+
+rtm:modelAdequacy a owl:DatatypeProperty ;
+    rdfs:label "model adequacy" ;
+    rdfs:comment """The engineer's statement on whether the model is an
+        adequate representation of the physical system for the purpose
+        of evaluating the attested requirement.""" ;
+    rdfs:domain rtm:Attestation ;
+    rdfs:range xsd:string .
+
+rtm:modelHash a owl:DatatypeProperty ;
+    rdfs:label "model hash" ;
+    rdfs:comment """SHA-256 hash of the structural model at the time
+        evidence was produced. Binds evidence to a specific model version.""" ;
+    rdfs:domain rtm:Evidence ;
+    rdfs:range xsd:string .
+
+rtm:proofHash a owl:DatatypeProperty ;
+    rdfs:label "proof hash" ;
+    rdfs:comment "SHA-256 hash of the proof script content + model hash." ;
+    rdfs:domain rtm:ProofArtifact ;
+    rdfs:range xsd:string .
+
+rtm:resultSummary a owl:DatatypeProperty ;
+    rdfs:label "result summary" ;
+    rdfs:comment "Human-readable summary of the evidence content." ;
+    rdfs:domain rtm:Evidence ;
+    rdfs:range xsd:string .
+
+rtm:sourceFile a owl:DatatypeProperty ;
+    rdfs:label "source file" ;
+    rdfs:comment "Path to the script or data file that produced this evidence." ;
+    rdfs:domain rtm:Evidence ;
+    rdfs:range xsd:string .
+
+shapes:PartUsageTypeShape a sh:NodeShape ;
+    rdfs:label "PartUsageTypeShape" ;
+    rdfs:comment "Every PartUsage must have a sysml:type pointing to a PartDefinition." ;
+    sh:property [ sh:message "PartUsage has no type reference." ;
+            sh:minCount 1 ;
+            sh:path sysml:type ] ;
+    sh:targetClass sysml:PartUsage .
+
+shapes:RequirementSatisfactionShape a sh:NodeShape ;
+    rdfs:label "RequirementSatisfactionShape" ;
+    rdfs:comment """Every subsystem-level RequirementDefinition must have at least
+        one SatisfyRequirementUsage. System-level requirements (SAT-REQ-*)
+        are allocated via rtm:derivedFrom and are excluded.""" ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            sh:message "Subsystem requirement has no satisfy relationship (not allocated to any design element)." ;
+            sh:select """
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this a sysml:RequirementDefinition .
+                # Only check requirements that derive from a parent
+                # (i.e., subsystem-level requirements, not system-level)
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    $this sysml:ownedRelationship ?rel .
+                    ?rel a sysml:SatisfyRequirementUsage .
+                }
+            }
+        """ ] ;
+    sh:targetClass sysml:RequirementDefinition .
+
+shapes:SubsystemPowerDeclaredShape a sh:NodeShape ;
+    rdfs:label "SubsystemPowerDeclaredShape" ;
+    rdfs:comment """Every PartDefinition that is an ownedPart of the satellite
+        must declare a power draw attribute.""" ;
+    sh:sparql [ a sh:SPARQLConstraint ;
+            sh:message "Subsystem is owned by satellite but does not declare a power draw attribute." ;
+            sh:select """
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX sat:   <http://example.org/adcs-demo/satellite/>
+            SELECT $this WHERE {
+                sat:GeoSat sysml:ownedPart $this .
+                FILTER NOT EXISTS {
+                    $this sysml:ownedAttribute ?attr .
+                    ?attr sysml:declaredName ?name .
+                    FILTER(CONTAINS(LCASE(?name), "power"))
+                }
+            }
+        """ ] ;
+    sh:targetClass sysml:PartDefinition .
+
+adcs:ADCSSubsystem a sysml:PartDefinition ;
+    rdfs:comment """Attitude Determination and Control System. Owned by
+        the controls team. Contains actuators, sensors, and controller.""" ;
+    sysml:declaredName "ADCS" ;
+    sysml:ownedAttribute adcs:attr_adcs_powerDraw ;
+    sysml:ownedPart adcs:IMU,
+        adcs:PDController,
+        adcs:ReactionWheel_X,
+        adcs:ReactionWheel_Y,
+        adcs:ReactionWheel_Z,
+        adcs:StarTracker .
+
+adcs:IMU a sysml:PartUsage ;
+    sysml:declaredName "IMU" ;
+    sysml:type adcs:IMUDef .
+
+adcs:IMUDef a sysml:PartDefinition ;
+    rdfs:comment "Inertial measurement unit — angular rate measurements." ;
+    sysml:declaredName "IMU" ;
+    sysml:ownedAttribute adcs:attr_imu_arw,
+        adcs:attr_imu_bias,
+        adcs:attr_imu_mass,
+        adcs:attr_imu_power .
+
+adcs:PDControllerDef a sysml:ConstraintDefinition ;
+    rdfs:comment """Proportional-derivative attitude controller.
+        tau = -Kp/2 * theta_error - Kd * omega""" ;
+    sysml:declaredName "PDController" ;
+    sysml:ownedAttribute adcs:attr_pd_Kd,
+        adcs:attr_pd_Kp,
+        adcs:attr_pd_power .
+
+adcs:StarTrackerDef a sysml:PartDefinition ;
+    rdfs:comment "Star tracker — primary attitude determination sensor." ;
+    sysml:declaredName "StarTracker" ;
+    sysml:ownedAttribute adcs:attr_st_accuracy,
+        adcs:attr_st_mass,
+        adcs:attr_st_power,
+        adcs:attr_st_updateRate .
+
+adcs:attr_adcs_powerDraw a sysml:AttributeUsage ;
+    rdfs:comment "Total ADCS nominal power draw (sum of all components)." ;
+    sysml:declaredName "adcsPowerDraw" ;
+    sysml:unit "W" ;
+    sysml:value 8e+01 .
+
+adcs:attr_imu_arw a sysml:AttributeUsage ;
+    sysml:declaredName "gyroARW" ;
+    sysml:unit "rad/s/sqrt(Hz)" ;
+    sysml:value 1.7e-03 .
+
+adcs:attr_imu_bias a sysml:AttributeUsage ;
+    sysml:declaredName "gyroBias" ;
+    sysml:unit "rad/s" ;
+    sysml:value 1e-04 .
+
+adcs:attr_imu_mass a sysml:AttributeUsage ;
+    sysml:declaredName "imuMass" ;
+    sysml:unit "kg" ;
+    sysml:value 5e-01 .
+
+adcs:attr_imu_power a sysml:AttributeUsage ;
+    rdfs:comment "IMU nominal power draw." ;
+    sysml:declaredName "imuPower" ;
+    sysml:unit "W" ;
+    sysml:value 3e+00 .
+
+adcs:attr_pd_Kd a sysml:AttributeUsage ;
+    rdfs:comment "Derivative gain." ;
+    sysml:declaredName "Kd" ;
+    sysml:unit "N.m.s/rad" ;
+    sysml:value 1e+01 .
+
+adcs:attr_pd_Kp a sysml:AttributeUsage ;
+    rdfs:comment "Proportional gain." ;
+    sysml:declaredName "Kp" ;
+    sysml:unit "N.m/rad" ;
+    sysml:value 1e+00 .
+
+adcs:attr_pd_power a sysml:AttributeUsage ;
+    rdfs:comment "Controller compute board power draw." ;
+    sysml:declaredName "controllerPower" ;
+    sysml:unit "W" ;
+    sysml:value 3e+00 .
+
+adcs:attr_rw_mass a sysml:AttributeUsage ;
+    rdfs:comment "Mass of a single reaction wheel." ;
+    sysml:declaredName "wheelMass" ;
+    sysml:unit "kg" ;
+    sysml:value 2.5e+00 .
+
+adcs:attr_rw_maxMomentum a sysml:AttributeUsage ;
+    rdfs:comment "Maximum angular momentum storage per wheel." ;
+    sysml:declaredName "maxMomentum" ;
+    sysml:unit "N.m.s" ;
+    sysml:value 4e+00 .
+
+adcs:attr_rw_maxTorque a sysml:AttributeUsage ;
+    rdfs:comment "Maximum torque output per wheel." ;
+    sysml:declaredName "maxTorque" ;
+    sysml:unit "N.m" ;
+    sysml:value 1e-01 .
+
+adcs:attr_rw_power a sysml:AttributeUsage ;
+    rdfs:comment "Nominal power draw of a single reaction wheel." ;
+    sysml:declaredName "wheelPower" ;
+    sysml:unit "W" ;
+    sysml:value 2.2e+01 .
+
+adcs:attr_st_accuracy a sysml:AttributeUsage ;
+    rdfs:comment "Star tracker pointing accuracy (1-sigma)." ;
+    sysml:declaredName "stAccuracy" ;
+    sysml:unit "arcsec" ;
+    sysml:value 5e+00 .
+
+adcs:attr_st_mass a sysml:AttributeUsage ;
+    sysml:declaredName "stMass" ;
+    sysml:unit "kg" ;
+    sysml:value 2e+00 .
+
+adcs:attr_st_power a sysml:AttributeUsage ;
+    rdfs:comment "Star tracker nominal power draw." ;
+    sysml:declaredName "stPower" ;
+    sysml:unit "W" ;
+    sysml:value 8e+00 .
+
+adcs:attr_st_updateRate a sysml:AttributeUsage ;
+    sysml:declaredName "stUpdateRate" ;
+    sysml:unit "Hz" ;
+    sysml:value 4e+00 .
+
+pwr:BatteryDef a sysml:PartDefinition ;
+    rdfs:comment "Li-ion battery pack for eclipse power and peak loads." ;
+    sysml:declaredName "Battery" ;
+    sysml:ownedAttribute pwr:attr_bat_capacity,
+        pwr:attr_bat_dod,
+        pwr:attr_bat_mass,
+        pwr:attr_bat_voltage .
+
+pwr:PDUDef a sysml:PartDefinition ;
+    rdfs:comment "Power distribution unit — regulates and routes power to subsystems." ;
+    sysml:declaredName "PDU" ;
+    sysml:ownedAttribute pwr:attr_pdu_efficiency,
+        pwr:attr_pdu_mass .
+
+pwr:PowerSubsystem a sysml:PartDefinition ;
+    rdfs:comment """Electrical Power System. Owned by the power team.
+        Generates, stores, and distributes electrical power to all
+        subsystems. Sets the power budget that other teams draw from.""" ;
+    sysml:declaredName "Power" ;
+    sysml:ownedAttribute pwr:attr_availablePower,
+        pwr:attr_pwr_powerDraw ;
+    sysml:ownedPart pwr:Battery,
+        pwr:PDU,
+        pwr:SolarArray_Port,
+        pwr:SolarArray_Starboard .
+
+pwr:attr_availablePower a sysml:AttributeUsage ;
+    rdfs:comment "Total power available to subsystems (generation * PDU efficiency)." ;
+    sysml:declaredName "availablePower" ;
+    sysml:unit "W" ;
+    sysml:value 2.55e+02 .
+
+pwr:attr_bat_capacity a sysml:AttributeUsage ;
+    rdfs:comment "Battery energy storage capacity." ;
+    sysml:declaredName "batteryCapacity" ;
+    sysml:unit "Ah" ;
+    sysml:value 4e+01 .
+
+pwr:attr_bat_dod a sysml:AttributeUsage ;
+    rdfs:comment "Maximum allowable depth of discharge." ;
+    sysml:declaredName "maxDepthOfDischarge" ;
+    sysml:unit "dimensionless" ;
+    sysml:value 6e-01 .
+
+pwr:attr_bat_mass a sysml:AttributeUsage ;
+    sysml:declaredName "batteryMass" ;
+    sysml:unit "kg" ;
+    sysml:value 1.2e+01 .
+
+pwr:attr_bat_voltage a sysml:AttributeUsage ;
+    rdfs:comment "Nominal battery bus voltage." ;
+    sysml:declaredName "batteryVoltage" ;
+    sysml:unit "V" ;
+    sysml:value 2.8e+01 .
+
+pwr:attr_pdu_efficiency a sysml:AttributeUsage ;
+    rdfs:comment "Power distribution efficiency (losses from regulation, switching)." ;
+    sysml:declaredName "pduEfficiency" ;
+    sysml:unit "dimensionless" ;
+    sysml:value 8.5e-01 .
+
+pwr:attr_pdu_mass a sysml:AttributeUsage ;
+    sysml:declaredName "pduMass" ;
+    sysml:unit "kg" ;
+    sysml:value 5e+00 .
+
+pwr:attr_pwr_powerDraw a sysml:AttributeUsage ;
+    rdfs:comment "Power subsystem's own power draw (charge regulation, telemetry)." ;
+    sysml:declaredName "pwrSubsystemPowerDraw" ;
+    sysml:unit "W" ;
+    sysml:value 1.5e+01 .
+
+pwr:attr_sa_area a sysml:AttributeUsage ;
+    rdfs:comment "Active cell area per panel." ;
+    sysml:declaredName "panelArea" ;
+    sysml:unit "m^2" ;
+    sysml:value 2.25e+00 .
+
+pwr:attr_sa_degradation a sysml:AttributeUsage ;
+    rdfs:comment "End-of-life power degradation factor (15 year GEO)." ;
+    sysml:declaredName "degradationFactor" ;
+    sysml:unit "dimensionless" ;
+    sysml:value 7.7e-01 .
+
+pwr:attr_sa_mass a sysml:AttributeUsage ;
+    rdfs:comment "Mass of a single solar panel (including deployment mechanism)." ;
+    sysml:declaredName "panelMass" ;
+    sysml:unit "kg" ;
+    sysml:value 3e+01 .
+
+pwr:attr_sa_power a sysml:AttributeUsage ;
+    rdfs:comment "BOL power output per panel at GEO (normal incidence)." ;
+    sysml:declaredName "panelPower" ;
+    sysml:unit "W" ;
+    sysml:value 1.5e+02 .
+
+sat:CommsSubsystem a sysml:PartDefinition ;
+    rdfs:comment "Comms subsystem — ADCS team points the antenna, comms defines link budget." ;
+    sysml:declaredName "Communications" ;
+    sysml:ownedAttribute sat:attr_comms_powerDraw .
+
+sat:SAT-REQ-DISTURBANCE a sysml:RequirementDefinition ;
+    sysml:declaredName "SAT-REQ-DISTURBANCE" ;
+    sysml:text """The satellite shall reject environmental disturbance torques
+        encountered in geostationary orbit.""" .
+
+sat:SAT-REQ-ECLIPSE a sysml:RequirementDefinition ;
+    sysml:declaredName "SAT-REQ-ECLIPSE" ;
+    sysml:text """The satellite shall sustain full operations during the
+        maximum GEO eclipse duration of 72 minutes.""" .
+
+sat:SAT-REQ-MOMENTUM a sysml:RequirementDefinition ;
+    sysml:declaredName "SAT-REQ-MOMENTUM" ;
+    sysml:text """The satellite shall not accumulate angular momentum beyond
+        the capacity of onboard momentum management devices.""" .
+
+sat:SAT-REQ-POINTING a sysml:RequirementDefinition ;
+    sysml:declaredName "SAT-REQ-POINTING" ;
+    sysml:text """The satellite shall maintain antenna boresight within 0.1 degrees
+        of the target ground station under nominal operating conditions.""" .
+
+sat:SAT-REQ-POWER a sysml:RequirementDefinition ;
+    sysml:declaredName "SAT-REQ-POWER" ;
+    sysml:text """Total satellite power consumption shall not exceed the
+        available power budget under nominal sunlit operations.""" .
+
+sat:SAT-REQ-STABILITY a sysml:RequirementDefinition ;
+    sysml:declaredName "SAT-REQ-STABILITY" ;
+    sysml:text """The satellite attitude control system shall be asymptotically
+        stable under all nominal operating conditions.""" .
+
+sat:StructureSubsystem a sysml:PartDefinition ;
+    rdfs:comment "Structural subsystem — defines mass properties, provides inertia tensor." ;
+    sysml:declaredName "Structure" ;
+    sysml:ownedAttribute sat:attr_structure_powerDraw .
+
+sat:ThermalSubsystem a sysml:PartDefinition ;
+    rdfs:comment "Thermal subsystem — manages heat from reaction wheels and electronics." ;
+    sysml:declaredName "Thermal" ;
+    sysml:ownedAttribute sat:attr_thermal_powerDraw .
+
+sat:attr_bodyHeight a sysml:AttributeUsage ;
+    sysml:declaredName "bodyHeight" ;
+    sysml:unit "m" ;
+    sysml:value 1.1e+00 .
+
+sat:attr_bodyLength a sysml:AttributeUsage ;
+    sysml:declaredName "bodyLength" ;
+    sysml:unit "m" ;
+    sysml:value 9e-01 .
+
+sat:attr_bodyWidth a sysml:AttributeUsage ;
+    sysml:declaredName "bodyWidth" ;
+    sysml:unit "m" ;
+    sysml:value 1e+00 .
+
+sat:attr_comms_powerDraw a sysml:AttributeUsage ;
+    rdfs:comment "Communications subsystem nominal power draw." ;
+    sysml:declaredName "commsPowerDraw" ;
+    sysml:unit "W" ;
+    sysml:value 1.2e+02 .
+
+sat:attr_mass a sysml:AttributeUsage ;
+    rdfs:comment "Total satellite bus mass (excluding panels and antenna)." ;
+    sysml:declaredName "mass" ;
+    sysml:unit "kg" ;
+    sysml:value 5.5e+02 .
+
+sat:attr_orbitalRate a sysml:AttributeUsage ;
+    rdfs:comment "GEO orbital angular rate (2*pi / 86400 s)." ;
+    sysml:declaredName "orbitalRate" ;
+    sysml:unit "rad/s" ;
+    sysml:value 7.2722e-05 .
+
+sat:attr_powerBudget a sysml:AttributeUsage ;
+    rdfs:comment "Total power available to subsystems after distribution losses." ;
+    sysml:declaredName "powerBudget" ;
+    sysml:unit "W" ;
+    sysml:value 3e+02 .
+
+sat:attr_structure_powerDraw a sysml:AttributeUsage ;
+    rdfs:comment "Structure subsystem power draw (deployment mechanisms, heaters)." ;
+    sysml:declaredName "structurePowerDraw" ;
+    sysml:unit "W" ;
+    sysml:value 1e+01 .
+
+sat:attr_thermal_powerDraw a sysml:AttributeUsage ;
+    rdfs:comment "Thermal subsystem nominal power draw (heaters, TEC)." ;
+    sysml:declaredName "thermalPowerDraw" ;
+    sysml:unit "W" ;
+    sysml:value 4e+01 .
+
+rtm:EvidenceMethod a owl:Class ;
+    rdfs:label "Evidence Method" ;
+    rdfs:comment "The computational method used to produce evidence." .
+
+rtm:ProofArtifact a owl:Class ;
+    rdfs:label "Proof Artifact" ;
+    rdfs:comment """A symbolic proof produced by SymPy — a chain of lemmas
+        each independently verifiable. Bound to a specific model version
+        via content hash.""" ;
+    rdfs:subClassOf rtm:Evidence .
+
+rtm:addressedBy a owl:ObjectProperty ;
+    rdfs:label "addressed by" ;
+    rdfs:comment "Inverse of rtm:addresses." ;
+    rdfs:domain sysml:RequirementDefinition ;
+    rdfs:range rtm:Evidence ;
+    owl:inverseOf rtm:addresses .
+
+rtm:addresses a owl:ObjectProperty ;
+    rdfs:label "addresses" ;
+    rdfs:comment """Structural link from evidence to the requirement it was
+        produced to evaluate. This is NOT an attestation — it records
+        intent ('this proof was constructed to address REQ-003'), not
+        judgment ('this proof is sufficient to satisfy REQ-003').
+        The human attestation resolves whether addressed evidence is
+        sufficient.""" ;
+    rdfs:domain rtm:Evidence ;
+    rdfs:range sysml:RequirementDefinition ;
+    owl:inverseOf rtm:addressedBy .
+
+rtm:attestedBy a owl:ObjectProperty ;
+    rdfs:label "attested by" ;
+    rdfs:comment "Inverse of rtm:attests." ;
+    rdfs:domain sysml:RequirementDefinition ;
+    rdfs:range rtm:Attestation ;
+    owl:inverseOf rtm:attests .
+
+rtm:attests a owl:ObjectProperty ;
+    rdfs:label "attests" ;
+    rdfs:comment """Links an attestation to the requirement it attests.
+        This is the ONLY property that connects evidence to requirement
+        satisfaction — it always passes through a human judgment.""" ;
+    rdfs:domain rtm:Attestation ;
+    rdfs:range sysml:RequirementDefinition ;
+    owl:inverseOf rtm:attestedBy .
+
+adcs:StarTracker a sysml:PartUsage ;
+    sysml:declaredName "StarTracker" ;
+    sysml:type adcs:StarTrackerDef .
+
+pwr:Battery a sysml:PartUsage ;
+    sysml:declaredName "Battery" ;
+    sysml:type pwr:BatteryDef .
+
+pwr:PDU a sysml:PartUsage ;
+    sysml:declaredName "PDU" ;
+    sysml:type pwr:PDUDef .
+
+pwr:SolarArrayDef a sysml:PartDefinition ;
+    rdfs:comment "Deployable solar array panel — GaAs triple-junction cells." ;
+    sysml:declaredName "SolarArray" ;
+    sysml:ownedAttribute pwr:attr_sa_area,
+        pwr:attr_sa_degradation,
+        pwr:attr_sa_mass,
+        pwr:attr_sa_power .
+
+pwr:SolarArray_Port a sysml:PartUsage ;
+    rdfs:comment "Port-side solar array." ;
+    sysml:declaredName "SolarArray_Port" ;
+    sysml:type pwr:SolarArrayDef .
+
+pwr:SolarArray_Starboard a sysml:PartUsage ;
+    rdfs:comment "Starboard-side solar array." ;
+    sysml:declaredName "SolarArray_Starboard" ;
+    sysml:type pwr:SolarArrayDef .
+
+adcs:ReactionWheelDef a sysml:PartDefinition ;
+    rdfs:comment "Reaction wheel — single-axis momentum exchange actuator." ;
+    sysml:declaredName "ReactionWheel" ;
+    sysml:ownedAttribute adcs:attr_rw_mass,
+        adcs:attr_rw_maxMomentum,
+        adcs:attr_rw_maxTorque,
+        adcs:attr_rw_power .
+
+adcs:ReactionWheel_X a sysml:PartUsage ;
+    rdfs:comment "Reaction wheel on X axis." ;
+    sysml:declaredName "ReactionWheel_X" ;
+    sysml:type adcs:ReactionWheelDef .
+
+adcs:ReactionWheel_Y a sysml:PartUsage ;
+    rdfs:comment "Reaction wheel on Y axis." ;
+    sysml:declaredName "ReactionWheel_Y" ;
+    sysml:type adcs:ReactionWheelDef .
+
+adcs:ReactionWheel_Z a sysml:PartUsage ;
+    rdfs:comment "Reaction wheel on Z axis." ;
+    sysml:declaredName "ReactionWheel_Z" ;
+    sysml:type adcs:ReactionWheelDef .
+
+adcs:PDController a sysml:PartUsage ;
+    sysml:declaredName "PDController" ;
+    sysml:type adcs:PDControllerDef .
+
+rtm:Attestation a owl:Class ;
+    rdfs:label "Attestation" ;
+    rdfs:comment """A human judgment that computational evidence is sufficient
+        to deem a requirement satisfied. The engineer judges two things:
+        (a) model adequacy — whether the model is an adequate representation
+        of the physical system for this requirement, and (b) evidence
+        sufficiency — whether the computational results within that model
+        support the requirement. This is the ONLY class that connects
+        evidence to requirement satisfaction.""" ;
+    rdfs:subClassOf prov:Activity .
+
+rtm:Evidence a owl:Class ;
+    rdfs:label "Evidence" ;
+    rdfs:comment """A computational artifact that constitutes a claim true
+        within a model. Evidence is produced by computational activities
+        (symbolic analysis, numerical simulation) and is consumed by
+        human attestation. Evidence alone does not verify a requirement.""" ;
+    rdfs:subClassOf prov:Entity .
+

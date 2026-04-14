@@ -1,0 +1,6 @@
+* 166ea1c (HEAD -> adcs-draw-70) ADCS: set draw to 70W
+| * d2bcb00 (power-reduce-and-draw-55) Power: set ADCS draw to 55W (independent analysis)
+| * 9f913a6 Power: reduce available to 250W
+|/  
+* 2cb3cf6 (main) ancestor
+* 8d31302 initial commit (empty)
