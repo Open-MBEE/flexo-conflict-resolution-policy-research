@@ -100,8 +100,8 @@ output/
 │   └── false-negative-*.ttl
 ├── shacl/
 │   └── *-report.txt          ← SHACL validation reports
-├── repos/                    ← git repos (inspectable)
-│   ├── true-negative/
+├── repos/                    ← git repos (regenerated on each run, gitignored)
+│   ├── true-negative/        inspect with: git -C output/repos/false-negative log --graph --all
 │   ├── false-negative/
 │   ├── true-positive/
 │   └── false-positive/
