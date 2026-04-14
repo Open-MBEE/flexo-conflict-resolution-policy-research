@@ -1,0 +1,6 @@
+* efd29b0 (HEAD -> main) UPDATE: currentModelHash to reflect structural change
+* 7a711fb DESIGN UPDATE: upgrade wheel momentum capacity 4.0 -> 8.0 N.m.s
+* f75b931 ATTESTATION: human review of evidence
+* 0880fa1 EVIDENCE: proofs bound to structural model v1
+* afd94b8 STRUCTURAL: model and requirements defined
+* f81c3f8 initial commit (empty)
