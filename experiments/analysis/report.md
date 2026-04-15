@@ -180,7 +180,7 @@ Running all five shapes against a merged state checks both lifecycle completenes
 
 ## Comparison with Experiments 1-13
 
-| Aspect | Experiments 1-13 (Flexo) | Experiments 14-18 (Git + RDF) |
+| Aspect | Experiments 1-13 (Flexo) | Experiments 14-20 (Git + RDF) |
 |--------|--------------------------|-------------------------------|
 | VCS | Flexo MMS (RDF-native) | Git (text-oriented) |
 | Conflict detection | Server-side SPARQL + client-side pyshacl | Client-side SHACL + SPARQL + Git merge signal |
