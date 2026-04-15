@@ -1,0 +1,4 @@
+* abb1011 (HEAD -> main) ATTESTATION: 5 of 6 requirements attested; REQ-001 declined
+* 3a0afa0 EVIDENCE: fresh proofs bound to model v2 (from reverification pipeline)
+* 3474ea3 MODEL v2: wheel momentum 8.0 N.m.s
+* 4afafdf initial commit (empty)

@@ -1,0 +1,196 @@
+{
+  "experiment": 19,
+  "title": "Programmatic Reverification Pipeline",
+  "timestamp": "2026-04-15T00:04:05.315511+00:00",
+  "duration_seconds": 1.17,
+  "environment": {
+    "python_version": "3.9.7",
+    "rdflib_version": "7.6.0",
+    "pyshacl_version": "0.31.0",
+    "gitpython_version": "3.1.46",
+    "platform": "darwin",
+    "git_commit": "95fd5c6"
+  },
+  "parameters": {
+    "model_change": "wheel maxMomentum 4.0 -> 8.0 N.m.s",
+    "proof_count": 6,
+    "pipeline_steps": [
+      "detect stale evidence",
+      "re-run proofs against new model",
+      "generate fresh evidence",
+      "verify freshness restored"
+    ]
+  },
+  "steps": [
+    {
+      "step": 1,
+      "name": "load_data",
+      "description": "Load model files",
+      "timestamp": "2026-04-15T00:04:04.147474+00:00",
+      "duration_seconds": 0.002,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 2,
+      "name": "commit_v1",
+      "description": "Commit original structural model (v1)",
+      "timestamp": "2026-04-15T00:04:04.371477+00:00",
+      "duration_seconds": 0.04,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 3,
+      "name": "add_stale_evidence",
+      "description": "Add evidence bound to model v1",
+      "timestamp": "2026-04-15T00:04:04.387817+00:00",
+      "duration_seconds": 0.016,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 4,
+      "name": "evolve_model",
+      "description": "Evolve model: wheel maxMomentum 4.0 -> 8.0 N.m.s",
+      "timestamp": "2026-04-15T00:04:04.436300+00:00",
+      "duration_seconds": 0.048,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 5,
+      "name": "detect_staleness",
+      "description": "Detect stale evidence (pre-reverification)",
+      "timestamp": "2026-04-15T00:04:04.737194+00:00",
+      "duration_seconds": 0.301,
+      "outcome": "success",
+      "details": {
+        "stale_count": 6
+      }
+    },
+    {
+      "step": 6,
+      "name": "rerun_proofs",
+      "description": "Re-run proofs against model v2 (simulated)",
+      "timestamp": "2026-04-15T00:04:04.737257+00:00",
+      "duration_seconds": 0.0,
+      "outcome": "success",
+      "details": {
+        "stable_count": 5,
+        "changed_count": 1,
+        "all_pass": true
+      }
+    },
+    {
+      "step": 7,
+      "name": "generate_fresh",
+      "description": "Generate fresh evidence bound to model v2",
+      "timestamp": "2026-04-15T00:04:04.756845+00:00",
+      "duration_seconds": 0.02,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 8,
+      "name": "check_freshness",
+      "description": "Verify evidence freshness restored",
+      "timestamp": "2026-04-15T00:04:04.928895+00:00",
+      "duration_seconds": 0.172,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 9,
+      "name": "check_lifecycle",
+      "description": "Check lifecycle gates (evidence completeness)",
+      "timestamp": "2026-04-15T00:04:05.255424+00:00",
+      "duration_seconds": 0.327,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 10,
+      "name": "summary",
+      "description": "Pipeline summary",
+      "timestamp": "2026-04-15T00:04:05.255473+00:00",
+      "duration_seconds": 0.0,
+      "outcome": "success",
+      "details": {}
+    }
+  ],
+  "findings": {
+    "model_hash_v1": "cc0999997597a5f4acb779d7420adb5d47ad7234ec5460dbf54d36c951c9bb49",
+    "model_hash_v2": "e415d7bdf7b16c3c1f7ef4ab41aba258e7450d21fb7c83d2cd108f947ddf3443",
+    "pre_reverification": {
+      "stale_evidence": 6
+    },
+    "proof_results": {
+      "REQ-001 pointing accuracy": {
+        "changed": false,
+        "conclusion_v2": "Steady-state error bounded by 2*tau_gg/Kp",
+        "depends_on": [
+          "Kp",
+          "Kd",
+          "tau_gg"
+        ]
+      },
+      "REQ-002 momentum capacity": {
+        "changed": true,
+        "conclusion_v2": "Peak momentum = Kd*theta_0*sqrt(Kp/(2*J)) < 4.0 N.m.s (margin increased: capacity now 8.0)",
+        "depends_on": [
+          "Kd",
+          "Kp",
+          "J",
+          "maxMomentum"
+        ]
+      },
+      "REQ-003 stability": {
+        "changed": false,
+        "conclusion_v2": "Routh-Hurwitz: all eigenvalues Re < -0.010 rad/s",
+        "depends_on": [
+          "Kp",
+          "Kd",
+          "J"
+        ]
+      },
+      "REQ-004 disturbance rejection": {
+        "changed": false,
+        "conclusion_v2": "Gravity gradient torques micro-Nm, below 0.1 N.m actuator capacity",
+        "depends_on": [
+          "maxTorque",
+          "orbitalRate",
+          "J"
+        ]
+      },
+      "REQ-P01 power budget": {
+        "changed": false,
+        "conclusion_v2": "306W available > 300W budget",
+        "depends_on": [
+          "panelPower",
+          "pduEfficiency",
+          "subsystem power draws"
+        ]
+      },
+      "REQ-P02 eclipse duration": {
+        "changed": false,
+        "conclusion_v2": "672Wh > 282Wh eclipse need",
+        "depends_on": [
+          "batteryCapacity",
+          "batteryVoltage",
+          "maxDOD",
+          "totalDraw"
+        ]
+      }
+    },
+    "post_reverification": {
+      "stale_evidence": 0,
+      "freshness_restored": true
+    },
+    "lifecycle_gates": {
+      "conforms": false,
+      "violations": 6
+    }
+  },
+  "verdict": "CONFIRMED \u2014 pipeline restored evidence freshness; attestation gap remains"
+}

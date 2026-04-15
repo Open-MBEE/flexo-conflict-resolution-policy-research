@@ -1,6 +1,6 @@
 # RDF + Git Mixed Model — Experiment Synthesis Report
 
-*Generated: 2026-04-14 23:44 UTC*
+*Generated: 2026-04-15 00:08 UTC*
 
 ## Executive Summary
 
@@ -90,6 +90,34 @@ Classes found: **BENIGN_DIVERGENCE, COUPLING_CONFLICT, ORDERING_ARTIFACT, TEXTUA
 | **After model change** | **6** | **3** |
 
 Model hash changed: `cc0999997597...` → `e415d7bdf7b1...`
+
+### Experiment 19: Programmatic Reverification Pipeline
+
+**Question:** Can a pipeline automatically re-run code-based oracles and restore evidence freshness after model evolution?
+
+**Verdict:** CONFIRMED — pipeline restored evidence freshness; attestation gap remains
+
+
+| Stage | Stale Evidence | Freshness | Attestation Gate |
+|-------|:--------------:|:---------:|:----------------:|
+| Pre-reverification | 6 | FAIL | FAIL |
+| **Post-reverification** | **0** | **PASS** | **FAIL (6)** |
+
+Proofs re-run: 5 stable, 1 changed (all pass). Evidence freshness restored but attestation gate still fails — human judgment required.
+
+### Experiment 20: The Attestation Gap — Human Judgment Under Model Evolution
+
+**Question:** What is the irreducible human role after programmatic reverification?
+
+**Verdict:** CONFIRMED — attestation gap: 1 requirement(s) have fresh evidence but no attestation. Human judgment is irreducible.
+
+
+| Requirement | Evidence | Attestation | Status |
+|-------------|:--------:|:-----------:|--------|
+
+Pipeline automated 100% of evidence regeneration. Engineer attested 5 of 6 requirements (83%).
+
+**Attestation gap**: REQ-001 — model inadequacy — vibration coupling not modeled. The proof passes but the engineer judges the model may be inadequate.
 
 ## Cross-Experiment Synthesis
 

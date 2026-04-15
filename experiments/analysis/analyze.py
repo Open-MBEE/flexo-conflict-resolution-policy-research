@@ -22,7 +22,7 @@ EXPERIMENTS_DIR = SCRIPT_DIR.parent
 TABLES_DIR = SCRIPT_DIR / "tables"
 TABLES_DIR.mkdir(exist_ok=True)
 
-EXPERIMENT_IDS = [14, 15, 16, 17, 18]
+EXPERIMENT_IDS = [14, 15, 16, 17, 18, 19, 20]
 
 
 def load_results() -> dict[int, dict]:
@@ -251,6 +251,20 @@ def temporal_spatial_matrix(results: dict[int, dict]) -> str:
             "temporal_git": "partial — shows what changed between commits",
             "spatial_rdf": "YES — SHACL detects hash mismatch",
             "requires_both": "YES — RDF identifies affected requirements; Git identifies the change",
+        },
+        {
+            "finding": "Programmatic reverification restores evidence freshness",
+            "experiment": 19,
+            "temporal_git": "YES — commit history tracks evidence regeneration",
+            "spatial_rdf": "YES — SHACL confirms freshness restored",
+            "requires_both": "Spatial confirms restoration; Git provides audit trail",
+        },
+        {
+            "finding": "Attestation gap is irreducible",
+            "experiment": 20,
+            "temporal_git": "no — Git cannot generate human judgments",
+            "spatial_rdf": "YES — SHACL detects missing attestation",
+            "requires_both": "Spatial detects the gap; resolution requires human judgment (neither tool)",
         },
     ]
 

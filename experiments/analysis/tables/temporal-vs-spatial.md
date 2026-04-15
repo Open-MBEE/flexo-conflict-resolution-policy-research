@@ -13,3 +13,5 @@ Git excels at the temporal dimension (how things evolve).
 | Four-way conflict classification | 17 | partial — distinguishes 2 classes (clean/conflict) | partial — distinguishes ordering but not textual | YES — only combination distinguishes all 4 classes |
 | Non-commutative ordering artifacts | 17 | YES — identifies which branch was applied when | YES — shows which ordering violates constraints | YES — both needed to detect and explain |
 | Evidence staleness after model evolution | 18 | partial — shows what changed between commits | YES — SHACL detects hash mismatch | YES — RDF identifies affected requirements; Git identifies the change |
+| Programmatic reverification restores evidence freshness | 19 | YES — commit history tracks evidence regeneration | YES — SHACL confirms freshness restored | Spatial confirms restoration; Git provides audit trail |
+| Attestation gap is irreducible | 20 | no — Git cannot generate human judgments | YES — SHACL detects missing attestation | Spatial detects the gap; resolution requires human judgment (neither tool) |

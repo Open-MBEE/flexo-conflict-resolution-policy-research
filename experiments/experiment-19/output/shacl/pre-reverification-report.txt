@@ -1,0 +1,87 @@
+Validation Report
+Conforms: False
+Results (6):
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: fresh:EvidenceFreshnessShape
+	Focus Node: adcs:EV-PROOF-REQ-001
+	Value Node: adcs:EV-PROOF-REQ-001
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("STALE EVIDENCE: modelHash does not match current model version.") ; sh:select Literal("
+            PREFIX rtm: <http://example.org/ontology/rtm#>
+            SELECT $this ?evidenceHash ?currentHash WHERE {
+                $this rtm:modelHash ?evidenceHash .
+                rtm: rtm:currentModelHash ?currentHash .
+                FILTER(?evidenceHash != ?currentHash)
+            }
+        ") ]
+	Message: STALE EVIDENCE: modelHash does not match current model version.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: fresh:EvidenceFreshnessShape
+	Focus Node: adcs:EV-PROOF-REQ-002
+	Value Node: adcs:EV-PROOF-REQ-002
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("STALE EVIDENCE: modelHash does not match current model version.") ; sh:select Literal("
+            PREFIX rtm: <http://example.org/ontology/rtm#>
+            SELECT $this ?evidenceHash ?currentHash WHERE {
+                $this rtm:modelHash ?evidenceHash .
+                rtm: rtm:currentModelHash ?currentHash .
+                FILTER(?evidenceHash != ?currentHash)
+            }
+        ") ]
+	Message: STALE EVIDENCE: modelHash does not match current model version.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: fresh:EvidenceFreshnessShape
+	Focus Node: adcs:EV-PROOF-REQ-003
+	Value Node: adcs:EV-PROOF-REQ-003
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("STALE EVIDENCE: modelHash does not match current model version.") ; sh:select Literal("
+            PREFIX rtm: <http://example.org/ontology/rtm#>
+            SELECT $this ?evidenceHash ?currentHash WHERE {
+                $this rtm:modelHash ?evidenceHash .
+                rtm: rtm:currentModelHash ?currentHash .
+                FILTER(?evidenceHash != ?currentHash)
+            }
+        ") ]
+	Message: STALE EVIDENCE: modelHash does not match current model version.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: fresh:EvidenceFreshnessShape
+	Focus Node: adcs:EV-PROOF-REQ-004
+	Value Node: adcs:EV-PROOF-REQ-004
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("STALE EVIDENCE: modelHash does not match current model version.") ; sh:select Literal("
+            PREFIX rtm: <http://example.org/ontology/rtm#>
+            SELECT $this ?evidenceHash ?currentHash WHERE {
+                $this rtm:modelHash ?evidenceHash .
+                rtm: rtm:currentModelHash ?currentHash .
+                FILTER(?evidenceHash != ?currentHash)
+            }
+        ") ]
+	Message: STALE EVIDENCE: modelHash does not match current model version.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: fresh:EvidenceFreshnessShape
+	Focus Node: pwr:EV-ANALYSIS-REQ-P01
+	Value Node: pwr:EV-ANALYSIS-REQ-P01
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("STALE EVIDENCE: modelHash does not match current model version.") ; sh:select Literal("
+            PREFIX rtm: <http://example.org/ontology/rtm#>
+            SELECT $this ?evidenceHash ?currentHash WHERE {
+                $this rtm:modelHash ?evidenceHash .
+                rtm: rtm:currentModelHash ?currentHash .
+                FILTER(?evidenceHash != ?currentHash)
+            }
+        ") ]
+	Message: STALE EVIDENCE: modelHash does not match current model version.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: fresh:EvidenceFreshnessShape
+	Focus Node: pwr:EV-ANALYSIS-REQ-P02
+	Value Node: pwr:EV-ANALYSIS-REQ-P02
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("STALE EVIDENCE: modelHash does not match current model version.") ; sh:select Literal("
+            PREFIX rtm: <http://example.org/ontology/rtm#>
+            SELECT $this ?evidenceHash ?currentHash WHERE {
+                $this rtm:modelHash ?evidenceHash .
+                rtm: rtm:currentModelHash ?currentHash .
+                FILTER(?evidenceHash != ?currentHash)
+            }
+        ") ]
+	Message: STALE EVIDENCE: modelHash does not match current model version.

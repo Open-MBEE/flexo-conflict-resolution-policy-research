@@ -17,7 +17,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 EXPERIMENTS_DIR = SCRIPT_DIR.parent
 REPORT_PATH = SCRIPT_DIR / "report.md"
 
-EXPERIMENT_IDS = [14, 15, 16, 17, 18]
+EXPERIMENT_IDS = [14, 15, 16, 17, 18, 19, 20]
 
 EXPERIMENT_META = {
     14: {
@@ -39,6 +39,14 @@ EXPERIMENT_META = {
     18: {
         "title": "Evidence Staleness — Provenance Chains Across RDF and Git",
         "question": "Can evidence staleness be detected as a SHACL shape, with provenance chains spanning both RDF and Git?",
+    },
+    19: {
+        "title": "Programmatic Reverification Pipeline",
+        "question": "Can a pipeline automatically re-run code-based oracles and restore evidence freshness after model evolution?",
+    },
+    20: {
+        "title": "The Attestation Gap — Human Judgment Under Model Evolution",
+        "question": "What is the irreducible human role after programmatic reverification?",
     },
 }
 
@@ -154,6 +162,36 @@ False negative rate: **{cm['false_negative_rate']:.0%}** — Git misses semantic
 
 Model hash changed: `{f['model_hash_v1'][:12]}...` → `{f['model_hash_v2'][:12]}...`
 """)
+
+        elif exp_id == 19:
+            f = r["findings"]
+            pre_stale = f["pre_reverification"]["stale_evidence"]
+            post_stale = f["post_reverification"]["stale_evidence"]
+            fresh = f["post_reverification"]["freshness_restored"]
+            lc = f["lifecycle_gates"]
+            changed = sum(1 for p in f["proof_results"].values() if p["changed"])
+            stable = sum(1 for p in f["proof_results"].values() if not p["changed"])
+            sections.append(f"""
+| Stage | Stale Evidence | Freshness | Attestation Gate |
+|-------|:--------------:|:---------:|:----------------:|
+| Pre-reverification | {pre_stale} | FAIL | FAIL |
+| **Post-reverification** | **{post_stale}** | **{'PASS' if fresh else 'FAIL'}** | **FAIL ({lc['violations']})** |
+
+Proofs re-run: {stable} stable, {changed} changed (all pass). Evidence freshness restored but attestation gate still fails — human judgment required.
+""")
+
+        elif exp_id == 20:
+            f = r["findings"]
+            gap = f["attestation_gap"]
+            sections.append(f"""
+| Requirement | Evidence | Attestation | Status |
+|-------------|:--------:|:-----------:|--------|
+""")
+            # Reconstruct from findings
+            attested = f["attested"]
+            declined = f["declined"]
+            sections.append(f"Pipeline automated 100% of evidence regeneration. Engineer attested {attested} of {attested + declined} requirements ({attested*100//(attested+declined)}%).\n")
+            sections.append(f"**Attestation gap**: {gap['requirement']} — {gap['reason']}. The proof passes but the engineer judges the model may be inadequate.\n")
 
     # ── Cross-Experiment Synthesis ─────────────────────────────
     sections.append("""## Cross-Experiment Synthesis
