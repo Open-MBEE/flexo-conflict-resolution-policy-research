@@ -1,0 +1,15 @@
+[project]
+name = "flexo-conflict-experiments"
+version = "0.1.0"
+description = "RDF + Git mixed model experiments for conflict resolution research"
+requires-python = ">=3.9"
+dependencies = [
+    "rdflib",
+    "pyshacl",
+    "gitpython",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]

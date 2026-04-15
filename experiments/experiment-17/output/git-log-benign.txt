@@ -1,0 +1,11 @@
+*   64a0af8 (merge-a-into-b) Merge branch 'adcs-tune-gains' into merge-a-into-b
+|\  
+| | * 47018cb (HEAD -> merge-b-into-a) Merge branch 'power-tune-battery' into merge-b-into-a
+| |/| 
+| |/  
+|/|   
+* | f55597c (power-tune-battery) power-tune-battery: structural/power.ttl
+| * b1d5046 (adcs-tune-gains) adcs-tune-gains: structural/adcs.ttl
+|/  
+* 0cad2a4 (main) ancestor: satellite model
+* 5ffe026 initial commit (empty)

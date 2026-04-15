@@ -1,0 +1,20 @@
+experiment,scenario,ordering,git_conflict,shacl_fail,oracle_fail,semantically_valid
+14,true-negative,a-into-b,False,False,False,True
+14,true-negative,b-into-a,False,False,False,True
+14,false-negative,a-into-b,False,False,True,False
+14,false-negative,b-into-a,False,False,True,False
+14,true-positive,a-into-b,True,,,
+14,true-positive,b-into-a,True,,,
+14,false-positive,a-into-b,True,,,
+14,false-positive,b-into-a,True,,,
+15,benign,composed,False,False,False,True
+15,property-rename,composed,False,True,False,False
+15,constraint-data,composed,False,True,False,False
+17,benign,a-into-b,False,False,False,True
+17,benign,b-into-a,False,False,False,True
+17,coupling,a-into-b,False,False,True,False
+17,coupling,b-into-a,False,False,True,False
+17,ordering,a-then-b (sequential),True,False,True,False
+17,ordering,b-then-a (sequential),True,False,False,True
+17,textual,a-into-b,True,,,
+17,textual,b-into-a,True,,,

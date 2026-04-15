@@ -1,0 +1,9 @@
+*   242838d (HEAD -> merge-result) Merge branch 'shapes-derivation-check' into merge-result
+|\  
+| * 9545fb2 (shapes-derivation-check) shapes-derivation-check: ontology/shapes.ttl
+* | 452847b (rtm-rename-property) rtm-rename-property: requirements/power.ttl
+* | 204aba8 rtm-rename-property: requirements/adcs.ttl
+* | 4226af7 rtm-rename-property: ontology/rtm.ttl
+|/  
+* 216ce25 (main) ancestor: satellite model
+* 0db1fb3 initial commit (empty)

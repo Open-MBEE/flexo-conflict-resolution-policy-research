@@ -1,0 +1,11 @@
+*   099762e (HEAD -> merge-b-into-a) Merge branch 'power-reduce-panels' into merge-b-into-a
+|\  
+| | * bbad51b (merge-a-into-b) Merge branch 'adcs-upgrade-wheels' into merge-a-into-b
+| |/| 
+| |/  
+|/|   
+* | cf077c6 (adcs-upgrade-wheels) adcs-upgrade-wheels: structural/adcs.ttl
+| * 0b99325 (power-reduce-panels) power-reduce-panels: structural/power.ttl
+|/  
+* 1e43e4e (main) ancestor: satellite model (ADCS + Power)
+* 57ea915 initial commit (empty)

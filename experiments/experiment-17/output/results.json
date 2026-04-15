@@ -1,0 +1,309 @@
+{
+  "experiment": 17,
+  "title": "Dual-Signal Conflict Classification (Git + SHACL)",
+  "timestamp": "2026-04-14T23:24:24.094829+00:00",
+  "duration_seconds": 6.747,
+  "environment": {
+    "python_version": "3.9.7",
+    "rdflib_version": "7.6.0",
+    "pyshacl_version": "0.31.0",
+    "gitpython_version": "3.1.46",
+    "platform": "darwin",
+    "git_commit": "089dd06"
+  },
+  "parameters": {
+    "conflict_classes": [
+      "BENIGN_DIVERGENCE: Git clean, both orderings valid",
+      "COUPLING_CONFLICT: Git clean, both orderings invalid",
+      "ORDERING_ARTIFACT: Git clean, orderings differ",
+      "TEXTUAL_CONFLICT: Git conflict, SHACL N/A"
+    ]
+  },
+  "steps": [
+    {
+      "step": 1,
+      "name": "load_data",
+      "description": "Load model files",
+      "timestamp": "2026-04-14T23:24:17.350066+00:00",
+      "duration_seconds": 0.002,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 2,
+      "name": "scenario_benign",
+      "description": "Scenario 1: Benign Divergence",
+      "timestamp": "2026-04-14T23:24:19.237419+00:00",
+      "duration_seconds": 1.887,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 3,
+      "name": "scenario_coupling",
+      "description": "Scenario 2: Coupling Conflict",
+      "timestamp": "2026-04-14T23:24:21.037948+00:00",
+      "duration_seconds": 1.8,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 4,
+      "name": "scenario_ordering",
+      "description": "Scenario 3: Ordering Artifact",
+      "timestamp": "2026-04-14T23:24:22.876000+00:00",
+      "duration_seconds": 1.838,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 5,
+      "name": "scenario_textual",
+      "description": "Scenario 4: Textual Conflict",
+      "timestamp": "2026-04-14T23:24:24.094615+00:00",
+      "duration_seconds": 1.219,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 6,
+      "name": "classification_summary",
+      "description": "Classification summary",
+      "timestamp": "2026-04-14T23:24:24.094790+00:00",
+      "duration_seconds": 0.0,
+      "outcome": "success",
+      "details": {
+        "classes_found": [
+          "BENIGN_DIVERGENCE",
+          "COUPLING_CONFLICT",
+          "ORDERING_ARTIFACT",
+          "TEXTUAL_CONFLICT"
+        ]
+      }
+    }
+  ],
+  "findings": {
+    "scenarios": [
+      {
+        "scenario": "benign",
+        "branch_a": "adcs-tune-gains",
+        "branch_b": "power-tune-battery",
+        "orderings": [
+          {
+            "ordering": "a-into-b",
+            "git_conflict": false,
+            "conflict_files": [],
+            "validation": {
+              "label": "benign-a-into-b",
+              "shacl_conforms": true,
+              "shacl_violation_count": 0,
+              "oracle_violation_count": 0,
+              "oracle_details": [
+                {
+                  "query": "c1-power-budget",
+                  "rows": [],
+                  "has_violations": false
+                }
+              ],
+              "semantically_valid": true
+            },
+            "semantically_valid": true
+          },
+          {
+            "ordering": "b-into-a",
+            "git_conflict": false,
+            "conflict_files": [],
+            "validation": {
+              "label": "benign-b-into-a",
+              "shacl_conforms": true,
+              "shacl_violation_count": 0,
+              "oracle_violation_count": 0,
+              "oracle_details": [
+                {
+                  "query": "c1-power-budget",
+                  "rows": [],
+                  "has_violations": false
+                }
+              ],
+              "semantically_valid": true
+            },
+            "semantically_valid": true
+          }
+        ],
+        "classification": "BENIGN_DIVERGENCE"
+      },
+      {
+        "scenario": "coupling",
+        "branch_a": "adcs-upgrade-wheels",
+        "branch_b": "power-reduce-panels",
+        "orderings": [
+          {
+            "ordering": "a-into-b",
+            "git_conflict": false,
+            "conflict_files": [],
+            "validation": {
+              "label": "coupling-a-into-b",
+              "shacl_conforms": true,
+              "shacl_violation_count": 0,
+              "oracle_violation_count": 1,
+              "oracle_details": [
+                {
+                  "query": "c1-power-budget",
+                  "rows": [
+                    {
+                      "totalDraw": "265.0",
+                      "available": "255.0",
+                      "violation": "10.0"
+                    }
+                  ],
+                  "has_violations": true
+                }
+              ],
+              "semantically_valid": false
+            },
+            "semantically_valid": false
+          },
+          {
+            "ordering": "b-into-a",
+            "git_conflict": false,
+            "conflict_files": [],
+            "validation": {
+              "label": "coupling-b-into-a",
+              "shacl_conforms": true,
+              "shacl_violation_count": 0,
+              "oracle_violation_count": 1,
+              "oracle_details": [
+                {
+                  "query": "c1-power-budget",
+                  "rows": [
+                    {
+                      "totalDraw": "265.0",
+                      "available": "255.0",
+                      "violation": "10.0"
+                    }
+                  ],
+                  "has_violations": true
+                }
+              ],
+              "semantically_valid": false
+            },
+            "semantically_valid": false
+          }
+        ],
+        "classification": "COUPLING_CONFLICT"
+      },
+      {
+        "scenario": "ordering",
+        "branch_a": "adcs-draw-70",
+        "branch_b": "power-reduce-and-draw-55",
+        "orderings": [
+          {
+            "ordering": "a-then-b (sequential)",
+            "git_conflict": true,
+            "semantically_valid": false,
+            "validation": {
+              "label": "ordering-ab",
+              "shacl_conforms": true,
+              "shacl_violation_count": 0,
+              "oracle_violation_count": 1,
+              "oracle_details": [
+                {
+                  "query": "c1-power-budget",
+                  "rows": [
+                    {
+                      "totalDraw": "255.0",
+                      "available": "250.0",
+                      "violation": "5.0"
+                    }
+                  ],
+                  "has_violations": true
+                }
+              ],
+              "semantically_valid": false
+            }
+          },
+          {
+            "ordering": "b-then-a (sequential)",
+            "git_conflict": true,
+            "semantically_valid": true,
+            "validation": {
+              "label": "ordering-ba",
+              "shacl_conforms": true,
+              "shacl_violation_count": 0,
+              "oracle_violation_count": 0,
+              "oracle_details": [
+                {
+                  "query": "c1-power-budget",
+                  "rows": [],
+                  "has_violations": false
+                }
+              ],
+              "semantically_valid": true
+            }
+          }
+        ],
+        "non_commutative": true,
+        "classification": "ORDERING_ARTIFACT"
+      },
+      {
+        "scenario": "textual",
+        "branch_a": "adcs-draw-55",
+        "branch_b": "syseng-draw-48",
+        "orderings": [
+          {
+            "ordering": "a-into-b",
+            "git_conflict": true,
+            "conflict_files": [
+              "structural/adcs.ttl"
+            ],
+            "validation": null,
+            "semantically_valid": null
+          },
+          {
+            "ordering": "b-into-a",
+            "git_conflict": true,
+            "conflict_files": [
+              "structural/adcs.ttl"
+            ],
+            "validation": null,
+            "semantically_valid": null
+          }
+        ],
+        "classification": "TEXTUAL_CONFLICT"
+      }
+    ],
+    "classification_table": {
+      "benign": {
+        "git_conflict": false,
+        "sem_valid_uv": true,
+        "sem_valid_vu": true,
+        "class": "BENIGN_DIVERGENCE"
+      },
+      "coupling": {
+        "git_conflict": false,
+        "sem_valid_uv": false,
+        "sem_valid_vu": false,
+        "class": "COUPLING_CONFLICT"
+      },
+      "ordering": {
+        "git_conflict": true,
+        "sem_valid_uv": false,
+        "sem_valid_vu": true,
+        "class": "ORDERING_ARTIFACT"
+      },
+      "textual": {
+        "git_conflict": true,
+        "sem_valid_uv": null,
+        "sem_valid_vu": null,
+        "class": "TEXTUAL_CONFLICT"
+      }
+    },
+    "classes_found": [
+      "BENIGN_DIVERGENCE",
+      "COUPLING_CONFLICT",
+      "ORDERING_ARTIFACT",
+      "TEXTUAL_CONFLICT"
+    ]
+  },
+  "verdict": "CONFIRMED \u2014 four-way classification requires both Git and SHACL signals"
+}

@@ -1,0 +1,61 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix rtm:     <http://example.org/ontology/rtm#> .
+@prefix fresh:   <http://example.org/shapes/freshness/> .
+
+# =============================================================================
+# Evidence freshness shapes
+# =============================================================================
+#
+# These SHACL shapes detect stale evidence — evidence whose rtm:modelHash
+# no longer matches the current structural model hash (rtm:currentModelHash
+# on the RTM root node).
+#
+# When the structural model evolves after evidence is bound, the evidence
+# becomes stale: it was produced against a model version that no longer
+# exists. Any attestations citing that evidence are also stale.
+#
+# This shape composes with Experiment 16's lifecycle gates:
+#   - EvidenceCompleteShape: "has evidence been provided?"
+#   - EvidenceFreshnessShape: "is that evidence still valid?"
+
+fresh:EvidenceFreshnessShape a sh:NodeShape ;
+    rdfs:label "EvidenceFreshnessShape" ;
+    rdfs:comment """Every Evidence artifact must have a modelHash that matches
+        the current model hash. If the model has changed since evidence
+        was produced, the evidence is stale and must be regenerated.""" ;
+    sh:targetClass rtm:Evidence ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "STALE EVIDENCE: modelHash does not match current model version." ;
+        sh:select """
+            PREFIX rtm: <http://example.org/ontology/rtm#>
+            SELECT $this ?evidenceHash ?currentHash WHERE {
+                $this rtm:modelHash ?evidenceHash .
+                rtm: rtm:currentModelHash ?currentHash .
+                FILTER(?evidenceHash != ?currentHash)
+            }
+        """
+    ] .
+
+fresh:AttestationFreshnessShape a sh:NodeShape ;
+    rdfs:label "AttestationFreshnessShape" ;
+    rdfs:comment """Every Attestation must cite only fresh evidence.
+        If any cited evidence is stale, the attestation is also stale.""" ;
+    sh:targetClass rtm:Attestation ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "STALE ATTESTATION: cites evidence bound to outdated model version." ;
+        sh:select """
+            PREFIX rtm: <http://example.org/ontology/rtm#>
+            SELECT $this ?evidence ?evidenceHash ?currentHash WHERE {
+                $this rtm:hasEvidence ?evidence .
+                ?evidence rtm:modelHash ?evidenceHash .
+                rtm: rtm:currentModelHash ?currentHash .
+                FILTER(?evidenceHash != ?currentHash)
+            }
+        """
+    ] .

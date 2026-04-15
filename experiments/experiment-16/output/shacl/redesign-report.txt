@@ -1,0 +1,229 @@
+Validation Report
+Conforms: False
+Results (14):
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:AttestationCompleteShape
+	Focus Node: adcs:REQ-001
+	Value Node: adcs:REQ-001
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("ATTESTATION GATE: Subsystem requirement has no attestation.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?att rtm:attests $this .
+                }
+            }
+        ") ]
+	Message: ATTESTATION GATE: Subsystem requirement has no attestation.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:AttestationCompleteShape
+	Focus Node: adcs:REQ-002
+	Value Node: adcs:REQ-002
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("ATTESTATION GATE: Subsystem requirement has no attestation.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?att rtm:attests $this .
+                }
+            }
+        ") ]
+	Message: ATTESTATION GATE: Subsystem requirement has no attestation.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:AttestationCompleteShape
+	Focus Node: adcs:REQ-003
+	Value Node: adcs:REQ-003
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("ATTESTATION GATE: Subsystem requirement has no attestation.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?att rtm:attests $this .
+                }
+            }
+        ") ]
+	Message: ATTESTATION GATE: Subsystem requirement has no attestation.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:AttestationCompleteShape
+	Focus Node: adcs:REQ-004
+	Value Node: adcs:REQ-004
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("ATTESTATION GATE: Subsystem requirement has no attestation.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?att rtm:attests $this .
+                }
+            }
+        ") ]
+	Message: ATTESTATION GATE: Subsystem requirement has no attestation.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:AttestationCompleteShape
+	Focus Node: pwr:REQ-P01
+	Value Node: pwr:REQ-P01
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("ATTESTATION GATE: Subsystem requirement has no attestation.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?att rtm:attests $this .
+                }
+            }
+        ") ]
+	Message: ATTESTATION GATE: Subsystem requirement has no attestation.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:AttestationCompleteShape
+	Focus Node: pwr:REQ-P02
+	Value Node: pwr:REQ-P02
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("ATTESTATION GATE: Subsystem requirement has no attestation.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?att rtm:attests $this .
+                }
+            }
+        ") ]
+	Message: ATTESTATION GATE: Subsystem requirement has no attestation.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:EvidenceCompleteShape
+	Focus Node: adcs:REQ-001
+	Value Node: adcs:REQ-001
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("EVIDENCE GATE: Subsystem requirement has no evidence addressing it.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?evidence rtm:addresses $this .
+                }
+            }
+        ") ]
+	Message: EVIDENCE GATE: Subsystem requirement has no evidence addressing it.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:EvidenceCompleteShape
+	Focus Node: adcs:REQ-002
+	Value Node: adcs:REQ-002
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("EVIDENCE GATE: Subsystem requirement has no evidence addressing it.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?evidence rtm:addresses $this .
+                }
+            }
+        ") ]
+	Message: EVIDENCE GATE: Subsystem requirement has no evidence addressing it.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:EvidenceCompleteShape
+	Focus Node: adcs:REQ-003
+	Value Node: adcs:REQ-003
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("EVIDENCE GATE: Subsystem requirement has no evidence addressing it.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?evidence rtm:addresses $this .
+                }
+            }
+        ") ]
+	Message: EVIDENCE GATE: Subsystem requirement has no evidence addressing it.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:EvidenceCompleteShape
+	Focus Node: adcs:REQ-004
+	Value Node: adcs:REQ-004
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("EVIDENCE GATE: Subsystem requirement has no evidence addressing it.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?evidence rtm:addresses $this .
+                }
+            }
+        ") ]
+	Message: EVIDENCE GATE: Subsystem requirement has no evidence addressing it.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:EvidenceCompleteShape
+	Focus Node: pwr:REQ-P01
+	Value Node: pwr:REQ-P01
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("EVIDENCE GATE: Subsystem requirement has no evidence addressing it.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?evidence rtm:addresses $this .
+                }
+            }
+        ") ]
+	Message: EVIDENCE GATE: Subsystem requirement has no evidence addressing it.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:EvidenceCompleteShape
+	Focus Node: pwr:REQ-P02
+	Value Node: pwr:REQ-P02
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("EVIDENCE GATE: Subsystem requirement has no evidence addressing it.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?evidence rtm:addresses $this .
+                }
+            }
+        ") ]
+	Message: EVIDENCE GATE: Subsystem requirement has no evidence addressing it.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:StructuralCompleteShape
+	Focus Node: pwr:REQ-P01
+	Value Node: pwr:REQ-P01
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("STRUCTURAL GATE: Subsystem requirement is not allocated to any design element.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    $this sysml:ownedRelationship ?rel .
+                    ?rel a sysml:SatisfyRequirementUsage .
+                }
+            }
+        ") ]
+	Message: STRUCTURAL GATE: Subsystem requirement is not allocated to any design element.
+Constraint Violation in SPARQLConstraintComponent (http://www.w3.org/ns/shacl#SPARQLConstraintComponent):
+	Severity: sh:Violation
+	Source Shape: lc:StructuralCompleteShape
+	Focus Node: pwr:REQ-P02
+	Value Node: pwr:REQ-P02
+	Source Constraint: [ rdf:type sh:SPARQLConstraint ; sh:message Literal("STRUCTURAL GATE: Subsystem requirement is not allocated to any design element.") ; sh:select Literal("
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    $this sysml:ownedRelationship ?rel .
+                    ?rel a sysml:SatisfyRequirementUsage .
+                }
+            }
+        ") ]
+	Message: STRUCTURAL GATE: Subsystem requirement is not allocated to any design element.

@@ -1,0 +1,7 @@
+*   4d02c68 (HEAD -> merge-result) Merge branch 'adcs-add-component' into merge-result
+|\  
+| * a2865d6 (adcs-add-component) adcs-add-component: structural/adcs.ttl
+* | 5b6b37c (shapes-unit-check) shapes-unit-check: ontology/shapes.ttl
+|/  
+* 5293510 (main) ancestor: satellite model
+* 0e66917 initial commit (empty)

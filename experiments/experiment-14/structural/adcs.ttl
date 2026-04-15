@@ -1,0 +1,184 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix sysml:   <https://www.omg.org/spec/SysML/2.0/> .
+@prefix adcs:    <http://example.org/adcs-demo/> .
+
+# =============================================================================
+# ADCS Subsystem (owned by controls team)
+# =============================================================================
+# This file is owned by the ADCS team. Changes here do not require
+# coordination with other teams UNLESS they affect interface parameters
+# (e.g., power consumption, mass).
+
+adcs:ADCSSubsystem a sysml:PartDefinition ;
+    sysml:declaredName "ADCS" ;
+    rdfs:comment """Attitude Determination and Control System. Owned by
+        the controls team. Contains actuators, sensors, and controller.""" ;
+    sysml:ownedPart adcs:ReactionWheel_X ,
+                    adcs:ReactionWheel_Y ,
+                    adcs:ReactionWheel_Z ,
+                    adcs:StarTracker ,
+                    adcs:IMU ,
+                    adcs:PDController ;
+    sysml:ownedAttribute adcs:attr_adcs_powerDraw .
+
+# --- Power interface attribute ---
+
+adcs:attr_adcs_powerDraw a sysml:AttributeUsage ;
+    sysml:declaredName "adcsPowerDraw" ;
+    rdfs:comment "Total ADCS nominal power draw (sum of all components)." ;
+    sysml:value "50.0"^^xsd:double ;
+    sysml:unit "W" .
+
+# --- Reaction Wheels ---
+
+adcs:ReactionWheelDef a sysml:PartDefinition ;
+    sysml:declaredName "ReactionWheel" ;
+    rdfs:comment "Reaction wheel — single-axis momentum exchange actuator." ;
+    sysml:ownedAttribute adcs:attr_rw_maxTorque ,
+                         adcs:attr_rw_maxMomentum ,
+                         adcs:attr_rw_mass ,
+                         adcs:attr_rw_power .
+
+adcs:ReactionWheel_X a sysml:PartUsage ;
+    sysml:declaredName "ReactionWheel_X" ;
+    sysml:type adcs:ReactionWheelDef ;
+    rdfs:comment "Reaction wheel on X axis." .
+
+adcs:ReactionWheel_Y a sysml:PartUsage ;
+    sysml:declaredName "ReactionWheel_Y" ;
+    sysml:type adcs:ReactionWheelDef ;
+    rdfs:comment "Reaction wheel on Y axis." .
+
+adcs:ReactionWheel_Z a sysml:PartUsage ;
+    sysml:declaredName "ReactionWheel_Z" ;
+    sysml:type adcs:ReactionWheelDef ;
+    rdfs:comment "Reaction wheel on Z axis." .
+
+adcs:attr_rw_maxTorque a sysml:AttributeUsage ;
+    sysml:declaredName "maxTorque" ;
+    rdfs:comment "Maximum torque output per wheel." ;
+    sysml:value "0.1"^^xsd:double ;
+    sysml:unit "N.m" .
+
+adcs:attr_rw_maxMomentum a sysml:AttributeUsage ;
+    sysml:declaredName "maxMomentum" ;
+    rdfs:comment "Maximum angular momentum storage per wheel." ;
+    sysml:value "4.0"^^xsd:double ;
+    sysml:unit "N.m.s" .
+
+adcs:attr_rw_mass a sysml:AttributeUsage ;
+    sysml:declaredName "wheelMass" ;
+    rdfs:comment "Mass of a single reaction wheel." ;
+    sysml:value "2.5"^^xsd:double ;
+    sysml:unit "kg" .
+
+adcs:attr_rw_power a sysml:AttributeUsage ;
+    sysml:declaredName "wheelPower" ;
+    rdfs:comment "Nominal power draw of a single reaction wheel." ;
+    sysml:value "12.0"^^xsd:double ;
+    sysml:unit "W" .
+
+# --- Star Tracker ---
+
+adcs:StarTrackerDef a sysml:PartDefinition ;
+    sysml:declaredName "StarTracker" ;
+    rdfs:comment "Star tracker — primary attitude determination sensor." ;
+    sysml:ownedAttribute adcs:attr_st_accuracy ,
+                         adcs:attr_st_updateRate ,
+                         adcs:attr_st_mass ,
+                         adcs:attr_st_power .
+
+adcs:StarTracker a sysml:PartUsage ;
+    sysml:declaredName "StarTracker" ;
+    sysml:type adcs:StarTrackerDef .
+
+adcs:attr_st_accuracy a sysml:AttributeUsage ;
+    sysml:declaredName "stAccuracy" ;
+    rdfs:comment "Star tracker pointing accuracy (1-sigma)." ;
+    sysml:value "5.0"^^xsd:double ;
+    sysml:unit "arcsec" .
+
+adcs:attr_st_updateRate a sysml:AttributeUsage ;
+    sysml:declaredName "stUpdateRate" ;
+    sysml:value "4.0"^^xsd:double ;
+    sysml:unit "Hz" .
+
+adcs:attr_st_mass a sysml:AttributeUsage ;
+    sysml:declaredName "stMass" ;
+    sysml:value "2.0"^^xsd:double ;
+    sysml:unit "kg" .
+
+adcs:attr_st_power a sysml:AttributeUsage ;
+    sysml:declaredName "stPower" ;
+    rdfs:comment "Star tracker nominal power draw." ;
+    sysml:value "8.0"^^xsd:double ;
+    sysml:unit "W" .
+
+# --- IMU ---
+
+adcs:IMUDef a sysml:PartDefinition ;
+    sysml:declaredName "IMU" ;
+    rdfs:comment "Inertial measurement unit — angular rate measurements." ;
+    sysml:ownedAttribute adcs:attr_imu_arw ,
+                         adcs:attr_imu_bias ,
+                         adcs:attr_imu_mass ,
+                         adcs:attr_imu_power .
+
+adcs:IMU a sysml:PartUsage ;
+    sysml:declaredName "IMU" ;
+    sysml:type adcs:IMUDef .
+
+adcs:attr_imu_arw a sysml:AttributeUsage ;
+    sysml:declaredName "gyroARW" ;
+    sysml:value "0.0017"^^xsd:double ;
+    sysml:unit "rad/s/sqrt(Hz)" .
+
+adcs:attr_imu_bias a sysml:AttributeUsage ;
+    sysml:declaredName "gyroBias" ;
+    sysml:value "0.0001"^^xsd:double ;
+    sysml:unit "rad/s" .
+
+adcs:attr_imu_mass a sysml:AttributeUsage ;
+    sysml:declaredName "imuMass" ;
+    sysml:value "0.5"^^xsd:double ;
+    sysml:unit "kg" .
+
+adcs:attr_imu_power a sysml:AttributeUsage ;
+    sysml:declaredName "imuPower" ;
+    rdfs:comment "IMU nominal power draw." ;
+    sysml:value "3.0"^^xsd:double ;
+    sysml:unit "W" .
+
+# --- PD Controller ---
+
+adcs:PDControllerDef a sysml:ConstraintDefinition ;
+    sysml:declaredName "PDController" ;
+    rdfs:comment """Proportional-derivative attitude controller.
+        tau = -Kp/2 * theta_error - Kd * omega""" ;
+    sysml:ownedAttribute adcs:attr_pd_Kp ,
+                         adcs:attr_pd_Kd ,
+                         adcs:attr_pd_power .
+
+adcs:PDController a sysml:PartUsage ;
+    sysml:declaredName "PDController" ;
+    sysml:type adcs:PDControllerDef .
+
+adcs:attr_pd_Kp a sysml:AttributeUsage ;
+    sysml:declaredName "Kp" ;
+    rdfs:comment "Proportional gain." ;
+    sysml:value "1.0"^^xsd:double ;
+    sysml:unit "N.m/rad" .
+
+adcs:attr_pd_Kd a sysml:AttributeUsage ;
+    sysml:declaredName "Kd" ;
+    rdfs:comment "Derivative gain." ;
+    sysml:value "10.0"^^xsd:double ;
+    sysml:unit "N.m.s/rad" .
+
+adcs:attr_pd_power a sysml:AttributeUsage ;
+    sysml:declaredName "controllerPower" ;
+    rdfs:comment "Controller compute board power draw." ;
+    sysml:value "3.0"^^xsd:double ;
+    sysml:unit "W" .

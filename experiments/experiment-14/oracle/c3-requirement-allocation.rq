@@ -1,0 +1,15 @@
+# C3 — Requirement allocation (informational)
+# Lists all requirements and their satisfying elements.
+# Does not flag violations — used for traceability audit.
+
+PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+
+SELECT ?req ?reqName ?element ?elementName WHERE {
+    ?req a sysml:RequirementDefinition ;
+         sysml:declaredName ?reqName ;
+         sysml:ownedRelationship ?rel .
+    ?rel a sysml:SatisfyRequirementUsage ;
+         sysml:satisfyingElement ?element .
+    OPTIONAL { ?element sysml:declaredName ?elementName }
+}
+ORDER BY ?reqName

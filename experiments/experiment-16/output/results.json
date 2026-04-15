@@ -1,0 +1,437 @@
+{
+  "experiment": 16,
+  "title": "Lifecycle Branches \u2014 Stage Gates as SHACL Shapes",
+  "timestamp": "2026-04-14T23:14:11.076259+00:00",
+  "duration_seconds": 3.792,
+  "environment": {
+    "python_version": "3.9.7",
+    "rdflib_version": "7.6.0",
+    "pyshacl_version": "0.31.0",
+    "gitpython_version": "3.1.46",
+    "platform": "darwin",
+    "git_commit": "c636e49"
+  },
+  "parameters": {
+    "lifecycle_stages": [
+      "structural",
+      "evidence",
+      "attestation"
+    ],
+    "gate_shapes": [
+      "StructuralCompleteShape: every subsystem req has a satisfy link",
+      "EvidenceCompleteShape: every subsystem req has evidence",
+      "AttestationCompleteShape: every subsystem req has attestation"
+    ],
+    "conflict_scenario": "late redesign merged into attested branch"
+  },
+  "steps": [
+    {
+      "step": 1,
+      "name": "load_data",
+      "description": "Load model files",
+      "timestamp": "2026-04-14T23:14:07.286214+00:00",
+      "duration_seconds": 0.002,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 2,
+      "name": "stage_structural",
+      "description": "Stage 1: STRUCTURAL \u2014 commit model + requirements",
+      "timestamp": "2026-04-14T23:14:07.909140+00:00",
+      "duration_seconds": 0.445,
+      "outcome": "success",
+      "details": {
+        "gates": {
+          "structural": {
+            "pass": true,
+            "violations": []
+          },
+          "evidence": {
+            "pass": false,
+            "violations": [
+              {
+                "shape": "lc:EvidenceCompleteShape",
+                "focus_node": "adcs:REQ-001",
+                "message": "EVIDENCE GATE: Subsystem requirement has no evidence addressing it.",
+                "value": "adcs:REQ-001"
+              },
+              {
+                "shape": "lc:EvidenceCompleteShape",
+                "focus_node": "adcs:REQ-002",
+                "message": "EVIDENCE GATE: Subsystem requirement has no evidence addressing it.",
+                "value": "adcs:REQ-002"
+              },
+              {
+                "shape": "lc:EvidenceCompleteShape",
+                "focus_node": "adcs:REQ-003",
+                "message": "EVIDENCE GATE: Subsystem requirement has no evidence addressing it.",
+                "value": "adcs:REQ-003"
+              },
+              {
+                "shape": "lc:EvidenceCompleteShape",
+                "focus_node": "adcs:REQ-004",
+                "message": "EVIDENCE GATE: Subsystem requirement has no evidence addressing it.",
+                "value": "adcs:REQ-004"
+              },
+              {
+                "shape": "lc:EvidenceCompleteShape",
+                "focus_node": "pwr:REQ-P01",
+                "message": "EVIDENCE GATE: Subsystem requirement has no evidence addressing it.",
+                "value": "pwr:REQ-P01"
+              },
+              {
+                "shape": "lc:EvidenceCompleteShape",
+                "focus_node": "pwr:REQ-P02",
+                "message": "EVIDENCE GATE: Subsystem requirement has no evidence addressing it.",
+                "value": "pwr:REQ-P02"
+              }
+            ]
+          },
+          "attestation": {
+            "pass": false,
+            "violations": [
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-001",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-001"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-002",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-002"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-003",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-003"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-004",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-004"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "pwr:REQ-P01",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "pwr:REQ-P01"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "pwr:REQ-P02",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "pwr:REQ-P02"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "step": 3,
+      "name": "stage_evidence",
+      "description": "Stage 2: EVIDENCE \u2014 add proof artifacts",
+      "timestamp": "2026-04-14T23:14:08.318936+00:00",
+      "duration_seconds": 0.41,
+      "outcome": "success",
+      "details": {
+        "gates": {
+          "structural": {
+            "pass": true,
+            "violations": []
+          },
+          "evidence": {
+            "pass": true,
+            "violations": []
+          },
+          "attestation": {
+            "pass": false,
+            "violations": [
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-001",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-001"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-002",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-002"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-003",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-003"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-004",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-004"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "pwr:REQ-P01",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "pwr:REQ-P01"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "pwr:REQ-P02",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "pwr:REQ-P02"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "step": 4,
+      "name": "stage_attestation",
+      "description": "Stage 3: ATTESTATION \u2014 add human attestations",
+      "timestamp": "2026-04-14T23:14:08.725918+00:00",
+      "duration_seconds": 0.407,
+      "outcome": "success",
+      "details": {
+        "gates": {
+          "structural": {
+            "pass": true,
+            "violations": []
+          },
+          "evidence": {
+            "pass": true,
+            "violations": []
+          },
+          "attestation": {
+            "pass": false,
+            "violations": [
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-001",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-001"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "step": 5,
+      "name": "redesign",
+      "description": "Create redesign branch with structural changes",
+      "timestamp": "2026-04-14T23:14:09.189211+00:00",
+      "duration_seconds": 0.463,
+      "outcome": "success",
+      "details": {
+        "gates": {
+          "structural": {
+            "pass": false,
+            "violations": [
+              {
+                "shape": "lc:StructuralCompleteShape",
+                "focus_node": "pwr:REQ-P01",
+                "message": "STRUCTURAL GATE: Subsystem requirement is not allocated to any design element.",
+                "value": "pwr:REQ-P01"
+              },
+              {
+                "shape": "lc:StructuralCompleteShape",
+                "focus_node": "pwr:REQ-P02",
+                "message": "STRUCTURAL GATE: Subsystem requirement is not allocated to any design element.",
+                "value": "pwr:REQ-P02"
+              }
+            ]
+          },
+          "evidence": {
+            "pass": false,
+            "violations": [
+              {
+                "shape": "lc:EvidenceCompleteShape",
+                "focus_node": "adcs:REQ-001",
+                "message": "EVIDENCE GATE: Subsystem requirement has no evidence addressing it.",
+                "value": "adcs:REQ-001"
+              },
+              {
+                "shape": "lc:EvidenceCompleteShape",
+                "focus_node": "adcs:REQ-002",
+                "message": "EVIDENCE GATE: Subsystem requirement has no evidence addressing it.",
+                "value": "adcs:REQ-002"
+              },
+              {
+                "shape": "lc:EvidenceCompleteShape",
+                "focus_node": "adcs:REQ-003",
+                "message": "EVIDENCE GATE: Subsystem requirement has no evidence addressing it.",
+                "value": "adcs:REQ-003"
+              },
+              {
+                "shape": "lc:EvidenceCompleteShape",
+                "focus_node": "adcs:REQ-004",
+                "message": "EVIDENCE GATE: Subsystem requirement has no evidence addressing it.",
+                "value": "adcs:REQ-004"
+              },
+              {
+                "shape": "lc:EvidenceCompleteShape",
+                "focus_node": "pwr:REQ-P01",
+                "message": "EVIDENCE GATE: Subsystem requirement has no evidence addressing it.",
+                "value": "pwr:REQ-P01"
+              },
+              {
+                "shape": "lc:EvidenceCompleteShape",
+                "focus_node": "pwr:REQ-P02",
+                "message": "EVIDENCE GATE: Subsystem requirement has no evidence addressing it.",
+                "value": "pwr:REQ-P02"
+              }
+            ]
+          },
+          "attestation": {
+            "pass": false,
+            "violations": [
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-001",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-001"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-002",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-002"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-003",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-003"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-004",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-004"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "pwr:REQ-P01",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "pwr:REQ-P01"
+              },
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "pwr:REQ-P02",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "pwr:REQ-P02"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "step": 6,
+      "name": "merge_regression",
+      "description": "Merge redesign into attestation branch",
+      "timestamp": "2026-04-14T23:14:09.809048+00:00",
+      "duration_seconds": 0.62,
+      "outcome": "success",
+      "details": {
+        "git_conflict": false,
+        "gates": {
+          "structural": {
+            "pass": false,
+            "violations": [
+              {
+                "shape": "lc:StructuralCompleteShape",
+                "focus_node": "pwr:REQ-P01",
+                "message": "STRUCTURAL GATE: Subsystem requirement is not allocated to any design element.",
+                "value": "pwr:REQ-P01"
+              },
+              {
+                "shape": "lc:StructuralCompleteShape",
+                "focus_node": "pwr:REQ-P02",
+                "message": "STRUCTURAL GATE: Subsystem requirement is not allocated to any design element.",
+                "value": "pwr:REQ-P02"
+              }
+            ]
+          },
+          "evidence": {
+            "pass": true,
+            "violations": []
+          },
+          "attestation": {
+            "pass": false,
+            "violations": [
+              {
+                "shape": "lc:AttestationCompleteShape",
+                "focus_node": "adcs:REQ-001",
+                "message": "ATTESTATION GATE: Subsystem requirement has no attestation.",
+                "value": "adcs:REQ-001"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "step": 7,
+      "name": "compliance_matrix",
+      "description": "Stage-by-branch compliance matrix",
+      "timestamp": "2026-04-14T23:14:11.020316+00:00",
+      "duration_seconds": 1.211,
+      "outcome": "success",
+      "details": {
+        "matrix": {
+          "main": {
+            "structural": true,
+            "evidence": false,
+            "attestation": false
+          },
+          "evidence": {
+            "structural": true,
+            "evidence": true,
+            "attestation": false
+          },
+          "attestation": {
+            "structural": false,
+            "evidence": true,
+            "attestation": false
+          }
+        }
+      }
+    }
+  ],
+  "findings": {
+    "stage_compliance": {
+      "main": {
+        "structural": true,
+        "evidence": false,
+        "attestation": false
+      },
+      "evidence": {
+        "structural": true,
+        "evidence": true,
+        "attestation": false
+      },
+      "attestation": {
+        "structural": false,
+        "evidence": true,
+        "attestation": false
+      }
+    },
+    "merged_compliance": {
+      "structural": false,
+      "evidence": true,
+      "attestation": false
+    },
+    "regression_detected": true
+  },
+  "verdict": "CONFIRMED \u2014 lifecycle regression: late structural change broke gate on attested branch"
+}

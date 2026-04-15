@@ -1,0 +1,9 @@
+*   8e0ede8 (HEAD -> attestation) Merge branch 'redesign' into attestation
+|\  
+| * 5cfb5a0 (redesign) redesign: remove REQ-P01 satisfy links (power architecture redesign)
+| * c60c2a6 redesign: remove StarTracker from REQ-001 allocation (sensor trade study)
+* | 85d3a3a stage: ATTESTATION — human review complete
+* | 07622b4 (evidence) stage: EVIDENCE — proof artifacts bound
+|/  
+* 721e2e8 (main) stage: STRUCTURAL — model and requirements defined
+* 0032726 initial commit (empty)

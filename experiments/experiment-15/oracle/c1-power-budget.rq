@@ -1,0 +1,31 @@
+# C1 — Power budget constraint
+# Sums declared power draws from all subsystems and compares
+# against the power subsystem's declared available power.
+# Returns a row if total draw exceeds available power.
+#
+# This catches the coupling conflict: ADCS increases consumption
+# while Power reduces generation — each individually valid,
+# but combined they violate the budget.
+
+PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+PREFIX sat:   <http://example.org/adcs-demo/satellite/>
+PREFIX adcs:  <http://example.org/adcs-demo/>
+PREFIX pwr:   <http://example.org/adcs-demo/power/>
+
+SELECT ?totalDraw ?available ?violation WHERE {
+    {
+        SELECT (SUM(?draw) AS ?totalDraw) WHERE {
+            VALUES (?attr) {
+                (adcs:attr_adcs_powerDraw)
+                (pwr:attr_pwr_powerDraw)
+                (sat:attr_comms_powerDraw)
+                (sat:attr_thermal_powerDraw)
+                (sat:attr_structure_powerDraw)
+            }
+            ?attr sysml:value ?draw .
+        }
+    }
+    pwr:attr_availablePower sysml:value ?available .
+    BIND(?totalDraw - ?available AS ?violation)
+    FILTER(?violation > 0)
+}

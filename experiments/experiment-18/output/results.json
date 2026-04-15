@@ -1,0 +1,332 @@
+{
+  "experiment": 18,
+  "title": "Evidence Staleness \u2014 Provenance Chains Across RDF and Git",
+  "timestamp": "2026-04-14T23:32:07.085356+00:00",
+  "duration_seconds": 1.18,
+  "environment": {
+    "python_version": "3.9.7",
+    "rdflib_version": "7.6.0",
+    "pyshacl_version": "0.31.0",
+    "gitpython_version": "3.1.46",
+    "platform": "darwin",
+    "git_commit": "0a9e795"
+  },
+  "parameters": {
+    "model_evolution": "change reaction wheel max momentum from 4.0 to 8.0 N.m.s",
+    "evidence_binding": "SHA-256 hash of structural model at evidence generation time",
+    "freshness_check": "SHACL shape comparing rtm:modelHash to rtm:currentModelHash"
+  },
+  "steps": [
+    {
+      "step": 1,
+      "name": "load_data",
+      "description": "Load model files",
+      "timestamp": "2026-04-14T23:32:05.907274+00:00",
+      "duration_seconds": 0.002,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 2,
+      "name": "stage_structural",
+      "description": "Stage 1: Commit structural model",
+      "timestamp": "2026-04-14T23:32:06.173068+00:00",
+      "duration_seconds": 0.052,
+      "outcome": "success",
+      "details": {
+        "commit": "afd94b8190a51be1de5c725c8a527f3934b1b774",
+        "model_hash": "cc0999997597a5f4acb779d7420adb5d47ad7234ec5460dbf54d36c951c9bb49"
+      }
+    },
+    {
+      "step": 3,
+      "name": "stage_evidence",
+      "description": "Stage 2: Bind evidence to model v1",
+      "timestamp": "2026-04-14T23:32:06.234823+00:00",
+      "duration_seconds": 0.028,
+      "outcome": "success",
+      "details": {
+        "commit": "0880fa10707d7825cde84726e82e8f4c515c6e58"
+      }
+    },
+    {
+      "step": 4,
+      "name": "stage_attestation",
+      "description": "Stage 3: Add attestations",
+      "timestamp": "2026-04-14T23:32:06.255617+00:00",
+      "duration_seconds": 0.021,
+      "outcome": "success",
+      "details": {
+        "commit": "f75b9310bef14842727bea3fd6b88c6f1922e3c7"
+      }
+    },
+    {
+      "step": 5,
+      "name": "freshness_pre",
+      "description": "Check freshness before model change",
+      "timestamp": "2026-04-14T23:32:06.624604+00:00",
+      "duration_seconds": 0.369,
+      "outcome": "success",
+      "details": {
+        "conforms": true
+      }
+    },
+    {
+      "step": 6,
+      "name": "model_evolution",
+      "description": "Stage 4: Evolve structural model (design update)",
+      "timestamp": "2026-04-14T23:32:06.686461+00:00",
+      "duration_seconds": 0.062,
+      "outcome": "success",
+      "details": {
+        "commit": "7a711fbc4d1187bc4950004c4a846cfa42558d56",
+        "model_hash_v2": "e415d7bdf7b16c3c1f7ef4ab41aba258e7450d21fb7c83d2cd108f947ddf3443",
+        "hash_changed": true
+      }
+    },
+    {
+      "step": 7,
+      "name": "freshness_post",
+      "description": "Check freshness after model change",
+      "timestamp": "2026-04-14T23:32:06.924789+00:00",
+      "duration_seconds": 0.208,
+      "outcome": "success",
+      "details": {
+        "conforms": false,
+        "stale_evidence": [
+          {
+            "shape": "fresh:EvidenceFreshnessShape",
+            "focus_node": "adcs:EV-PROOF-REQ-001",
+            "message": "STALE EVIDENCE: modelHash does not match current model version.",
+            "value": "adcs:EV-PROOF-REQ-001"
+          },
+          {
+            "shape": "fresh:EvidenceFreshnessShape",
+            "focus_node": "adcs:EV-PROOF-REQ-002",
+            "message": "STALE EVIDENCE: modelHash does not match current model version.",
+            "value": "adcs:EV-PROOF-REQ-002"
+          },
+          {
+            "shape": "fresh:EvidenceFreshnessShape",
+            "focus_node": "adcs:EV-PROOF-REQ-003",
+            "message": "STALE EVIDENCE: modelHash does not match current model version.",
+            "value": "adcs:EV-PROOF-REQ-003"
+          },
+          {
+            "shape": "fresh:EvidenceFreshnessShape",
+            "focus_node": "adcs:EV-PROOF-REQ-004",
+            "message": "STALE EVIDENCE: modelHash does not match current model version.",
+            "value": "adcs:EV-PROOF-REQ-004"
+          },
+          {
+            "shape": "fresh:EvidenceFreshnessShape",
+            "focus_node": "pwr:EV-ANALYSIS-REQ-P01",
+            "message": "STALE EVIDENCE: modelHash does not match current model version.",
+            "value": "pwr:EV-ANALYSIS-REQ-P01"
+          },
+          {
+            "shape": "fresh:EvidenceFreshnessShape",
+            "focus_node": "pwr:EV-ANALYSIS-REQ-P02",
+            "message": "STALE EVIDENCE: modelHash does not match current model version.",
+            "value": "pwr:EV-ANALYSIS-REQ-P02"
+          }
+        ],
+        "stale_attestations": [
+          {
+            "shape": "fresh:AttestationFreshnessShape",
+            "focus_node": "adcs:ATT-REQ-002",
+            "message": "STALE ATTESTATION: cites evidence bound to outdated model version.",
+            "value": "adcs:ATT-REQ-002"
+          },
+          {
+            "shape": "fresh:AttestationFreshnessShape",
+            "focus_node": "adcs:ATT-REQ-003",
+            "message": "STALE ATTESTATION: cites evidence bound to outdated model version.",
+            "value": "adcs:ATT-REQ-003"
+          },
+          {
+            "shape": "fresh:AttestationFreshnessShape",
+            "focus_node": "pwr:ATT-REQ-P01",
+            "message": "STALE ATTESTATION: cites evidence bound to outdated model version.",
+            "value": "pwr:ATT-REQ-P01"
+          }
+        ]
+      }
+    },
+    {
+      "step": 8,
+      "name": "staleness_query",
+      "description": "Run staleness provenance query",
+      "timestamp": "2026-04-14T23:32:06.963334+00:00",
+      "duration_seconds": 0.039,
+      "outcome": "success",
+      "details": {
+        "staleness_report": [
+          {
+            "attestation": "http://example.org/adcs-demo/ATT-REQ-002",
+            "requirement": "http://example.org/adcs-demo/REQ-002",
+            "reqName": "REQ-002",
+            "evidence": "http://example.org/adcs-demo/EV-PROOF-REQ-002",
+            "evidenceHash": "cc0999997597a5f4acb779d7420adb5d47ad7234ec5460dbf54d36c951c9bb49",
+            "currentHash": "e415d7bdf7b16c3c1f7ef4ab41aba258e7450d21fb7c83d2cd108f947ddf3443",
+            "engineer": "Dr. Michael Zargham",
+            "attestTime": "2026-04-14T23:32:06.234885+00:00"
+          },
+          {
+            "attestation": "http://example.org/adcs-demo/ATT-REQ-003",
+            "requirement": "http://example.org/adcs-demo/REQ-003",
+            "reqName": "REQ-003",
+            "evidence": "http://example.org/adcs-demo/EV-PROOF-REQ-003",
+            "evidenceHash": "cc0999997597a5f4acb779d7420adb5d47ad7234ec5460dbf54d36c951c9bb49",
+            "currentHash": "e415d7bdf7b16c3c1f7ef4ab41aba258e7450d21fb7c83d2cd108f947ddf3443",
+            "engineer": "Dr. Michael Zargham",
+            "attestTime": "2026-04-14T23:32:06.234885+00:00"
+          },
+          {
+            "attestation": "http://example.org/adcs-demo/power/ATT-REQ-P01",
+            "requirement": "http://example.org/adcs-demo/power/REQ-P01",
+            "reqName": "REQ-P01",
+            "evidence": "http://example.org/adcs-demo/power/EV-ANALYSIS-REQ-P01",
+            "evidenceHash": "cc0999997597a5f4acb779d7420adb5d47ad7234ec5460dbf54d36c951c9bb49",
+            "currentHash": "e415d7bdf7b16c3c1f7ef4ab41aba258e7450d21fb7c83d2cd108f947ddf3443",
+            "engineer": "Dr. Michael Zargham",
+            "attestTime": "2026-04-14T23:32:06.234885+00:00"
+          }
+        ]
+      }
+    },
+    {
+      "step": 9,
+      "name": "git_provenance",
+      "description": "Git provenance \u2014 what changed between evidence and design update",
+      "timestamp": "2026-04-14T23:32:07.026907+00:00",
+      "duration_seconds": 0.064,
+      "outcome": "success",
+      "details": {
+        "evidence_commit": "0880fa10707d7825cde84726e82e8f4c515c6e58",
+        "design_commit": "7a711fbc4d1187bc4950004c4a846cfa42558d56",
+        "diff_line_count": 39
+      }
+    },
+    {
+      "step": 10,
+      "name": "combined_report",
+      "description": "Combined temporal-spatial staleness report",
+      "timestamp": "2026-04-14T23:32:07.027055+00:00",
+      "duration_seconds": 0.0,
+      "outcome": "success",
+      "details": {}
+    }
+  ],
+  "findings": {
+    "model_hash_v1": "cc0999997597a5f4acb779d7420adb5d47ad7234ec5460dbf54d36c951c9bb49",
+    "model_hash_v2": "e415d7bdf7b16c3c1f7ef4ab41aba258e7450d21fb7c83d2cd108f947ddf3443",
+    "pre_change_freshness": {
+      "label": "pre-change",
+      "conforms": true,
+      "stale_evidence_count": 0,
+      "stale_attestation_count": 0,
+      "stale_evidence": [],
+      "stale_attestations": []
+    },
+    "post_change_freshness": {
+      "label": "post-change",
+      "conforms": false,
+      "stale_evidence_count": 6,
+      "stale_attestation_count": 3,
+      "stale_evidence": [
+        {
+          "shape": "fresh:EvidenceFreshnessShape",
+          "focus_node": "adcs:EV-PROOF-REQ-001",
+          "message": "STALE EVIDENCE: modelHash does not match current model version.",
+          "value": "adcs:EV-PROOF-REQ-001"
+        },
+        {
+          "shape": "fresh:EvidenceFreshnessShape",
+          "focus_node": "adcs:EV-PROOF-REQ-002",
+          "message": "STALE EVIDENCE: modelHash does not match current model version.",
+          "value": "adcs:EV-PROOF-REQ-002"
+        },
+        {
+          "shape": "fresh:EvidenceFreshnessShape",
+          "focus_node": "adcs:EV-PROOF-REQ-003",
+          "message": "STALE EVIDENCE: modelHash does not match current model version.",
+          "value": "adcs:EV-PROOF-REQ-003"
+        },
+        {
+          "shape": "fresh:EvidenceFreshnessShape",
+          "focus_node": "adcs:EV-PROOF-REQ-004",
+          "message": "STALE EVIDENCE: modelHash does not match current model version.",
+          "value": "adcs:EV-PROOF-REQ-004"
+        },
+        {
+          "shape": "fresh:EvidenceFreshnessShape",
+          "focus_node": "pwr:EV-ANALYSIS-REQ-P01",
+          "message": "STALE EVIDENCE: modelHash does not match current model version.",
+          "value": "pwr:EV-ANALYSIS-REQ-P01"
+        },
+        {
+          "shape": "fresh:EvidenceFreshnessShape",
+          "focus_node": "pwr:EV-ANALYSIS-REQ-P02",
+          "message": "STALE EVIDENCE: modelHash does not match current model version.",
+          "value": "pwr:EV-ANALYSIS-REQ-P02"
+        }
+      ],
+      "stale_attestations": [
+        {
+          "shape": "fresh:AttestationFreshnessShape",
+          "focus_node": "adcs:ATT-REQ-002",
+          "message": "STALE ATTESTATION: cites evidence bound to outdated model version.",
+          "value": "adcs:ATT-REQ-002"
+        },
+        {
+          "shape": "fresh:AttestationFreshnessShape",
+          "focus_node": "adcs:ATT-REQ-003",
+          "message": "STALE ATTESTATION: cites evidence bound to outdated model version.",
+          "value": "adcs:ATT-REQ-003"
+        },
+        {
+          "shape": "fresh:AttestationFreshnessShape",
+          "focus_node": "pwr:ATT-REQ-P01",
+          "message": "STALE ATTESTATION: cites evidence bound to outdated model version.",
+          "value": "pwr:ATT-REQ-P01"
+        }
+      ]
+    },
+    "staleness_report": [
+      {
+        "attestation": "http://example.org/adcs-demo/ATT-REQ-002",
+        "requirement": "http://example.org/adcs-demo/REQ-002",
+        "reqName": "REQ-002",
+        "evidence": "http://example.org/adcs-demo/EV-PROOF-REQ-002",
+        "evidenceHash": "cc0999997597a5f4acb779d7420adb5d47ad7234ec5460dbf54d36c951c9bb49",
+        "currentHash": "e415d7bdf7b16c3c1f7ef4ab41aba258e7450d21fb7c83d2cd108f947ddf3443",
+        "engineer": "Dr. Michael Zargham",
+        "attestTime": "2026-04-14T23:32:06.234885+00:00"
+      },
+      {
+        "attestation": "http://example.org/adcs-demo/ATT-REQ-003",
+        "requirement": "http://example.org/adcs-demo/REQ-003",
+        "reqName": "REQ-003",
+        "evidence": "http://example.org/adcs-demo/EV-PROOF-REQ-003",
+        "evidenceHash": "cc0999997597a5f4acb779d7420adb5d47ad7234ec5460dbf54d36c951c9bb49",
+        "currentHash": "e415d7bdf7b16c3c1f7ef4ab41aba258e7450d21fb7c83d2cd108f947ddf3443",
+        "engineer": "Dr. Michael Zargham",
+        "attestTime": "2026-04-14T23:32:06.234885+00:00"
+      },
+      {
+        "attestation": "http://example.org/adcs-demo/power/ATT-REQ-P01",
+        "requirement": "http://example.org/adcs-demo/power/REQ-P01",
+        "reqName": "REQ-P01",
+        "evidence": "http://example.org/adcs-demo/power/EV-ANALYSIS-REQ-P01",
+        "evidenceHash": "cc0999997597a5f4acb779d7420adb5d47ad7234ec5460dbf54d36c951c9bb49",
+        "currentHash": "e415d7bdf7b16c3c1f7ef4ab41aba258e7450d21fb7c83d2cd108f947ddf3443",
+        "engineer": "Dr. Michael Zargham",
+        "attestTime": "2026-04-14T23:32:06.234885+00:00"
+      }
+    ],
+    "evidence_commit": "0880fa10707d7825cde84726e82e8f4c515c6e58",
+    "design_commit": "7a711fbc4d1187bc4950004c4a846cfa42558d56"
+  },
+  "verdict": "CONFIRMED \u2014 evidence staleness detected after model evolution"
+}

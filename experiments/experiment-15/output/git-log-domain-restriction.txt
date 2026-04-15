@@ -1,0 +1,7 @@
+*   02ea062 (HEAD -> merge-result) Merge branch 'shapes-add-attestation-check' into merge-result
+|\  
+| * 6668db6 (shapes-add-attestation-check) shapes-add-attestation-check: ontology/shapes.ttl
+* | c1a2936 (rtm-restrict-attests) rtm-restrict-attests: ontology/rtm.ttl
+|/  
+* 6d7f8f9 (main) ancestor: satellite model with ontology packages
+* 9187fc6 initial commit (empty)

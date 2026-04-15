@@ -1,0 +1,18 @@
+# C4 — Unallocated subsystem requirements
+# Finds subsystem-level requirements (those with rtm:derivedFrom)
+# that have no satisfy relationship.
+# System-level requirements (SAT-REQ-*) are excluded — they are
+# allocated through derivation, not direct satisfaction.
+
+PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+PREFIX rtm:   <http://example.org/ontology/rtm#>
+
+SELECT ?req ?reqName WHERE {
+    ?req a sysml:RequirementDefinition ;
+         sysml:declaredName ?reqName ;
+         rtm:derivedFrom ?parent .
+    FILTER NOT EXISTS {
+        ?req sysml:ownedRelationship ?rel .
+        ?rel a sysml:SatisfyRequirementUsage .
+    }
+}

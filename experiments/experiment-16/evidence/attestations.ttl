@@ -1,0 +1,68 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov:    <http://www.w3.org/ns/prov#> .
+@prefix rtm:     <http://example.org/ontology/rtm#> .
+@prefix adcs:    <http://example.org/adcs-demo/> .
+@prefix pwr:     <http://example.org/adcs-demo/power/> .
+
+# =============================================================================
+# Attestations — added at the ATTESTATION lifecycle stage
+# =============================================================================
+
+adcs:engineer-mz a rtm:Engineer ;
+    rdfs:label "Dr. Michael Zargham" .
+
+adcs:engineer-js a rtm:Engineer ;
+    rdfs:label "Jane Smith, Power Lead" .
+
+# --- ADCS attestations ---
+
+adcs:ATT-REQ-002 a rtm:Attestation ;
+    rtm:attests adcs:REQ-002 ;
+    rtm:hasEvidence adcs:EV-PROOF-REQ-002 ;
+    rtm:modelAdequacy "Energy-based momentum bound is conservative. Adequate for peak estimation." ;
+    rtm:evidenceSufficiency "Symbolic bound confirms peak momentum well below 4.0 N.m.s." ;
+    rtm:gitCommit "abc1234" ;
+    prov:wasAssociatedWith adcs:engineer-mz ;
+    prov:generatedAtTime "2026-04-05T09:00:00Z"^^xsd:dateTime .
+
+adcs:ATT-REQ-003 a rtm:Attestation ;
+    rtm:attests adcs:REQ-003 ;
+    rtm:hasEvidence adcs:EV-PROOF-REQ-003 ;
+    rtm:modelAdequacy "Linearized stability via Routh-Hurwitz is adequate for small-angle regime." ;
+    rtm:evidenceSufficiency "All eigenvalues satisfy Re ≤ -0.010 rad/s for positive J, Kp, Kd." ;
+    rtm:gitCommit "abc1234" ;
+    prov:wasAssociatedWith adcs:engineer-mz ;
+    prov:generatedAtTime "2026-04-05T09:15:00Z"^^xsd:dateTime .
+
+adcs:ATT-REQ-004 a rtm:Attestation ;
+    rtm:attests adcs:REQ-004 ;
+    rtm:hasEvidence adcs:EV-PROOF-REQ-004 ;
+    rtm:modelAdequacy "Linearized gravity gradient model adequate for GEO orbit." ;
+    rtm:evidenceSufficiency "Gravity gradient torques are micro-Nm, orders of magnitude below actuator capacity." ;
+    rtm:gitCommit "abc1234" ;
+    prov:wasAssociatedWith adcs:engineer-mz ;
+    prov:generatedAtTime "2026-04-05T09:30:00Z"^^xsd:dateTime .
+
+# REQ-001 is NOT attested (settling time exceeds requirement — mirrors ADCS demo)
+
+# --- Power attestations ---
+
+pwr:ATT-REQ-P01 a rtm:Attestation ;
+    rtm:attests pwr:REQ-P01 ;
+    rtm:hasEvidence pwr:EV-ANALYSIS-REQ-P01 ;
+    rtm:modelAdequacy "Power budget analysis with BOL panel output and measured PDU efficiency." ;
+    rtm:evidenceSufficiency "306W available exceeds 300W budget with 2% margin." ;
+    rtm:gitCommit "abc1234" ;
+    prov:wasAssociatedWith adcs:engineer-js ;
+    prov:generatedAtTime "2026-04-06T11:00:00Z"^^xsd:dateTime .
+
+pwr:ATT-REQ-P02 a rtm:Attestation ;
+    rtm:attests pwr:REQ-P02 ;
+    rtm:hasEvidence pwr:EV-ANALYSIS-REQ-P02 ;
+    rtm:modelAdequacy "Battery capacity analysis with nominal load profile." ;
+    rtm:evidenceSufficiency "672Wh available at 60% DOD exceeds 282Wh needed for 72min eclipse." ;
+    rtm:gitCommit "abc1234" ;
+    prov:wasAssociatedWith adcs:engineer-js ;
+    prov:generatedAtTime "2026-04-06T11:15:00Z"^^xsd:dateTime .

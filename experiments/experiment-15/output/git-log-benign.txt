@@ -1,0 +1,7 @@
+*   0bf3a88 (HEAD -> merge-result) Merge branch 'shapes-add-name-check' into merge-result
+|\  
+| * 327b30c (shapes-add-name-check) shapes-add-name-check: ontology/shapes.ttl
+* | 5b750d1 (rtm-add-class) rtm-add-class: ontology/rtm.ttl
+|/  
+* 04bc8cd (main) ancestor: satellite model
+* a464972 initial commit (empty)

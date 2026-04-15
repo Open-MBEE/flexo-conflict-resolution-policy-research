@@ -1,0 +1,853 @@
+{
+  "experiment": 14,
+  "title": "Git as RDF Conflict Detector \u2014 Confusion Matrix",
+  "timestamp": "2026-04-14T22:10:58.010049+00:00",
+  "duration_seconds": 6.764,
+  "environment": {
+    "python_version": "3.9.7",
+    "rdflib_version": "7.6.0",
+    "pyshacl_version": "0.31.0",
+    "gitpython_version": "3.1.46",
+    "platform": "darwin",
+    "git_commit": "b0f8f12"
+  },
+  "parameters": {
+    "model_files": [
+      "structural/satellite.ttl",
+      "structural/adcs.ttl",
+      "structural/power.ttl",
+      "requirements/satellite.ttl",
+      "requirements/adcs.ttl",
+      "requirements/power.ttl",
+      "ontology/rtm.ttl",
+      "ontology/shapes.ttl"
+    ],
+    "model_domain": "GeoSat (ADCS + Power subsystems)",
+    "random_seed": 42,
+    "scenarios": [
+      "TN: ADCS tunes gains, Power tunes battery \u2014 no coupling",
+      "FN: ADCS upgrades wheels (+30W), Power reduces panels (-51W) \u2014 budget violated",
+      "TP: two teams edit same ADCS power draw attribute \u2014 textual conflict",
+      "FP: same structural content with reordered serialization"
+    ]
+  },
+  "steps": [
+    {
+      "step": 1,
+      "name": "load_data",
+      "description": "Load model, ontology, and shapes",
+      "timestamp": "2026-04-14T22:10:51.297148+00:00",
+      "duration_seconds": 0.051,
+      "outcome": "success",
+      "details": {
+        "model_files": [
+          "structural/satellite.ttl",
+          "structural/adcs.ttl",
+          "structural/power.ttl",
+          "requirements/satellite.ttl",
+          "requirements/adcs.ttl",
+          "requirements/power.ttl",
+          "ontology/rtm.ttl",
+          "ontology/shapes.ttl"
+        ],
+        "ancestor_triples": 511
+      }
+    },
+    {
+      "step": 2,
+      "name": "validate_ancestor",
+      "description": "Validate ancestor model (baseline)",
+      "timestamp": "2026-04-14T22:10:51.854191+00:00",
+      "duration_seconds": 0.534,
+      "outcome": "success",
+      "details": {
+        "valid": true,
+        "shacl_conforms": true,
+        "oracle_violations": 0
+      }
+    },
+    {
+      "step": 3,
+      "name": "scenario_tn",
+      "description": "Scenario 1: True Negative \u2014 disjoint, uncoupled changes",
+      "timestamp": "2026-04-14T22:10:53.748652+00:00",
+      "duration_seconds": 1.894,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 4,
+      "name": "scenario_fn",
+      "description": "Scenario 2: False Negative \u2014 coupled across files",
+      "timestamp": "2026-04-14T22:10:55.558431+00:00",
+      "duration_seconds": 1.81,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 5,
+      "name": "scenario_tp",
+      "description": "Scenario 3: True Positive \u2014 same attribute, same file",
+      "timestamp": "2026-04-14T22:10:56.791511+00:00",
+      "duration_seconds": 1.233,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 6,
+      "name": "scenario_fp",
+      "description": "Scenario 4: False Positive \u2014 reordered serialization",
+      "timestamp": "2026-04-14T22:10:58.009540+00:00",
+      "duration_seconds": 1.218,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 7,
+      "name": "confusion_matrix",
+      "description": "Build confusion matrix",
+      "timestamp": "2026-04-14T22:10:58.010001+00:00",
+      "duration_seconds": 0.0,
+      "outcome": "success",
+      "details": {
+        "matrix": {
+          "true_positive": 4,
+          "true_negative": 2,
+          "false_positive": 0,
+          "false_negative": 2,
+          "total": 8,
+          "accuracy": 0.75,
+          "false_negative_rate": 0.333,
+          "false_positive_rate": 0.0
+        }
+      }
+    },
+    {
+      "step": 8,
+      "name": "summary",
+      "description": "Per-scenario summary",
+      "timestamp": "2026-04-14T22:10:58.010025+00:00",
+      "duration_seconds": 0.0,
+      "outcome": "success",
+      "details": {}
+    }
+  ],
+  "findings": {
+    "confusion_matrix": {
+      "true_positive": 4,
+      "true_negative": 2,
+      "false_positive": 0,
+      "false_negative": 2,
+      "total": 8,
+      "accuracy": 0.75,
+      "false_negative_rate": 0.333,
+      "false_positive_rate": 0.0
+    },
+    "scenarios": [
+      {
+        "scenario": "true-negative",
+        "branch_a": "adcs-tune-gains",
+        "branch_b": "power-tune-battery",
+        "ancestor_sha": "8ae0008198b4218d4c53f8948c6d014e02f754d3",
+        "branch_a_sha": "541c2ee3dcca234dc6a3aa09ca2335dbc23751cf",
+        "branch_b_sha": "d7137d55ae41c0a68ba6ff43380c8598fe2bc70b",
+        "orderings": [
+          {
+            "ordering": "a-into-b",
+            "target": "power-tune-battery",
+            "source": "adcs-tune-gains",
+            "git_conflict": false,
+            "conflict_files": [],
+            "validation": {
+              "label": "true-negative-a-into-b",
+              "shacl_conforms": true,
+              "shacl_violation_count": 0,
+              "shacl_violations": [],
+              "oracle_results": [
+                {
+                  "query": "c1-power-budget",
+                  "rows": [],
+                  "has_violations": false
+                },
+                {
+                  "query": "c2-power-generation",
+                  "rows": [],
+                  "has_violations": false
+                },
+                {
+                  "query": "c3-requirement-allocation",
+                  "rows": [
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-001",
+                      "reqName": "REQ-001",
+                      "element": "http://example.org/adcs-demo/PDController",
+                      "elementName": "PDController"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-001",
+                      "reqName": "REQ-001",
+                      "element": "http://example.org/adcs-demo/StarTracker",
+                      "elementName": "StarTracker"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-002",
+                      "reqName": "REQ-002",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_X",
+                      "elementName": "ReactionWheel_X"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-002",
+                      "reqName": "REQ-002",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Y",
+                      "elementName": "ReactionWheel_Y"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-002",
+                      "reqName": "REQ-002",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Z",
+                      "elementName": "ReactionWheel_Z"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-003",
+                      "reqName": "REQ-003",
+                      "element": "http://example.org/adcs-demo/PDController",
+                      "elementName": "PDController"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/PDController",
+                      "elementName": "PDController"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_X",
+                      "elementName": "ReactionWheel_X"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Y",
+                      "elementName": "ReactionWheel_Y"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Z",
+                      "elementName": "ReactionWheel_Z"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P01",
+                      "reqName": "REQ-P01",
+                      "element": "http://example.org/adcs-demo/power/SolarArray_Port",
+                      "elementName": "SolarArray_Port"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P01",
+                      "reqName": "REQ-P01",
+                      "element": "http://example.org/adcs-demo/power/SolarArray_Starboard",
+                      "elementName": "SolarArray_Starboard"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P01",
+                      "reqName": "REQ-P01",
+                      "element": "http://example.org/adcs-demo/power/PDU",
+                      "elementName": "PDU"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P02",
+                      "reqName": "REQ-P02",
+                      "element": "http://example.org/adcs-demo/power/Battery",
+                      "elementName": "Battery"
+                    }
+                  ],
+                  "has_violations": false
+                },
+                {
+                  "query": "c4-unallocated-requirements",
+                  "rows": [],
+                  "has_violations": false
+                }
+              ],
+              "oracle_violation_count": 0,
+              "semantically_valid": true
+            },
+            "semantically_valid": true
+          },
+          {
+            "ordering": "b-into-a",
+            "target": "adcs-tune-gains",
+            "source": "power-tune-battery",
+            "git_conflict": false,
+            "conflict_files": [],
+            "validation": {
+              "label": "true-negative-b-into-a",
+              "shacl_conforms": true,
+              "shacl_violation_count": 0,
+              "shacl_violations": [],
+              "oracle_results": [
+                {
+                  "query": "c1-power-budget",
+                  "rows": [],
+                  "has_violations": false
+                },
+                {
+                  "query": "c2-power-generation",
+                  "rows": [],
+                  "has_violations": false
+                },
+                {
+                  "query": "c3-requirement-allocation",
+                  "rows": [
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-001",
+                      "reqName": "REQ-001",
+                      "element": "http://example.org/adcs-demo/PDController",
+                      "elementName": "PDController"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-001",
+                      "reqName": "REQ-001",
+                      "element": "http://example.org/adcs-demo/StarTracker",
+                      "elementName": "StarTracker"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-002",
+                      "reqName": "REQ-002",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_X",
+                      "elementName": "ReactionWheel_X"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-002",
+                      "reqName": "REQ-002",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Y",
+                      "elementName": "ReactionWheel_Y"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-002",
+                      "reqName": "REQ-002",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Z",
+                      "elementName": "ReactionWheel_Z"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-003",
+                      "reqName": "REQ-003",
+                      "element": "http://example.org/adcs-demo/PDController",
+                      "elementName": "PDController"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/PDController",
+                      "elementName": "PDController"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_X",
+                      "elementName": "ReactionWheel_X"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Y",
+                      "elementName": "ReactionWheel_Y"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Z",
+                      "elementName": "ReactionWheel_Z"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P01",
+                      "reqName": "REQ-P01",
+                      "element": "http://example.org/adcs-demo/power/SolarArray_Port",
+                      "elementName": "SolarArray_Port"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P01",
+                      "reqName": "REQ-P01",
+                      "element": "http://example.org/adcs-demo/power/SolarArray_Starboard",
+                      "elementName": "SolarArray_Starboard"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P01",
+                      "reqName": "REQ-P01",
+                      "element": "http://example.org/adcs-demo/power/PDU",
+                      "elementName": "PDU"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P02",
+                      "reqName": "REQ-P02",
+                      "element": "http://example.org/adcs-demo/power/Battery",
+                      "elementName": "Battery"
+                    }
+                  ],
+                  "has_violations": false
+                },
+                {
+                  "query": "c4-unallocated-requirements",
+                  "rows": [],
+                  "has_violations": false
+                }
+              ],
+              "oracle_violation_count": 0,
+              "semantically_valid": true
+            },
+            "semantically_valid": true
+          }
+        ]
+      },
+      {
+        "scenario": "false-negative",
+        "branch_a": "adcs-upgrade-wheels",
+        "branch_b": "power-reduce-panels",
+        "ancestor_sha": "1e43e4e4217b2ab54230a7422372504802befbb1",
+        "branch_a_sha": "cf077c67b6abe39ad135a335481f564cd9017bec",
+        "branch_b_sha": "0b993258de7e2702849cb666bc3ecebe14456027",
+        "orderings": [
+          {
+            "ordering": "a-into-b",
+            "target": "power-reduce-panels",
+            "source": "adcs-upgrade-wheels",
+            "git_conflict": false,
+            "conflict_files": [],
+            "validation": {
+              "label": "false-negative-a-into-b",
+              "shacl_conforms": true,
+              "shacl_violation_count": 0,
+              "shacl_violations": [],
+              "oracle_results": [
+                {
+                  "query": "c1-power-budget",
+                  "rows": [
+                    {
+                      "totalDraw": "265.0",
+                      "available": "255.0",
+                      "violation": "10.0"
+                    }
+                  ],
+                  "has_violations": true
+                },
+                {
+                  "query": "c2-power-generation",
+                  "rows": [],
+                  "has_violations": false
+                },
+                {
+                  "query": "c3-requirement-allocation",
+                  "rows": [
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-001",
+                      "reqName": "REQ-001",
+                      "element": "http://example.org/adcs-demo/PDController",
+                      "elementName": "PDController"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-001",
+                      "reqName": "REQ-001",
+                      "element": "http://example.org/adcs-demo/StarTracker",
+                      "elementName": "StarTracker"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-002",
+                      "reqName": "REQ-002",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_X",
+                      "elementName": "ReactionWheel_X"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-002",
+                      "reqName": "REQ-002",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Y",
+                      "elementName": "ReactionWheel_Y"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-002",
+                      "reqName": "REQ-002",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Z",
+                      "elementName": "ReactionWheel_Z"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-003",
+                      "reqName": "REQ-003",
+                      "element": "http://example.org/adcs-demo/PDController",
+                      "elementName": "PDController"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/PDController",
+                      "elementName": "PDController"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_X",
+                      "elementName": "ReactionWheel_X"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Y",
+                      "elementName": "ReactionWheel_Y"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Z",
+                      "elementName": "ReactionWheel_Z"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P01",
+                      "reqName": "REQ-P01",
+                      "element": "http://example.org/adcs-demo/power/SolarArray_Port",
+                      "elementName": "SolarArray_Port"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P01",
+                      "reqName": "REQ-P01",
+                      "element": "http://example.org/adcs-demo/power/SolarArray_Starboard",
+                      "elementName": "SolarArray_Starboard"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P01",
+                      "reqName": "REQ-P01",
+                      "element": "http://example.org/adcs-demo/power/PDU",
+                      "elementName": "PDU"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P02",
+                      "reqName": "REQ-P02",
+                      "element": "http://example.org/adcs-demo/power/Battery",
+                      "elementName": "Battery"
+                    }
+                  ],
+                  "has_violations": false
+                },
+                {
+                  "query": "c4-unallocated-requirements",
+                  "rows": [],
+                  "has_violations": false
+                }
+              ],
+              "oracle_violation_count": 1,
+              "semantically_valid": false
+            },
+            "semantically_valid": false
+          },
+          {
+            "ordering": "b-into-a",
+            "target": "adcs-upgrade-wheels",
+            "source": "power-reduce-panels",
+            "git_conflict": false,
+            "conflict_files": [],
+            "validation": {
+              "label": "false-negative-b-into-a",
+              "shacl_conforms": true,
+              "shacl_violation_count": 0,
+              "shacl_violations": [],
+              "oracle_results": [
+                {
+                  "query": "c1-power-budget",
+                  "rows": [
+                    {
+                      "totalDraw": "265.0",
+                      "available": "255.0",
+                      "violation": "10.0"
+                    }
+                  ],
+                  "has_violations": true
+                },
+                {
+                  "query": "c2-power-generation",
+                  "rows": [],
+                  "has_violations": false
+                },
+                {
+                  "query": "c3-requirement-allocation",
+                  "rows": [
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-001",
+                      "reqName": "REQ-001",
+                      "element": "http://example.org/adcs-demo/PDController",
+                      "elementName": "PDController"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-001",
+                      "reqName": "REQ-001",
+                      "element": "http://example.org/adcs-demo/StarTracker",
+                      "elementName": "StarTracker"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-002",
+                      "reqName": "REQ-002",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_X",
+                      "elementName": "ReactionWheel_X"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-002",
+                      "reqName": "REQ-002",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Y",
+                      "elementName": "ReactionWheel_Y"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-002",
+                      "reqName": "REQ-002",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Z",
+                      "elementName": "ReactionWheel_Z"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-003",
+                      "reqName": "REQ-003",
+                      "element": "http://example.org/adcs-demo/PDController",
+                      "elementName": "PDController"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/PDController",
+                      "elementName": "PDController"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_X",
+                      "elementName": "ReactionWheel_X"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Y",
+                      "elementName": "ReactionWheel_Y"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/REQ-004",
+                      "reqName": "REQ-004",
+                      "element": "http://example.org/adcs-demo/ReactionWheel_Z",
+                      "elementName": "ReactionWheel_Z"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P01",
+                      "reqName": "REQ-P01",
+                      "element": "http://example.org/adcs-demo/power/SolarArray_Port",
+                      "elementName": "SolarArray_Port"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P01",
+                      "reqName": "REQ-P01",
+                      "element": "http://example.org/adcs-demo/power/SolarArray_Starboard",
+                      "elementName": "SolarArray_Starboard"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P01",
+                      "reqName": "REQ-P01",
+                      "element": "http://example.org/adcs-demo/power/PDU",
+                      "elementName": "PDU"
+                    },
+                    {
+                      "req": "http://example.org/adcs-demo/power/REQ-P02",
+                      "reqName": "REQ-P02",
+                      "element": "http://example.org/adcs-demo/power/Battery",
+                      "elementName": "Battery"
+                    }
+                  ],
+                  "has_violations": false
+                },
+                {
+                  "query": "c4-unallocated-requirements",
+                  "rows": [],
+                  "has_violations": false
+                }
+              ],
+              "oracle_violation_count": 1,
+              "semantically_valid": false
+            },
+            "semantically_valid": false
+          }
+        ]
+      },
+      {
+        "scenario": "true-positive",
+        "branch_a": "adcs-update-power",
+        "branch_b": "syseng-correct-power",
+        "ancestor_sha": "63e72e567e6f881f14adab2db49955859bba4f05",
+        "branch_a_sha": "362bce9721872ddab2e507a5c322e8c09ec68789",
+        "branch_b_sha": "e0bd8d7a9bc7b47e6e51889c791397978b8559a8",
+        "orderings": [
+          {
+            "ordering": "a-into-b",
+            "target": "syseng-correct-power",
+            "source": "adcs-update-power",
+            "git_conflict": true,
+            "conflict_files": [
+              "structural/adcs.ttl"
+            ],
+            "validation": null,
+            "semantically_valid": null
+          },
+          {
+            "ordering": "b-into-a",
+            "target": "adcs-update-power",
+            "source": "syseng-correct-power",
+            "git_conflict": true,
+            "conflict_files": [
+              "structural/adcs.ttl"
+            ],
+            "validation": null,
+            "semantically_valid": null
+          }
+        ]
+      },
+      {
+        "scenario": "false-positive",
+        "branch_a": "serialize-order-a",
+        "branch_b": "serialize-order-b",
+        "ancestor_sha": "7278a126047e9b14b40b24374028ccd24984f73f",
+        "branch_a_sha": "f0c32d2793bb66b839935567b8de98ec73b9de3b",
+        "branch_b_sha": "84ddf8506e8cb2f6c4cd824b53d75e446652c4f3",
+        "orderings": [
+          {
+            "ordering": "a-into-b",
+            "target": "serialize-order-b",
+            "source": "serialize-order-a",
+            "git_conflict": true,
+            "conflict_files": [
+              "structural/adcs.ttl"
+            ],
+            "validation": null,
+            "semantically_valid": null
+          },
+          {
+            "ordering": "b-into-a",
+            "target": "serialize-order-a",
+            "source": "serialize-order-b",
+            "git_conflict": true,
+            "conflict_files": [
+              "structural/adcs.ttl"
+            ],
+            "validation": null,
+            "semantically_valid": null
+          }
+        ]
+      }
+    ],
+    "ancestor_validation": {
+      "label": "ancestor",
+      "shacl_conforms": true,
+      "shacl_violation_count": 0,
+      "shacl_violations": [],
+      "oracle_results": [
+        {
+          "query": "c1-power-budget",
+          "rows": [],
+          "has_violations": false
+        },
+        {
+          "query": "c2-power-generation",
+          "rows": [],
+          "has_violations": false
+        },
+        {
+          "query": "c3-requirement-allocation",
+          "rows": [
+            {
+              "req": "http://example.org/adcs-demo/REQ-001",
+              "reqName": "REQ-001",
+              "element": "http://example.org/adcs-demo/PDController",
+              "elementName": "PDController"
+            },
+            {
+              "req": "http://example.org/adcs-demo/REQ-001",
+              "reqName": "REQ-001",
+              "element": "http://example.org/adcs-demo/StarTracker",
+              "elementName": "StarTracker"
+            },
+            {
+              "req": "http://example.org/adcs-demo/REQ-002",
+              "reqName": "REQ-002",
+              "element": "http://example.org/adcs-demo/ReactionWheel_X",
+              "elementName": "ReactionWheel_X"
+            },
+            {
+              "req": "http://example.org/adcs-demo/REQ-002",
+              "reqName": "REQ-002",
+              "element": "http://example.org/adcs-demo/ReactionWheel_Y",
+              "elementName": "ReactionWheel_Y"
+            },
+            {
+              "req": "http://example.org/adcs-demo/REQ-002",
+              "reqName": "REQ-002",
+              "element": "http://example.org/adcs-demo/ReactionWheel_Z",
+              "elementName": "ReactionWheel_Z"
+            },
+            {
+              "req": "http://example.org/adcs-demo/REQ-003",
+              "reqName": "REQ-003",
+              "element": "http://example.org/adcs-demo/PDController",
+              "elementName": "PDController"
+            },
+            {
+              "req": "http://example.org/adcs-demo/REQ-004",
+              "reqName": "REQ-004",
+              "element": "http://example.org/adcs-demo/PDController",
+              "elementName": "PDController"
+            },
+            {
+              "req": "http://example.org/adcs-demo/REQ-004",
+              "reqName": "REQ-004",
+              "element": "http://example.org/adcs-demo/ReactionWheel_X",
+              "elementName": "ReactionWheel_X"
+            },
+            {
+              "req": "http://example.org/adcs-demo/REQ-004",
+              "reqName": "REQ-004",
+              "element": "http://example.org/adcs-demo/ReactionWheel_Y",
+              "elementName": "ReactionWheel_Y"
+            },
+            {
+              "req": "http://example.org/adcs-demo/REQ-004",
+              "reqName": "REQ-004",
+              "element": "http://example.org/adcs-demo/ReactionWheel_Z",
+              "elementName": "ReactionWheel_Z"
+            },
+            {
+              "req": "http://example.org/adcs-demo/power/REQ-P01",
+              "reqName": "REQ-P01",
+              "element": "http://example.org/adcs-demo/power/SolarArray_Port",
+              "elementName": "SolarArray_Port"
+            },
+            {
+              "req": "http://example.org/adcs-demo/power/REQ-P01",
+              "reqName": "REQ-P01",
+              "element": "http://example.org/adcs-demo/power/SolarArray_Starboard",
+              "elementName": "SolarArray_Starboard"
+            },
+            {
+              "req": "http://example.org/adcs-demo/power/REQ-P01",
+              "reqName": "REQ-P01",
+              "element": "http://example.org/adcs-demo/power/PDU",
+              "elementName": "PDU"
+            },
+            {
+              "req": "http://example.org/adcs-demo/power/REQ-P02",
+              "reqName": "REQ-P02",
+              "element": "http://example.org/adcs-demo/power/Battery",
+              "elementName": "Battery"
+            }
+          ],
+          "has_violations": false
+        },
+        {
+          "query": "c4-unallocated-requirements",
+          "rows": [],
+          "has_violations": false
+        }
+      ],
+      "oracle_violation_count": 0,
+      "semantically_valid": true
+    }
+  },
+  "verdict": "MIXED \u2014 Git misses semantic conflicts (false negatives)"
+}

@@ -1,0 +1,115 @@
+{
+  "experiment": 20,
+  "title": "The Attestation Gap \u2014 Human Judgment Under Model Evolution",
+  "timestamp": "2026-04-15T00:06:02.638724+00:00",
+  "duration_seconds": 1.189,
+  "environment": {
+    "python_version": "3.9.7",
+    "rdflib_version": "7.6.0",
+    "pyshacl_version": "0.31.0",
+    "gitpython_version": "3.1.46",
+    "platform": "darwin",
+    "git_commit": "95fd5c6"
+  },
+  "parameters": {
+    "starting_state": "Experiment 19 output (fresh evidence, no attestations)",
+    "attestation_scenarios": [
+      "REQ-002: re-attested with revised statement (margin doubled)",
+      "REQ-003, REQ-004, REQ-P01, REQ-P02: re-attested unchanged",
+      "REQ-001: DECLINED \u2014 engineer flags vibration coupling concern"
+    ]
+  },
+  "steps": [
+    {
+      "step": 1,
+      "name": "load_data",
+      "description": "Load model files",
+      "timestamp": "2026-04-15T00:06:01.451747+00:00",
+      "duration_seconds": 0.002,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 2,
+      "name": "setup",
+      "description": "Set up: model v2 + fresh evidence (Exp 19 state)",
+      "timestamp": "2026-04-15T00:06:01.700419+00:00",
+      "duration_seconds": 0.069,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 3,
+      "name": "pre_attestation",
+      "description": "Check state before attestation",
+      "timestamp": "2026-04-15T00:06:02.173187+00:00",
+      "duration_seconds": 0.473,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 4,
+      "name": "attestation",
+      "description": "Engineer reviews evidence and attests",
+      "timestamp": "2026-04-15T00:06:02.190450+00:00",
+      "duration_seconds": 0.017,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 5,
+      "name": "post_attestation",
+      "description": "Check state after partial attestation",
+      "timestamp": "2026-04-15T00:06:02.581213+00:00",
+      "duration_seconds": 0.391,
+      "outcome": "success",
+      "details": {}
+    },
+    {
+      "step": 6,
+      "name": "analysis",
+      "description": "The attestation gap",
+      "timestamp": "2026-04-15T00:06:02.581276+00:00",
+      "duration_seconds": 0.0,
+      "outcome": "success",
+      "details": {}
+    }
+  ],
+  "findings": {
+    "model_hash_v2": "e415d7bdf7b16c3c1f7ef4ab41aba258e7450d21fb7c83d2cd108f947ddf3443",
+    "evidence_fresh": true,
+    "total_requirements": 6,
+    "attested": 5,
+    "declined": 1,
+    "declined_requirements": [
+      "REQ-001"
+    ],
+    "decline_reason": "Model adequacy concern: larger wheels may change vibration characteristics not captured in pointing proof",
+    "pre_attestation_gates": {
+      "structural": 0,
+      "evidence": 0,
+      "attestation": 6,
+      "stale_evidence": 0,
+      "stale_attestation": 0
+    },
+    "post_attestation_gates": {
+      "structural": 0,
+      "evidence": 0,
+      "attestation": 1,
+      "stale_evidence": 0,
+      "stale_attestation": 0
+    },
+    "attestation_gap": {
+      "requirement": "REQ-001",
+      "evidence_status": "fresh (proof passes)",
+      "attestation_status": "declined",
+      "reason": "model inadequacy \u2014 vibration coupling not modeled",
+      "resolution_options": [
+        "additional analysis (vibration coupling model)",
+        "engineering judgment (vibration negligible)",
+        "hardware testing (validate assumption)"
+      ]
+    }
+  },
+  "verdict": "CONFIRMED \u2014 attestation gap: 1 requirement(s) have fresh evidence but no attestation. Human judgment is irreducible."
+}

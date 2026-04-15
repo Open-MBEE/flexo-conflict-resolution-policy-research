@@ -1,0 +1,6 @@
+* abc660f (HEAD -> main) REVERIFICATION: fresh evidence bound to model v2
+* 47d1c34 UPDATE: currentModelHash for model v2
+* efc4a6b DESIGN: upgrade wheel momentum 4.0 -> 8.0 N.m.s
+* 7abf73d EVIDENCE: proofs bound to model v1
+* c60045f STRUCTURAL: model v1
+* 8349b98 initial commit (empty)

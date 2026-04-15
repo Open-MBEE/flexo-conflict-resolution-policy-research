@@ -1,0 +1,100 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix sh:      <http://www.w3.org/ns/shacl#> .
+@prefix sysml:   <https://www.omg.org/spec/SysML/2.0/> .
+@prefix rtm:     <http://example.org/ontology/rtm#> .
+@prefix lc:      <http://example.org/shapes/lifecycle/> .
+
+# =============================================================================
+# Lifecycle gate shapes
+# =============================================================================
+#
+# These SHACL shapes encode lifecycle stage prerequisites as declarative
+# constraints. In the ADCS-lifecycle-demo, gates are enforced imperatively
+# in Python (check_gate()). Here they become queryable, composable SHACL
+# shapes that can be evaluated at merge time.
+#
+# Stage progression:
+#   STRUCTURAL_COMPLETE → EVIDENCE_COMPLETE → ATTESTATION_COMPLETE
+#
+# Each stage subsumes the previous: passing EVIDENCE_COMPLETE implies
+# STRUCTURAL_COMPLETE must also pass. A late structural change can
+# cause regression — breaking an earlier gate on a branch that had
+# already passed later gates.
+
+# --- Gate 1: Structural completeness ---
+# Every subsystem requirement must be allocated to at least one
+# design element via SatisfyRequirementUsage.
+
+lc:StructuralCompleteShape a sh:NodeShape ;
+    rdfs:label "StructuralCompleteShape" ;
+    rdfs:comment """Gate 1: Every subsystem requirement (those with rtm:derivedFrom)
+        must have at least one SatisfyRequirementUsage allocating it to
+        a design element. System-level requirements are excluded.""" ;
+    sh:targetClass sysml:RequirementDefinition ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "STRUCTURAL GATE: Subsystem requirement is not allocated to any design element." ;
+        sh:select """
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    $this sysml:ownedRelationship ?rel .
+                    ?rel a sysml:SatisfyRequirementUsage .
+                }
+            }
+        """
+    ] .
+
+# --- Gate 2: Evidence completeness ---
+# Every subsystem requirement must have at least one Evidence artifact
+# that addresses it via rtm:addresses.
+
+lc:EvidenceCompleteShape a sh:NodeShape ;
+    rdfs:label "EvidenceCompleteShape" ;
+    rdfs:comment """Gate 2: Every subsystem requirement must be addressed by
+        at least one piece of computational evidence.""" ;
+    sh:targetClass sysml:RequirementDefinition ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "EVIDENCE GATE: Subsystem requirement has no evidence addressing it." ;
+        sh:select """
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?evidence rtm:addresses $this .
+                }
+            }
+        """
+    ] .
+
+# --- Gate 3: Attestation completeness ---
+# Every subsystem requirement must have at least one Attestation
+# that attests it via rtm:attests.
+
+lc:AttestationCompleteShape a sh:NodeShape ;
+    rdfs:label "AttestationCompleteShape" ;
+    rdfs:comment """Gate 3: Every subsystem requirement must be attested by
+        at least one human attestation. This is the final gate —
+        evidence addresses requirements, but only attestation
+        confirms satisfaction.""" ;
+    sh:targetClass sysml:RequirementDefinition ;
+    sh:sparql [
+        a sh:SPARQLConstraint ;
+        sh:message "ATTESTATION GATE: Subsystem requirement has no attestation." ;
+        sh:select """
+            PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+            PREFIX rtm:   <http://example.org/ontology/rtm#>
+            SELECT $this WHERE {
+                $this rtm:derivedFrom ?parent .
+                FILTER NOT EXISTS {
+                    ?att rtm:attests $this .
+                }
+            }
+        """
+    ] .

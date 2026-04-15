@@ -1,0 +1,41 @@
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix sysml:   <https://www.omg.org/spec/SysML/2.0/> .
+@prefix sat:     <http://example.org/adcs-demo/satellite/> .
+
+# =============================================================================
+# Satellite-level requirements (owned by systems engineering)
+# =============================================================================
+# These are given to subsystem teams as constraints. Subsystem teams
+# derive their own requirements from these.
+
+sat:SAT-REQ-POINTING a sysml:RequirementDefinition ;
+    sysml:declaredName "SAT-REQ-POINTING" ;
+    sysml:text """The satellite shall maintain antenna boresight within 0.1 degrees
+        of the target ground station under nominal operating conditions.""" .
+
+sat:SAT-REQ-MOMENTUM a sysml:RequirementDefinition ;
+    sysml:declaredName "SAT-REQ-MOMENTUM" ;
+    sysml:text """The satellite shall not accumulate angular momentum beyond
+        the capacity of onboard momentum management devices.""" .
+
+sat:SAT-REQ-STABILITY a sysml:RequirementDefinition ;
+    sysml:declaredName "SAT-REQ-STABILITY" ;
+    sysml:text """The satellite attitude control system shall be asymptotically
+        stable under all nominal operating conditions.""" .
+
+sat:SAT-REQ-DISTURBANCE a sysml:RequirementDefinition ;
+    sysml:declaredName "SAT-REQ-DISTURBANCE" ;
+    sysml:text """The satellite shall reject environmental disturbance torques
+        encountered in geostationary orbit.""" .
+
+sat:SAT-REQ-POWER a sysml:RequirementDefinition ;
+    sysml:declaredName "SAT-REQ-POWER" ;
+    sysml:text """Total satellite power consumption shall not exceed the
+        available power budget under nominal sunlit operations.""" .
+
+sat:SAT-REQ-ECLIPSE a sysml:RequirementDefinition ;
+    sysml:declaredName "SAT-REQ-ECLIPSE" ;
+    sysml:text """The satellite shall sustain full operations during the
+        maximum GEO eclipse duration of 72 minutes.""" .

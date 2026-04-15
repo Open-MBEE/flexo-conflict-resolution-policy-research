@@ -1,0 +1,5 @@
+* 84ddf85 (serialize-order-b, merge-a-into-b) serialize-order-b: structural/adcs.ttl
+| * f0c32d2 (HEAD -> merge-b-into-a, serialize-order-a) serialize-order-a: structural/adcs.ttl
+|/  
+* 7278a12 (main) ancestor: satellite model (ADCS + Power)
+* 199db6f initial commit (empty)

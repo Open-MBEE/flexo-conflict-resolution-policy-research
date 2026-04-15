@@ -1,0 +1,28 @@
+# Staleness report — traces from stale attestations back through
+# evidence to the model version mismatch.
+#
+# Returns: which attestations are stale, what evidence they cite,
+# what model hash the evidence was bound to, what the current hash is,
+# which requirements are affected, and who attested.
+
+PREFIX rtm:   <http://example.org/ontology/rtm#>
+PREFIX prov:  <http://www.w3.org/ns/prov#>
+PREFIX sysml: <https://www.omg.org/spec/SysML/2.0/>
+
+SELECT ?attestation ?requirement ?reqName ?evidence ?evidenceHash ?currentHash ?engineer ?attestTime WHERE {
+    ?attestation a rtm:Attestation ;
+                 rtm:attests ?requirement ;
+                 rtm:hasEvidence ?evidence .
+
+    ?requirement sysml:declaredName ?reqName .
+
+    ?evidence rtm:modelHash ?evidenceHash .
+
+    rtm: rtm:currentModelHash ?currentHash .
+
+    FILTER(?evidenceHash != ?currentHash)
+
+    OPTIONAL { ?attestation prov:wasAssociatedWith ?eng . ?eng rdfs:label ?engineer }
+    OPTIONAL { ?attestation prov:generatedAtTime ?attestTime }
+}
+ORDER BY ?reqName
