@@ -7,7 +7,7 @@ Participants aligned on prioritizing a Git+RDF protocol for Diff/Merge, requirem
 
 Key topics:
 
-- **Research scope: Git+RDF-first Diff and Merge:** Michael queued OpenMBE research issues to run Diff and Merge experiments at the Git+RDF protocol layer, treating SysML v2 as a field test rather than the core. The objective is valid, hash-addressable RDF with canonical serializations and referenced artifacts, enabling conflict taxonomy and resolution independent of any single ontology.
+- **Research scope: Git+RDF-first Diff and Merge:** Michael queued OpenMBEE research issues to run Diff and Merge experiments at the Git+RDF protocol layer, treating SysML v2 as a field test rather than the core. The objective is valid, hash-addressable RDF with canonical serializations and referenced artifacts, enabling conflict taxonomy and resolution independent of any single ontology.
     
 - **Requirements traceability and accountability:** Michael is building an open RDF+Git RTM and attestation framework so model changes trigger hash invalidation and selective revalidation, delivering reproducibility, manager-level views, and cross-organizational auditability. He wants this standardized in OpenMBE to avoid proprietary lock-in and make model assets transaction-ready.
     
@@ -59,3 +59,7 @@ Key topics:
 ## Actions for Vince
 
 - Create a SysML v2 API framework around a kernel and define modular subdivisions of the language
+
+
+ 
+
