@@ -1,4 +1,3 @@
-# Why Strong Diff/Merge Matters for SysML Models
 
 ## Summary
 
