@@ -1,6 +1,6 @@
-# Experiments — Conflict Resolution in Flexo MMS
+# Experiments — Conflict Resolution in Model-Based Systems Engineering
 
-This directory contains 13 experiments that progressively investigate how Flexo MMS handles merge conflicts across different API layers, model types, and architectural patterns. The experiments start with a concrete engineering scenario, generalize to arbitrary knowledge graphs, discover API-layer limitations, and culminate in a three-layer service architecture that separates storage, schema, and verification concerns.
+This directory contains 20 experiments that progressively investigate how merge conflicts surface in model-based systems engineering. The first arc (Exp 1–13) starts with a concrete engineering scenario in Flexo MMS, generalizes to arbitrary knowledge graphs, discovers API-layer limitations, and culminates in a three-layer service architecture that separates storage, schema, and verification concerns. The second arc (Exp 14–20) pivots to test whether Git's textual VCS and RDF/SHACL constraint validation form complementary signals for conflict detection — using a refactored satellite model (ADCS + Power) split across team-owned files.
 
 ## Experiment Index
 
@@ -19,6 +19,13 @@ This directory contains 13 experiments that progressively investigate how Flexo 
 | 11 | [MTG-KC + schema (remote SPARQL)](experiment-11/) | Remote Layer 1 | MTG-KC + OWL/SHACL | Remote SPARQL preserves schema? | [log](experiment-11/run-output-20260318.log) |
 | 12 | [Three-layer architecture](experiment-12/) | Local Layer 1 | MTG-KC | Where does each concern live? | [log](experiment-12/run-output-20260318.log) |
 | 13 | [KC Python API verification](experiment-13/) | Remote Layer 1 | MTG-KC via KC API | Can domain APIs abstract verification? | [log](experiment-13/run-output-20260318.log) |
+| 14 | [Git as conflict detector](experiment-14/) | Git + local SPARQL/SHACL | Satellite (ADCS+Power, team-split files) | Does Git catch semantic conflicts across files? | scenario logs in [output/](experiment-14/output/) |
+| 15 | [Ontology package versioning](experiment-15/) | Git + local SHACL | Satellite + composable ontology packages | Do independently-evolved packages produce composition conflicts? | scenario logs in [output/](experiment-15/output/) |
+| 16 | [Lifecycle branches as stage gates](experiment-16/) | Git + local SHACL | Satellite (Structural→Evidence→Attestation) | Are SHACL-encoded lifecycle gates monotonic? | [log](experiment-16/output/git-log.txt) |
+| 17 | [Dual-signal classification](experiment-17/) | Git + local SHACL | Satellite | Does Git+SHACL yield a richer conflict taxonomy than either alone? | scenario logs in [output/](experiment-17/output/) |
+| 18 | [Evidence staleness](experiment-18/) | Git + local SHACL + content hashes | Satellite with hash-bound evidence | Can evidence freshness be a SHACL shape spanning RDF + Git? | [log](experiment-18/output/git-log.txt) |
+| 19 | [Programmatic reverification](experiment-19/) | Git + local SHACL + oracle re-run | Satellite with proof regeneration | Can a pipeline auto-restore evidence freshness after a model change? | [log](experiment-19/output/git-log.txt) |
+| 20 | [The attestation gap](experiment-20/) | Git + local SHACL + human attestation | Satellite (two-stage verification) | What is the irreducible human role after automated reverification? | [log](experiment-20/output/git-log.txt) |
 
 ## Narrative Arc
 
@@ -86,6 +93,26 @@ Layer 1 accepts any syntactically valid RDF — well-formed triples with valid U
 
 **Experiment 13** replaces raw pyshacl/SPARQL with the [mtg-kc Python API](https://github.com/mzargham/mtg-kc), which abstracts SHACL and SPARQL behind domain-typed operations (`add_vertex`, `add_edge`, `add_face`, `ValidationError`). This previews how a KerML/SysML v2 verification service would work: the constraint machinery is hidden behind a public API that exposes domain concepts, not violation reports.
 
+### Stage 7: Git + SHACL Dual-Signal Conflict Detection (Experiments 14–20)
+
+Experiments 1–13 used Flexo MMS (an RDF-native VCS) exclusively. Experiments 14–20 invert the question: what happens when **Git** is the version-control layer and **SHACL/SPARQL** runs as a separate constraint-checking layer? The model is refactored from MTG-KC back to a satellite (ADCS + Power subsystems, adapted from [BlockScience/ADCS-lifecycle-demo](https://github.com/BlockScience/ADCS-lifecycle-demo)) and split across team-owned files (`structural/{satellite,adcs,power}.ttl`, `requirements/...`, `ontology/{rtm,shapes}.ttl`) to mirror real multi-team engineering practice.
+
+**Experiment 14 — Git as conflict detector.** Two teams modify different files. ADCS adds a heavier reaction wheel (+30W); Power reduces available bus margin (−51W). Each change individually stays within budget; together they exceed it by 10W. Git merges cleanly because the edits are in different files. Across a 2×2 confusion matrix (semantic valid/invalid × Git clean/conflict), Git has a **33% false-negative rate** — it misses cross-file semantic conflicts that are coupled through shared constraints.
+
+**Experiment 15 — Ontology package versioning.** When `rtm.ttl` and `shapes.ttl` evolve on independent Git branches, composition conflicts emerge that neither Git nor per-package SHACL catches. Example: RTM consistently renames `rtm:derivedFrom` → `rtm:tracesTo`, while shapes adds a new constraint against the old name. Each branch validates cleanly; Git merges cleanly; the composed graph fails with 6 violations. **Composed SHACL validation is more reliable than static gate queries.**
+
+**Experiment 16 — Lifecycle branches as stage gates.** SHACL shapes encode three lifecycle gates (Structural, Evidence, Attestation). A redesign branch (which removed satisfy links) merges into an already-attested branch, leaving two requirements without structural allocation. The merged state passes Gate 2 but fails Gate 1 — **lifecycle gate compliance is not monotonic**: passing Gate 3 doesn't mean Gate 1 still holds.
+
+**Experiment 17 — Dual-signal classification.** Composing Git's temporal-divergence signal with SHACL's spatial-constraint signal yields a four-way taxonomy: Benign Divergence, Coupling Conflict, Ordering Artifact, Textual Conflict. Git alone collapses benign divergence and coupling conflicts into "clean"; SHACL alone cannot distinguish textual from ordering artifacts. **Coupling conflicts are the most dangerous — invisible to Git, symmetric in SHACL** — and they formalize the false-negative pattern from Experiment 14.
+
+**Experiment 18 — Evidence staleness.** Evidence artifacts carry an `rtm:modelHash` binding them to a model version. A single parameter edit (wheel `maxMomentum` 4.0 → 8.0 N·m·s) invalidates all 6 evidence artifacts and 3 attestations. A `FreshnessShape` compares each evidence's `rtm:modelHash` to the ontology root's `rtm:currentModelHash`. **Evidence freshness is a joint temporal-spatial property** — RDF says which requirements are affected; Git says what changed and when. Neither alone tells the full story.
+
+**Experiment 19 — Programmatic reverification pipeline.** After Experiment 18's parameter change, an automated pipeline re-runs every code-based oracle, regenerates evidence bound to the new model hash, and re-checks the lifecycle gates. Evidence freshness is **RESTORED** (0 stale). 5 of 6 proofs are completely stable (their conclusions don't reference the changed parameter); REQ-002's proof still passes but its margin statement updates. The attestation gate, however, **FAILS** with 6 unattested requirements. The pipeline can automate evidence regeneration but not attestation.
+
+**Experiment 20 — The attestation gap.** Starting from Experiment 19's fresh evidence, an engineer re-attests 5 of 6 requirements and **declines** REQ-001 (pointing accuracy). The proof passes — steady-state error is bounded by `2·tau_gg/Kp`, which doesn't reference wheel momentum — but larger wheels may have different vibration characteristics that couple into star tracker accuracy, and the model doesn't capture this. The `AttestationCompleteShape` correctly fires on REQ-001. **The attestation gap is SHACL-detectable but not SHACL-resolvable** — engineers retain the irreducible role of judging model adequacy.
+
+The mixed-model thesis: **RDF excels at the spatial dimension** (how things relate, compose, and satisfy constraints); **Git excels at the temporal dimension** (who changed what, and when). Composing their signals catches conflicts neither catches alone.
+
 ## Cross-Cutting Findings
 
 ### Commutativity
@@ -96,20 +123,21 @@ Layer 1 accepts any syntactically valid RDF — well-formed triples with valid U
 | MTG-KC (Exp 3, 4, 10, 11) | SPARQL | **No** | delete→enrich has orphans; enrich→delete is clean |
 | MTG-KC (Exp 5) | REST (no deletion) | **No** | Both orderings have orphans (API limitation) |
 | MTG-KC (Exp 8) | REST (with deletion) | **No** | Matches SPARQL behavior after @id bugfix |
+| Satellite cross-file (Exp 14, 17) | Git + SHACL | **Mixed** | Coupling conflicts symmetric under SHACL re-validation; ordering artifacts asymmetric — see Exp 17 taxonomy |
 
 Non-commutativity is a richer conflict signal than simple value disagreement. It indicates that the merge result depends on application order — a property that conflict resolution policies must account for.
 
 ### API Comparison
 
-| Capability | Layer 1 SPARQL | SysML v2 REST |
-| --- | --- | --- |
-| Type validation | None (stores any RDF) | None (stores any JSON) |
-| Constraint evaluation | Server-side (SPARQL SELECT) | Client-side only |
-| Element deletion | `DELETE WHERE` (native, thorough) | Identity-only commit (not native — workaround discovered in Exp 7–8) |
-| Query capabilities | Full SPARQL | None (fetch all, filter client-side) |
-| Schema storage | Preserves OWL/SHACL triples | Not applicable (JSON) |
-| `@id` handling | Preserves URIs | Strips namespace prefixes |
-| OWL reasoning | No | No |
+| Capability | Layer 1 SPARQL | SysML v2 REST | Git + SHACL (host filesystem) |
+| --- | --- | --- | --- |
+| Type validation | None (stores any RDF) | None (stores any JSON) | None (Git is text-only) |
+| Constraint evaluation | Server-side (SPARQL SELECT) | Client-side only | Out-of-band (SHACL/SPARQL run separately on the materialized graph) |
+| Element deletion | `DELETE WHERE` (native, thorough) | Identity-only commit (not native — workaround discovered in Exp 7–8) | Native (file/line edits + `git rm`) |
+| Query capabilities | Full SPARQL | None (fetch all, filter client-side) | None at storage layer (load into rdflib for SPARQL) |
+| Schema storage | Preserves OWL/SHACL triples | Not applicable (JSON) | Files committed alongside instance data |
+| `@id` handling | Preserves URIs | Strips namespace prefixes | Preserves verbatim |
+| OWL reasoning | No | No | No |
 
 ### Key Discoveries
 
@@ -125,6 +153,19 @@ Non-commutativity is a richer conflict signal than simple value disagreement. It
 
 6. **Domain APIs can abstract verification** — the KC Python API hides SHACL/SPARQL behind typed operations, previewing how a production KerML/SysML v2 verification service would work.
 
+7. **Git misses cross-file semantic conflicts** — Git's textual merge sees no overlap when independently-edited files are coupled through a shared constraint (e.g., a power budget spanning ADCS and Power team files). Quantified at a **33% false-negative rate** in Exp 14 and formalized as the Coupling Conflict class in Exp 17.
+
+8. **Lifecycle gate compliance is not monotonic** — passing an attestation gate doesn't mean structural gates still hold. A late change on a separate branch can regress earlier gates after merge, and evidence bound to an old model hash silently goes stale (Exp 16, 18).
+
+9. **Programmatic reverification cannot replace human attestation** — an automated pipeline can re-run code-based oracles and restore evidence freshness to 100%, but the attestation gate remains the engineer's responsibility. Some requirements need new analysis (e.g., vibration coupling not in the model) before they can be attested (Exp 19–20).
+
+## Cross-Experiment Tooling
+
+Experiments 14–20 share infrastructure under [lib/](lib/) and [analysis/](analysis/), managed via [pyproject.toml](pyproject.toml) and [uv](https://docs.astral.sh/uv/).
+
+- [lib/](lib/) — `experiment_logger.py` (dual-output: stdout + structured `output/results.json`), `git_utils.py` (repo orchestration, branching, merging), `rdf_utils.py` (loading, canonical N-Triples hashing, serialization), `shacl_runner.py` (pyshacl wrapper).
+- [analysis/](analysis/) — `analyze.py` and `report.py` consume each experiment's `output/results.json` and emit comparison tables (`tables/conflict-detection.{md,csv}`, `tables/signal-effectiveness.{md,csv}`, `tables/temporal-vs-spatial.md`) plus a full `report.md`. The synthesis currently covers Experiments 14–18; 19–20 are documented in their own READMEs.
+
 ## How to Reproduce
 
 ### Prerequisites
@@ -133,6 +174,7 @@ Non-commutativity is a richer conflict signal than simple value disagreement. It
 - **Remote REST experiments (2, 5, 6, 7, 8):** `FLEXO_BEARER_TOKEN` env var with token for `experimental.starforge.app`
 - **Remote SPARQL experiments (9, 10, 11, 13):** `FLEXO_TOKEN` env var with token for `try-layer1.starforge.app`
 - **Python experiments (2, 5, 6, 7, 8, 12, 13):** Python 3.8+, `pip install requests rdflib pyshacl`
+- **Mixed-model experiments (14–20):** Python ≥3.9 and [uv](https://docs.astral.sh/uv/). Dependencies (`rdflib`, `pyshacl`, `gitpython`) are managed via [pyproject.toml](pyproject.toml). No Flexo deployment or token is required — the experiments operate on a scratch Git repo and validate RDF directly.
 - **All bash experiments:** `curl` and `python3` on PATH
 
 ### Environment Variables
@@ -143,6 +185,14 @@ export FLEXO_BEARER_TOKEN="eyJhbGci..."
 
 # For remote Layer 1 SPARQL API (try-layer1.starforge.app)
 export FLEXO_TOKEN="eyJhbGci..."
+```
+
+For the mixed-model experiments (14–20), no tokens are needed — install dependencies with uv and run each experiment directly:
+
+```bash
+cd experiments
+uv sync
+uv run python experiment-14/run.py
 ```
 
 ### Suggested Run Order
@@ -164,6 +214,9 @@ docker compose down && docker compose up -d
 7. **Exp 9–11** → remote SPARQL validation
 8. **Exp 12** → three-layer architecture (restart Flexo first)
 9. **Exp 13** → KC API verification
+10. **Exp 14–18** → Git + SHACL mixed-model experiments (uv-managed, no Flexo restart needed)
+11. **Exp 19–20** → reverification pipeline and the attestation gap
+12. **analysis/** → run `uv run python analysis/analyze.py` and `uv run python analysis/report.py` to regenerate the cross-experiment tables and synthesis report
 
 ## Note on the Knowledge Complex Model
 
