@@ -6,7 +6,7 @@ When evidence is hash-bound to a model version and the model subsequently evolve
 
 ## Background
 
-The [dynamical-systems-group/ADCS-lifecycle-demo](https://github.com/dynamical-systems-group/ADCS-lifecycle-demo) binds evidence to model versions via `rtm:modelHash` and `rtm:gitCommit`, using deterministic SHA-256 hashing of canonical N-Triples. But the demo runs as a single pipeline execution — it never tests what happens when the model evolves *after* evidence is bound.
+The [DSG ADCS-lifecycle-demo](https://github.com/DynamicalSystemsGroup/ADCS-lifecycle-demo) binds evidence to model versions via `rtm:modelHash` and `rtm:gitCommit`, using deterministic SHA-256 hashing of canonical N-Triples. But the demo runs as a single pipeline execution — it never tests what happens when the model evolves *after* evidence is bound.
 
 This experiment introduces model evolution and tests whether the freshness property can be checked declaratively via SHACL, and whether the full provenance chain (which requirements are affected, who attested them, what changed, when) spans both RDF and Git.
 

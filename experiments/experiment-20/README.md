@@ -6,7 +6,7 @@ After programmatic reverification restores evidence freshness (Experiment 19), w
 
 ## Background
 
-The [dynamical-systems-group/ADCS-lifecycle-demo](https://github.com/dynamical-systems-group/ADCS-lifecycle-demo) establishes the core epistemological principle:
+The [DSG ADCS-lifecycle-demo](https://github.com/DynamicalSystemsGroup/ADCS-lifecycle-demo) establishes the core epistemological principle:
 
 > "Evidence does not verify requirements; evidence supports a human judgment that requirements are satisfied."
 
