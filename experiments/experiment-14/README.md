@@ -8,7 +8,7 @@ When RDF graphs are split across team-owned files under Git, does Git's textual 
 
 Experiments 1–13 used Flexo MMS (an RDF-native VCS) exclusively. This experiment asks: what happens if you use Git (a text-oriented VCS) instead? It establishes the **baseline motivation** for the RDF + Git mixed model by quantifying where Git succeeds and fails as a conflict detector for structured engineering data.
 
-Reference: [dynamical-systems-group/ADCS-lifecycle-demo](https://github.com/dynamical-systems-group/ADCS-lifecycle-demo) — the satellite structural model adapted here.
+Reference: [DSG ADCS-lifecycle-demo](https://github.com/DynamicalSystemsGroup/ADCS-lifecycle-demo) — the satellite structural model adapted here.
 
 ## Model
 

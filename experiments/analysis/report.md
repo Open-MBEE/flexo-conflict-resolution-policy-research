@@ -6,7 +6,7 @@
 
 These five experiments test the thesis that **RDF and Git are complementary tools** for modeling complex composable engineering systems. RDF excels at the spatial dimension — how things relate, compose, and satisfy constraints. Git excels at the temporal dimension — how things evolve, who changed what, and when.
 
-Using a refactored satellite model (ADCS + Power subsystems, adapted from [dynamical-systems-group/ADCS-lifecycle-demo](https://github.com/dynamical-systems-group/ADCS-lifecycle-demo)), the experiments demonstrate that:
+Using a refactored satellite model (ADCS + Power subsystems, adapted from [DSG ADCS-lifecycle-demo](https://github.com/DynamicalSystemsGroup/ADCS-lifecycle-demo)), the experiments demonstrate that:
 
 1. **Git misses 33% of semantic conflicts** when teams modify different files that are coupled through shared constraints (Exp 14)
 2. **Ontology composition conflicts** are invisible to both Git and per-package validation — only composed SHACL catches them (Exp 15)
