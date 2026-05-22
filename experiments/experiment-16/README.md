@@ -6,7 +6,7 @@ When Git branches represent lifecycle stages, can SHACL shapes encode stage gate
 
 ## Background
 
-The [BlockScience/ADCS-lifecycle-demo](https://github.com/BlockScience/ADCS-lifecycle-demo) implements an 8-stage lifecycle pipeline with gates enforced imperatively in Python (`check_gate()`). This experiment makes those gates **declarative SHACL shapes** — the same verification machinery used for topological constraints in Experiments 4, 11, and 12.
+The [dynamical-systems-group/ADCS-lifecycle-demo](https://github.com/dynamical-systems-group/ADCS-lifecycle-demo) implements an 8-stage lifecycle pipeline with gates enforced imperatively in Python (`check_gate()`). This experiment makes those gates **declarative SHACL shapes** — the same verification machinery used for topological constraints in Experiments 4, 11, and 12.
 
 **Thesis:** Lifecycle progression is a temporal concern (Git branch topology captures stage ordering). Gate compliance is a spatial concern (the RDF graph at each stage must satisfy stage-specific shapes). A late structural change can break an earlier gate on a branch that had already passed later gates — lifecycle regression.
 
@@ -65,7 +65,7 @@ uv run python experiment-16/run.py
 
 ## Connection
 
-- **ADCS-lifecycle-demo**: gates were imperative Python; now declarative SHACL
+- **DSG/ADCS-lifecycle-demo**: gates were imperative Python; now declarative SHACL
 - **Experiment 14**: same false-negative pattern (cross-file coupling invisible to Git)
 - **Experiment 17**: lifecycle regression becomes a conflict class in the dual-signal taxonomy
 - **Experiment 18**: composes lifecycle gates with evidence freshness checks

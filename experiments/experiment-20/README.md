@@ -6,7 +6,7 @@ After programmatic reverification restores evidence freshness (Experiment 19), w
 
 ## Background
 
-The [BlockScience/ADCS-lifecycle-demo](https://github.com/BlockScience/ADCS-lifecycle-demo) establishes the core epistemological principle:
+The [dynamical-systems-group/ADCS-lifecycle-demo](https://github.com/dynamical-systems-group/ADCS-lifecycle-demo) establishes the core epistemological principle:
 
 > "Evidence does not verify requirements; evidence supports a human judgment that requirements are satisfied."
 
@@ -71,4 +71,4 @@ uv run python experiment-20/run.py
 - **Experiment 18**: staleness detection (the problem)
 - **Experiment 19**: programmatic reverification (the automated solution)
 - **This experiment**: the human residual (what automation cannot do)
-- **ADCS-lifecycle-demo**: the epistemological framework (evidence ≠ verification)
+- **DSG/ADCS-lifecycle-demo**: the epistemological framework (evidence ≠ verification)

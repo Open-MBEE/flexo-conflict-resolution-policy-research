@@ -8,7 +8,7 @@ When RDF graphs are split across team-owned files under Git, does Git's textual 
 
 Experiments 1–13 used Flexo MMS (an RDF-native VCS) exclusively. This experiment asks: what happens if you use Git (a text-oriented VCS) instead? It establishes the **baseline motivation** for the RDF + Git mixed model by quantifying where Git succeeds and fails as a conflict detector for structured engineering data.
 
-Reference: [BlockScience/ADCS-lifecycle-demo](https://github.com/BlockScience/ADCS-lifecycle-demo) — the satellite structural model adapted here.
+Reference: [dynamical-systems-group/ADCS-lifecycle-demo](https://github.com/dynamical-systems-group/ADCS-lifecycle-demo) — the satellite structural model adapted here.
 
 ## Model
 
@@ -26,7 +26,7 @@ requirements/
 └── power.ttl        ← power requirements (REQ-P01, REQ-P02)
 
 ontology/
-├── rtm.ttl          ← RTM ontology (from ADCS-lifecycle-demo)
+├── rtm.ttl          ← RTM ontology (from DSG/ADCS-lifecycle-demo)
 └── shapes.ttl       ← SHACL structural constraints
 
 oracle/

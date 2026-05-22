@@ -5,7 +5,7 @@ Key question: When evidence is hash-bound to a model version and the
 model subsequently evolves, can staleness detection be encoded as a
 SHACL shape — and can provenance chains span both RDF and Git?
 
-The ADCS-lifecycle-demo binds evidence to model versions via
+The DSG/ADCS-lifecycle-demo binds evidence to model versions via
 rtm:modelHash and rtm:gitCommit. But it runs as a single pipeline —
 it never tests what happens when the model evolves AFTER evidence
 is bound. This experiment introduces model evolution and tests:

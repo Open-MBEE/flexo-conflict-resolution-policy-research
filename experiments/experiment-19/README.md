@@ -58,4 +58,4 @@ uv run python experiment-19/run.py
 
 - **Experiment 18**: staleness detection (this experiment's starting point)
 - **Experiment 20**: the attestation gap (what automation cannot do)
-- **ADCS-lifecycle-demo**: the proof re-execution pattern (`reproduce.py`)
+- **DSG/ADCS-lifecycle-demo**: the proof re-execution pattern (`reproduce.py`)
