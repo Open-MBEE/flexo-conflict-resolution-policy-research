@@ -11,7 +11,7 @@
 # =============================================================================
 #
 # These SHACL shapes encode lifecycle stage prerequisites as declarative
-# constraints. In the ADCS-lifecycle-demo, gates are enforced imperatively
+# constraints. In the DSG/ADCS-lifecycle-demo, gates are enforced imperatively
 # in Python (check_gate()). Here they become queryable, composable SHACL
 # shapes that can be evaluated at merge time.
 #

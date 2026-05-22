@@ -6,7 +6,7 @@ When evidence is hash-bound to a model version and the model subsequently evolve
 
 ## Background
 
-The [BlockScience/ADCS-lifecycle-demo](https://github.com/BlockScience/ADCS-lifecycle-demo) binds evidence to model versions via `rtm:modelHash` and `rtm:gitCommit`, using deterministic SHA-256 hashing of canonical N-Triples. But the demo runs as a single pipeline execution — it never tests what happens when the model evolves *after* evidence is bound.
+The [dynamical-systems-group/ADCS-lifecycle-demo](https://github.com/dynamical-systems-group/ADCS-lifecycle-demo) binds evidence to model versions via `rtm:modelHash` and `rtm:gitCommit`, using deterministic SHA-256 hashing of canonical N-Triples. But the demo runs as a single pipeline execution — it never tests what happens when the model evolves *after* evidence is bound.
 
 This experiment introduces model evolution and tests whether the freshness property can be checked declaratively via SHACL, and whether the full provenance chain (which requirements are affected, who attested them, what changed, when) spans both RDF and Git.
 
@@ -90,7 +90,7 @@ uv run python experiment-18/run.py
 
 ## Connection
 
-- **ADCS-lifecycle-demo**: evidence hashing and provenance binding (single pipeline, no evolution)
+- **DSG/ADCS-lifecycle-demo**: evidence hashing and provenance binding (single pipeline, no evolution)
 - **Experiment 16**: lifecycle gates (structural, evidence, attestation) — freshness extends these
 - **Experiment 14**: false negatives from cross-file coupling — staleness is a temporal variant of coupling
 - This is the **capstone experiment** for the mixed model thesis: the provenance chain spanning RDF and Git is the most concrete demonstration that neither tool alone captures the full traceability picture

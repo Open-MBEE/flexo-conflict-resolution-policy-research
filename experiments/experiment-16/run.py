@@ -6,7 +6,7 @@ evidence → attestation), can SHACL shapes encode lifecycle gate
 prerequisites — and what happens when a late structural change merges
 into an attested branch?
 
-The ADCS-lifecycle-demo enforces gates imperatively in Python
+The DSG/ADCS-lifecycle-demo enforces gates imperatively in Python
 (check_gate()). This experiment makes them declarative SHACL shapes:
   - StructuralCompleteShape: every subsystem req has a satisfy link
   - EvidenceCompleteShape: every subsystem req has evidence addressing it
